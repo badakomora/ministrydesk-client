@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState } from "react";
 
 const globalStyles = css`
   * {
@@ -11,637 +10,789 @@ const globalStyles = css`
   }
 
   body {
-    background-color: #f5f7fa;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
     color: #333;
+    min-height: 100vh;
   }
 `;
 
-const containerStyles = css`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-`;
-
 const headerStyles = css`
-  padding: 20px 0;
   background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
 `;
 
 const headerContentStyles = css`
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 64px;
 `;
 
 const logoStyles = css`
-  font-size: 24px;
-  font-weight: 700;
-  color: #5b68e4;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .icon {
+    width: 32px;
+    height: 32px;
+    background-color: #2563eb;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+  }
 `;
 
 const navStyles = css`
-  ul {
+  display: none;
+
+  @media (min-width: 768px) {
     display: flex;
-    list-style: none;
+    gap: 32px;
 
-    li {
-      margin-left: 30px;
+    a {
+      text-decoration: none;
+      color: #6b7280;
+      font-weight: 500;
+      transition: color 0.2s;
 
-      a {
-        text-decoration: none;
-        color: #555;
-        font-weight: 500;
-        transition: color 0.3s;
-
-        &:hover {
-          color: #5b68e4;
-        }
+      &:hover {
+        color: #2563eb;
       }
     }
   }
 `;
 
-const ctaButtonStyles = css`
-  background-color: #5b68e4;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 25px;
+const buttonStyles = css`
+  padding: 8px 16px;
+  border-radius: 6px;
   font-weight: 600;
+  font-size: 14px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.2s;
 
-  &:hover {
-    background-color: #4850c8;
+  &.primary {
+    background-color: #2563eb;
+    color: white;
+
+    &:hover {
+      background-color: #1d4ed8;
+    }
+  }
+
+  &.outline {
+    background-color: transparent;
+    color: #2563eb;
+    border: 1px solid #2563eb;
+
+    &:hover {
+      background-color: #f0f4ff;
+    }
+  }
+
+  &.secondary {
+    background-color: white;
+    color: #2563eb;
+    border: 1px solid #e5e7eb;
+
+    &:hover {
+      background-color: #f9fafb;
+    }
+  }
+
+  &.large {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 
+const mainStyles = css`
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 48px 20px;
+`;
+
 const heroStyles = css`
-  padding: 80px 0 40px;
   text-align: center;
+  margin-bottom: 64px;
 
   h1 {
-    font-size: 42px;
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    color: #111827;
+    margin-bottom: 24px;
 
-    span {
-      color: #5b68e4;
-      font-weight: 400;
-      font-style: italic;
+    @media (min-width: 768px) {
+      font-size: 3rem;
+    }
+
+    .highlight {
+      color: #2563eb;
     }
   }
 
   p {
-    font-size: 18px;
-    color: #666;
-    max-width: 600px;
-    margin: 0 auto 30px;
+    font-size: 1.25rem;
+    color: #6b7280;
+    max-width: 768px;
+    margin: 0 auto 32px;
     line-height: 1.6;
   }
 `;
 
-const toggleStyles = css`
-  display: inline-flex;
-  background-color: #f0f2fa;
-  border-radius: 25px;
-  padding: 5px;
-  margin-bottom: 40px;
-
-  button {
-    padding: 8px 20px;
-    border: none;
-    background: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s;
-
-    &.active {
-      background-color: #5b68e4;
-      color: white;
-    }
-  }
-`;
-
-const pricingCardsStyles = css`
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  margin-bottom: 80px;
-`;
-
 const cardStyles = css`
   background-color: white;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  flex: 1;
-  min-width: 300px;
-  max-width: 350px;
-  position: relative;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
 
-  &.popular {
-    border-top: 4px solid #ffcc5c;
+  &.urgent {
+    border: 1px solid #fed7aa;
+    background-color: #fff7ed;
   }
 `;
 
-const popularTagStyles = css`
-  position: absolute;
-  top: -12px;
-  right: 30px;
-  background-color: #ffcc5c;
-  color: #333;
+const badgeStyles = css`
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 9999px;
   font-size: 12px;
   font-weight: 600;
-  padding: 5px 15px;
-  border-radius: 20px;
-`;
 
-const cardIconStyles = css`
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-
-  &.starter {
-    background-color: #e6eeff;
-    color: #5b68e4;
+  &.secondary {
+    background-color: #f3f4f6;
+    color: #374151;
   }
 
-  &.pro {
-    background-color: #fff5e6;
-    color: #ffaa33;
-  }
-
-  &.enterprise {
-    background-color: #e6f9ff;
-    color: #33aaff;
-  }
-`;
-
-const cardContentStyles = css`
-  h2 {
-    font-size: 22px;
-    margin-bottom: 10px;
-  }
-
-  .subtitle {
-    color: #666;
-    margin-bottom: 25px;
-    font-size: 14px;
-  }
-
-  .price {
-    font-size: 38px;
-    font-weight: 700;
-    margin-bottom: 30px;
-
-    span {
-      font-size: 16px;
-      color: #888;
-      font-weight: 400;
-    }
-  }
-`;
-
-const featuresStyles = css`
-  margin-bottom: 30px;
-
-  .feature {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    font-size: 14px;
-
-    svg {
-      flex-shrink: 0;
-      margin-right: 10px;
-      margin-top: 3px;
-    }
-  }
-`;
-
-const cardButtonStyles = css`
-  width: 100%;
-  padding: 12px 0;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &.starter {
-    background-color: #f0f2fa;
-    color: #5b68e4;
-    border: 1px solid #e0e4f5;
-
-    &:hover {
-      background-color: #e6eaff;
-    }
-  }
-
-  &.pro {
-    background-color: #333;
+  &.urgent {
+    background-color: #dc2626;
     color: white;
-    border: none;
+  }
 
-    &:hover {
-      background-color: #222;
+  &.outline {
+    background-color: transparent;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+  }
+`;
+
+const gridStyles = css`
+  display: grid;
+  gap: 24px;
+  margin-bottom: 64px;
+
+  &.cols-2 {
+    grid-template-columns: 1fr;
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  &.enterprise {
-    background-color: white;
-    color: #5b68e4;
-    border: 1px solid #5b68e4;
-
-    &:hover {
-      background-color: #f0f2fa;
+  &.cols-3 {
+    grid-template-columns: 1fr;
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
     }
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+`;
+
+const sectionStyles = css`
+  margin-bottom: 64px;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  &.left-align h2 {
+    text-align: left;
+    margin-bottom: 24px;
+    font-size: 1.5rem;
+  }
+`;
+
+const announcementStyles = css`
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .content {
+    flex: 1;
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+
+      h3 {
+        font-weight: 600;
+        margin: 0;
+      }
+    }
+
+    .message {
+      color: #6b7280;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .date {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+`;
+
+const sermonCardStyles = css`
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    .duration {
+      font-size: 14px;
+      color: #6b7280;
+    }
+  }
+
+  .title {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .speaker {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+
+  .date {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-bottom: 16px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+  }
+`;
+
+const eventCardStyles = css`
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    .icon {
+      width: 16px;
+      height: 16px;
+      color: #9ca3af;
+    }
+  }
+
+  .title {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .details {
+    font-size: 14px;
+    color: #6b7280;
+
+    .detail {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+
+      .icon {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+`;
+
+const ministryCardStyles = css`
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      background-color: #dbeafe;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2563eb;
+      font-size: 20px;
+    }
+
+    h3 {
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  .description {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .contacts {
+    font-size: 14px;
+
+    .contact {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: #6b7280;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+`;
+
+const ctaStyles = css`
+  border-radius: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  color: white;
+
+  &.giving {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+
+  .icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    opacity: 0.8;
+    font-size: 64px;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+    opacity: 0.9;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 `;
 
 export const Home = () => {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annually">(
-    "monthly"
-  );
+  const departments = [
+    {
+      name: "Worship Ministry",
+      description:
+        "Leading the congregation in spirit-filled worship and praise",
+      icon: "🎵",
+      contact: "worship@pag.org",
+      leader: "Pastor Sarah Johnson",
+    },
+    {
+      name: "Youth Ministry",
+      description:
+        "Empowering the next generation through discipleship and fellowship",
+      icon: "👥",
+      contact: "youth@pag.org",
+      leader: "Pastor Mike Chen",
+    },
+    {
+      name: "Children's Ministry",
+      description:
+        "Nurturing young hearts with age-appropriate biblical teaching",
+      icon: "❤️",
+      contact: "children@pag.org",
+      leader: "Sister Mary Rodriguez",
+    },
+    {
+      name: "Outreach Ministry",
+      description: "Reaching our community with God's love through service",
+      icon: "🏢",
+      contact: "outreach@pag.org",
+      leader: "Deacon James Wilson",
+    },
+    {
+      name: "Prayer Ministry",
+      description: "Interceding for our church, community, and global missions",
+      icon: "📖",
+      contact: "prayer@pag.org",
+      leader: "Sister Grace Kim",
+    },
+    {
+      name: "Missions Ministry",
+      description: "Supporting global evangelism and church planting efforts",
+      icon: "📍",
+      contact: "missions@pag.org",
+      leader: "Pastor David Thompson",
+    },
+  ];
+
+  const recentSermons = [
+    {
+      title: "Walking in Faith",
+      speaker: "Pastor Peter Komora",
+      date: "December 15, 2024",
+      duration: "45 min",
+      series: "Foundations of Faith P.A.G",
+    },
+    {
+      title: "The Power of Prayer",
+      speaker: "Pastor Everlyne Kavaya",
+      date: "December 8, 2024",
+      duration: "38 min",
+      series: "Mwambao P.A.G",
+    },
+    {
+      title: "God's Amazing Grace",
+      speaker: "Pastor Mike Chen",
+      date: "December 1, 2024",
+      duration: "42 min",
+      series: "Nyali P.A.G",
+    },
+  ];
+
+  const upcomingEvents = [
+    {
+      title: "Christmas Eve Service",
+      date: "December 24, 2024",
+      time: "7:00 PM",
+      location: "Main Sanctuary",
+      type: "Special Service",
+    },
+    {
+      title: "New Year Prayer Night",
+      date: "December 31, 2024",
+      time: "10:00 PM - 12:30 AM",
+      location: "Fellowship Hall",
+      type: "Prayer Meeting",
+    },
+    {
+      title: "Youth Winter Retreat",
+      date: "January 12-14, 2025",
+      time: "Friday 6 PM - Sunday 4 PM",
+      location: "Mountain View Camp",
+      type: "Retreat",
+    },
+    {
+      title: "Women's Conference",
+      date: "January 25, 2025",
+      time: "9:00 AM - 4:00 PM",
+      location: "Main Sanctuary",
+      type: "Conference",
+    },
+  ];
+
+  const announcements = [
+    {
+      title: "Christmas Food Drive",
+      message:
+        "Help us bless families in need this Christmas season. Drop off non-perishable items at the church office.",
+      date: "Posted December 10, 2024",
+      urgent: false,
+    },
+    {
+      title: "Church Office Holiday Hours",
+      message:
+        "The church office will be closed December 23-26 and January 1. Emergency contact: (555) 123-4567",
+      date: "Posted December 5, 2024",
+      urgent: true,
+    },
+    {
+      title: "New Member Orientation",
+      message:
+        "Join us January 7th at 2 PM for new member orientation. Learn about PAG's vision, ministries, and how to get involved.",
+      date: "Posted November 28, 2024",
+      urgent: false,
+    },
+  ];
 
   return (
     <div css={globalStyles}>
       <header css={headerStyles}>
-        <div css={[containerStyles, headerContentStyles]}>
-          <a href="." css={logoStyles}>
-            WPDean
-          </a>
+        <div css={headerContentStyles}>
+          <div css={logoStyles}>
+            <div className="icon">⛪</div>
+            <h1>PAG Ministry Network</h1>
+          </div>
+
           <nav css={navStyles}>
-            <ul>
-              <li>
-                <a href=".">Features</a>
-              </li>
-              <li>
-                <a href=".">Solutions</a>
-              </li>
-              <li>
-                <a href=".">Pricing</a>
-              </li>
-              <li>
-                <a href=".">Resources</a>
-              </li>
-            </ul>
+            <a href="#sermons">Sermons</a>
+            <a href="#events">Events</a>
+            <a href="#departments">Ministries</a>
+            <a href="#giving">Give</a>
+            <a href="#contact">Visit Us</a>
           </nav>
-          <button css={ctaButtonStyles}>Start Free Trial</button>
         </div>
       </header>
 
-      <main>
-        <section css={[heroStyles, containerStyles]}>
+      <main css={mainStyles}>
+        <section css={heroStyles}>
           <h1>
-            Simple pricing plans for <span>every business</span>
+            Welcome to <span className="highlight">PAG Ministry Network</span>
           </h1>
           <p>
-            Transparent and scalable pricing options designed to grow with your
-            needs. No hidden fees, no surprises.
+            Access all church resources, sermons, events, and ministry
+            information. Everything you need to stay connected with the PAG
+            family.
           </p>
+        </section>
 
-          <div css={toggleStyles}>
-            <button
-              className={billingPeriod === "monthly" ? "active" : ""}
-              onClick={() => setBillingPeriod("monthly")}
-            >
-              Monthly
-            </button>
-            <button
-              className={billingPeriod === "annually" ? "active" : ""}
-              onClick={() => setBillingPeriod("annually")}
-            >
-              Annually
-            </button>
+        {/* Announcements */}
+        <section
+          css={[sectionStyles, { marginBottom: "48px" }]}
+          className="left-align"
+        >
+          <h2>Latest Announcements</h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
+            {announcements.map((announcement, index) => (
+              <div
+                key={index}
+                css={[cardStyles, announcement.urgent ? "urgent" : ""]}
+              >
+                <div css={announcementStyles}>
+                  <div className="content">
+                    <div className="header">
+                      <h3>{announcement.title}</h3>
+                      {announcement.urgent && (
+                        <span css={badgeStyles} className="urgent">
+                          Urgent
+                        </span>
+                      )}
+                    </div>
+                    <p className="message">{announcement.message}</p>
+                    <p className="date">{announcement.date}</p>
+                  </div>
+                  <div className="icon">💬</div>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
-        <section css={[pricingCardsStyles, containerStyles]}>
-          {/* Starter Card */}
-          <div css={cardStyles} className="starter">
-            <div css={cardIconStyles} className="starter">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                  fill="currentColor"
-                />
-              </svg>
+        {/* Two Column Layout */}
+        <div css={gridStyles} className="cols-2">
+          {/* Sermons */}
+          <section css={sectionStyles} className="left-align" id="sermons">
+            <h2>Recent Sermons</h2>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+            >
+              {recentSermons.map((sermon, index) => (
+                <div key={index} css={cardStyles}>
+                  <div css={sermonCardStyles}>
+                    <div className="header">
+                      <span css={badgeStyles} className="secondary">
+                        {sermon.series}
+                      </span>
+                      <span className="duration">{sermon.duration}</span>
+                    </div>
+                    <h3 className="title">{sermon.title}</h3>
+                    <p className="speaker">{sermon.speaker}</p>
+                    <p className="date">{sermon.date}</p>
+                    <div className="actions">
+                      <button css={buttonStyles} className="outline">
+                        ▶️ Play
+                      </button>
+                      <button css={buttonStyles} className="outline">
+                        ⬇️ Download
+                      </button>
+                      <button css={buttonStyles} className="outline">
+                        📻 Stream
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div css={cardContentStyles}>
-              <h2>Starter</h2>
-              <p className="subtitle">
-                Perfect for individuals and small teams
-              </p>
-              <div className="price">
-                $0 <span>/ month</span>
-              </div>
-            </div>
+          </section>
 
-            <div css={featuresStyles}>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#5b68e4"
-                  />
-                </svg>
-                <span>Basic features with usage limits</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#5b68e4"
-                  />
-                </svg>
-                <span>Up to 3 projects</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#5b68e4"
-                  />
-                </svg>
-                <span>Basic analytics and reporting</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#5b68e4"
-                  />
-                </svg>
-                <span>Email support</span>
-              </div>
+          {/* Events */}
+          <section css={sectionStyles} className="left-align" id="events">
+            <h2>Upcoming Events</h2>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+            >
+              {upcomingEvents.map((event, index) => (
+                <div key={index} css={cardStyles}>
+                  <div css={eventCardStyles}>
+                    <div className="header">
+                      <span css={badgeStyles} className="outline">
+                        {event.type}
+                      </span>
+                      <div className="icon">📅</div>
+                    </div>
+                    <h3 className="title">{event.title}</h3>
+                    <div className="details">
+                      <div className="detail">
+                        <div className="icon">📅</div>
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="detail">
+                        <div className="icon">🕐</div>
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="detail">
+                        <div className="icon">📍</div>
+                        <span>{event.location}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
+          </section>
+        </div>
 
-            <button css={cardButtonStyles} className="starter">
-              Get Started
-            </button>
+        {/* Departments/Ministries */}
+        <section css={sectionStyles} id="departments">
+          <h2>Our Ministries</h2>
+          <div css={gridStyles} className="cols-3">
+            {departments.map((dept, index) => (
+              <div key={index} css={cardStyles}>
+                <div css={ministryCardStyles}>
+                  <div className="header">
+                    <div className="icon">{dept.icon}</div>
+                    <h3>{dept.name}</h3>
+                  </div>
+                  <p className="description">{dept.description}</p>
+                  <div className="contacts">
+                    <div className="contact">
+                      <div className="icon">👤</div>
+                      <span>{dept.leader}</span>
+                    </div>
+                    <div className="contact">
+                      <div className="icon">✉️</div>
+                      <span>{dept.contact}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
+        </section>
 
-          {/* Professional Card */}
-          <div css={cardStyles} className="popular">
-            <div css={popularTagStyles}>Most Popular</div>
-            <div css={cardIconStyles} className="pro">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+        {/* Giving Section */}
+        <section css={sectionStyles} id="giving">
+          <div css={[ctaStyles, { marginBottom: 0 }]} className="giving">
+            <div className="icon">💰</div>
+            <h2>Support Our Ministry</h2>
+            <p>
+              Your generous giving helps us reach more people with the Gospel
+              and serve our community.
+            </p>
+            <div className="buttons">
+              <button css={buttonStyles} className="secondary large">
+                Give Online
+              </button>
+              <button
+                css={[
+                  buttonStyles,
+                  css`
+                    background-color: transparent;
+                    border: 1px solid white;
+                    color: white;
+
+                    &:hover {
+                      background-color: white;
+                      color: #059669;
+                    }
+                  `,
+                ]}
+                className="large"
               >
-                <path
-                  d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                  fill="currentColor"
-                />
-              </svg>
+                Other Ways to Give
+              </button>
             </div>
-            <div css={cardContentStyles}>
-              <h2>Professional</h2>
-              <p className="subtitle">Ideal for growing businesses</p>
-              <div className="price">
-                $49 <span>/ month</span>
-              </div>
-            </div>
-
-            <div css={featuresStyles}>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#ffaa33"
-                  />
-                </svg>
-                <span>All Starter features, plus:</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#ffaa33"
-                  />
-                </svg>
-                <span>Advanced analytics with insights</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#ffaa33"
-                  />
-                </svg>
-                <span>Unlimited projects and collaborators</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#ffaa33"
-                  />
-                </svg>
-                <span>Priority support and training</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#ffaa33"
-                  />
-                </svg>
-                <span>Automation tools</span>
-              </div>
-            </div>
-
-            <button css={cardButtonStyles} className="pro">
-              Get Started
-            </button>
-          </div>
-
-          {/* Enterprise Card */}
-          <div css={cardStyles} className="enterprise">
-            <div css={cardIconStyles} className="enterprise">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 8L15 13.2L21 14.1L16.5 18.2L17.6 24L12 21.3L6.4 24L7.5 18.2L3 14.1L9 13.2L12 8Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div>
-            <div css={cardContentStyles}>
-              <h2>Enterprise</h2>
-              <p className="subtitle">Custom solutions for larger teams</p>
-              <div className="price">
-                $89 <span>/ month</span>
-              </div>
-            </div>
-
-            <div css={featuresStyles}>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#33aaff"
-                  />
-                </svg>
-                <span>All Professional features, plus:</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#33aaff"
-                  />
-                </svg>
-                <span>No limits on usage or data</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#33aaff"
-                  />
-                </svg>
-                <span>Dedicated account manager</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#33aaff"
-                  />
-                </svg>
-                <span>Advanced security features</span>
-              </div>
-              <div className="feature">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 16L7 11L8.4 9.55L12 13.15L19.6 5.55L21 7L12 16Z"
-                    fill="#33aaff"
-                  />
-                </svg>
-                <span>Custom integration options</span>
-              </div>
-            </div>
-
-            <button css={cardButtonStyles} className="enterprise">
-              Contact Sales
-            </button>
           </div>
         </section>
       </main>
