@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { useState } from "react";
 
+// -------------------- Global Styles --------------------
 const globalStyles = css`
   * {
     margin: 0;
@@ -16,6 +18,7 @@ const globalStyles = css`
   }
 `;
 
+// -------------------- Header --------------------
 const headerStyles = css`
   background-color: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -77,55 +80,7 @@ const navStyles = css`
   }
 `;
 
-const buttonStyles = css`
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &.primary {
-    background-color: #2563eb;
-    color: white;
-
-    &:hover {
-      background-color: #1d4ed8;
-    }
-  }
-
-  &.outline {
-    background-color: transparent;
-    color: #2563eb;
-    border: 1px solid #2563eb;
-
-    &:hover {
-      background-color: #f0f4ff;
-    }
-  }
-
-  &.secondary {
-    background-color: white;
-    color: #2563eb;
-    border: 1px solid #e5e7eb;
-
-    &:hover {
-      background-color: #f9fafb;
-    }
-  }
-
-  &.large {
-    padding: 12px 24px;
-    font-size: 16px;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
+// -------------------- Layout --------------------
 const mainStyles = css`
   max-width: 1400px;
   margin: 0 auto;
@@ -160,10 +115,36 @@ const heroStyles = css`
   }
 `;
 
+const sectionStyles = css`
+  margin-bottom: 64px;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+`;
+
+const cardGrid = css`
+  display: grid;
+  gap: 16px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+// -------------------- Cards --------------------
 const cardStyles = css`
   background-color: white;
   border-radius: 12px;
-  padding: 32px;
+  padding: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
   transition: all 0.3s;
@@ -172,11 +153,11 @@ const cardStyles = css`
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
+`;
 
-  &.urgent {
-    border: 1px solid #fed7aa;
-    background-color: #fff7ed;
-  }
+const urgentCardStyles = css`
+  border: 1px solid #fed7aa;
+  background-color: #fff7ed;
 `;
 
 const badgeStyles = css`
@@ -203,99 +184,32 @@ const badgeStyles = css`
   }
 `;
 
-const gridStyles = css`
-  display: grid;
-  gap: 24px;
-  margin-bottom: 64px;
-
-  &.cols-2 {
-    grid-template-columns: 1fr;
-    @media (min-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  &.cols-3 {
-    grid-template-columns: 1fr;
-    @media (min-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (min-width: 1024px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-`;
-
-const sectionStyles = css`
-  margin-bottom: 64px;
-
-  h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  &.left-align h2 {
-    text-align: left;
-    margin-bottom: 24px;
-    font-size: 1.5rem;
-  }
-`;
-
 const announcementStyles = css`
   display: flex;
-  align-items: start;
-  justify-content: space-between;
-  margin-bottom: 16px;
+  flex-direction: column;
 
-  .content {
-    flex: 1;
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-
-      h3 {
-        font-weight: 600;
-        margin: 0;
-      }
-    }
-
-    .message {
-      color: #6b7280;
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-
-    .date {
-      font-size: 14px;
-      color: #9ca3af;
-    }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
   }
 
-  .icon {
-    width: 20px;
-    height: 20px;
+  .message {
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+
+  .date {
+    font-size: 12px;
     color: #9ca3af;
-    margin-top: 4px;
   }
 `;
 
 const sermonCardStyles = css`
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-
-    .duration {
-      font-size: 14px;
-      color: #6b7280;
-    }
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
   }
 
   .title {
@@ -310,59 +224,8 @@ const sermonCardStyles = css`
   }
 
   .date {
-    font-size: 14px;
+    font-size: 12px;
     color: #9ca3af;
-    margin-bottom: 16px;
-  }
-
-  .actions {
-    display: flex;
-    gap: 8px;
-
-    button {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-  }
-`;
-
-const eventCardStyles = css`
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-
-    .icon {
-      width: 16px;
-      height: 16px;
-      color: #9ca3af;
-    }
-  }
-
-  .title {
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .details {
-    font-size: 14px;
-    color: #6b7280;
-
-    .detail {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-bottom: 4px;
-
-      .icon {
-        width: 12px;
-        height: 12px;
-      }
-    }
   }
 `;
 
@@ -371,12 +234,11 @@ const ministryCardStyles = css`
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     .icon {
       width: 40px;
       height: 40px;
-      background-color: #dbeafe;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -392,407 +254,327 @@ const ministryCardStyles = css`
   }
 
   .description {
-    color: #6b7280;
     font-size: 14px;
-    margin-bottom: 16px;
-    line-height: 1.5;
+    color: #6b7280;
+    margin-bottom: 12px;
   }
 
   .contacts {
     font-size: 14px;
-
     .contact {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      color: #6b7280;
-
-      .icon {
-        width: 16px;
-        height: 16px;
-      }
+      margin-bottom: 4px;
     }
   }
 `;
 
-const ctaStyles = css`
-  border-radius: 12px;
-  padding: 48px 32px;
-  text-align: center;
+const viewMoreButton = css`
+  margin-top: 16px;
+  background-color: #2563eb;
   color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
 
-  &.giving {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  }
-
-  .icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 24px;
-    opacity: 0.8;
-    font-size: 64px;
-  }
-
-  h2 {
-    font-size: 1.875rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-  }
-
-  p {
-    font-size: 1.25rem;
-    margin-bottom: 32px;
-    opacity: 0.9;
-  }
-
-  .buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
+  &:hover {
+    background-color: #1d4ed8;
   }
 `;
 
+// -------------------- Home Component --------------------
 export const Home = () => {
-  const departments = [
-    {
-      name: "Worship Ministry",
-      description:
-        "Leading the congregation in spirit-filled worship and praise",
-      icon: "🎵",
-      contact: "worship@pag.org",
-      leader: "Pastor Sarah Johnson",
-    },
-    {
-      name: "Youth Ministry",
-      description:
-        "Empowering the next generation through discipleship and fellowship",
-      icon: "👥",
-      contact: "youth@pag.org",
-      leader: "Pastor Mike Chen",
-    },
-    {
-      name: "Children's Ministry",
-      description:
-        "Nurturing young hearts with age-appropriate biblical teaching",
-      icon: "❤️",
-      contact: "children@pag.org",
-      leader: "Sister Mary Rodriguez",
-    },
-    {
-      name: "Outreach Ministry",
-      description: "Reaching our community with God's love through service",
-      icon: "🏢",
-      contact: "outreach@pag.org",
-      leader: "Deacon James Wilson",
-    },
-    {
-      name: "Prayer Ministry",
-      description: "Interceding for our church, community, and global missions",
-      icon: "📖",
-      contact: "prayer@pag.org",
-      leader: "Sister Grace Kim",
-    },
-    {
-      name: "Missions Ministry",
-      description: "Supporting global evangelism and church planting efforts",
-      icon: "📍",
-      contact: "missions@pag.org",
-      leader: "Pastor David Thompson",
-    },
-  ];
+  const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
+  const [showAllEvents, setShowAllEvents] = useState(false);
+  const [showAllSermons, setShowAllSermons] = useState(false);
+  const [showAllDepartments, setShowAllDepartments] = useState(false);
 
-  const recentSermons = [
+  // Sample Data
+  const announcements = [
     {
-      title: "Walking in Faith",
-      speaker: "Pastor Peter Komora",
-      date: "December 15, 2024",
-      duration: "45 min",
-      series: "Foundations of Faith P.A.G",
+      title: "Christmas Food Drive",
+      message: "Help us bless families in need this Christmas.",
+      date: "Dec 10, 2024",
+      urgent: false,
     },
     {
-      title: "The Power of Prayer",
-      speaker: "Pastor Everlyne Kavaya",
-      date: "December 8, 2024",
-      duration: "38 min",
-      series: "Mwambao P.A.G",
+      title: "Church Office Holiday Hours",
+      message: "Closed Dec 23-26 and Jan 1.",
+      date: "Dec 5, 2024",
+      urgent: true,
     },
     {
-      title: "God's Amazing Grace",
-      speaker: "Pastor Mike Chen",
-      date: "December 1, 2024",
-      duration: "42 min",
-      series: "Nyali P.A.G",
+      title: "New Member Orientation",
+      message: "Join Jan 7th at 2 PM for new member orientation.",
+      date: "Nov 28, 2024",
+      urgent: false,
+    },
+    {
+      title: "Weekly Newsletter",
+      message: "Subscribe to stay updated.",
+      date: "Nov 25, 2024",
+      urgent: false,
     },
   ];
 
   const upcomingEvents = [
     {
       title: "Christmas Eve Service",
-      date: "December 24, 2024",
-      time: "7:00 PM",
+      date: "Dec 24, 2024",
+      time: "7 PM",
       location: "Main Sanctuary",
       type: "Special Service",
     },
     {
       title: "New Year Prayer Night",
-      date: "December 31, 2024",
-      time: "10:00 PM - 12:30 AM",
+      date: "Dec 31, 2024",
+      time: "10 PM - 12:30 AM",
       location: "Fellowship Hall",
       type: "Prayer Meeting",
     },
     {
       title: "Youth Winter Retreat",
-      date: "January 12-14, 2025",
-      time: "Friday 6 PM - Sunday 4 PM",
+      date: "Jan 12-14, 2025",
+      time: "Fri 6 PM - Sun 4 PM",
       location: "Mountain View Camp",
       type: "Retreat",
     },
     {
-      title: "Women's Conference",
-      date: "January 25, 2025",
-      time: "9:00 AM - 4:00 PM",
-      location: "Main Sanctuary",
-      type: "Conference",
+      title: "Community Outreach",
+      date: "Jan 20, 2025",
+      time: "9 AM - 3 PM",
+      location: "Local Park",
+      type: "Outreach",
     },
   ];
 
-  const announcements = [
+  const recentSermons = [
     {
-      title: "Christmas Food Drive",
-      message:
-        "Help us bless families in need this Christmas season. Drop off non-perishable items at the church office.",
-      date: "Posted December 10, 2024",
-      urgent: false,
+      title: "Walking in Faith",
+      speaker: "Pastor Peter",
+      date: "Dec 15, 2024",
+      duration: "45 min",
     },
     {
-      title: "Church Office Holiday Hours",
-      message:
-        "The church office will be closed December 23-26 and January 1. Emergency contact: (555) 123-4567",
-      date: "Posted December 5, 2024",
-      urgent: true,
+      title: "Power of Prayer",
+      speaker: "Pastor Everlyne",
+      date: "Dec 8, 2024",
+      duration: "38 min",
     },
     {
-      title: "New Member Orientation",
-      message:
-        "Join us January 7th at 2 PM for new member orientation. Learn about PAG's vision, ministries, and how to get involved.",
-      date: "Posted November 28, 2024",
-      urgent: false,
+      title: "God's Grace",
+      speaker: "Pastor Mike",
+      date: "Dec 1, 2024",
+      duration: "42 min",
+    },
+    {
+      title: "Faith & Patience",
+      speaker: "Pastor John",
+      date: "Nov 24, 2024",
+      duration: "50 min",
+    },
+  ];
+
+  const departments = [
+    {
+      name: "Worship",
+      description: "Leading in worship",
+      icon: "🎵",
+      leader: "Sarah Johnson",
+      contact: "worship@pag.org",
+    },
+    {
+      name: "Youth",
+      description: "Youth programs",
+      icon: "👥",
+      leader: "Mike Chen",
+      contact: "youth@pag.org",
+    },
+    {
+      name: "Children",
+      description: "Children ministry",
+      icon: "❤️",
+      leader: "Mary Rodriguez",
+      contact: "children@pag.org",
+    },
+    {
+      name: "Outreach",
+      description: "Community service",
+      icon: "🏢",
+      leader: "James Wilson",
+      contact: "outreach@pag.org",
     },
   ];
 
   return (
     <div css={globalStyles}>
+      {/* Header */}
       <header css={headerStyles}>
         <div css={headerContentStyles}>
           <div css={logoStyles}>
             <div className="icon">⛪</div>
-            <h1>PAG Ministry Network</h1>
+            <h1>PAG Family</h1>
           </div>
-
           <nav css={navStyles}>
-            <a href="#sermons">Sermons</a>
-            <a href="#events">Events</a>
-            <a href="#departments">Ministries</a>
+            <a href="#news-events">News & Events</a>
+            <a href="#churches-sermons">Churches & Sermons</a>
             <a href="#giving">Give</a>
-            <a href="#contact">Visit Us</a>
+            <a href="#contact">My PAG</a>
           </nav>
         </div>
       </header>
 
+      {/* Main */}
       <main css={mainStyles}>
+        {/* Hero */}
         <section css={heroStyles}>
           <h1>
-            Welcome to <span className="highlight">PAG Ministry Network</span>
+            Welcome to <span className="highlight">PAG Family</span>
           </h1>
           <p>
-            Access all church resources, sermons, events, and ministry
-            information. Everything you need to stay connected with the PAG
-            family.
+            Access church resources, sermons, events, and ministry info. Stay
+            connected with the PAG family.
           </p>
         </section>
 
-        {/* Announcements */}
-        <section
-          css={[sectionStyles, { marginBottom: "48px" }]}
-          className="left-align"
-        >
-          <h2>Latest Announcements</h2>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            {announcements.map((announcement, index) => (
-              <div
-                key={index}
-                css={[cardStyles, announcement.urgent ? "urgent" : ""]}
-              >
-                <div css={announcementStyles}>
-                  <div className="content">
+        {/* News & Events */}
+        <section css={sectionStyles} id="news-events">
+          <h2>News & Events</h2>
+
+          {/* News */}
+          <div style={{ marginBottom: "32px" }}>
+            <h3 style={{ marginBottom: "16px" }}>News</h3>
+            <div css={cardGrid}>
+              {(showAllAnnouncements
+                ? announcements
+                : announcements.slice(0, 3)
+              ).map((a, idx) => (
+                <div key={idx} css={[cardStyles, a.urgent && urgentCardStyles]}>
+                  <div css={announcementStyles}>
                     <div className="header">
-                      <h3>{announcement.title}</h3>
-                      {announcement.urgent && (
+                      <h3>{a.title}</h3>
+                      {a.urgent && (
                         <span css={badgeStyles} className="urgent">
                           Urgent
                         </span>
                       )}
                     </div>
-                    <p className="message">{announcement.message}</p>
-                    <p className="date">{announcement.date}</p>
-                  </div>
-                  <div className="icon">💬</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Two Column Layout */}
-        <div css={gridStyles} className="cols-2">
-          {/* Sermons */}
-          <section css={sectionStyles} className="left-align" id="sermons">
-            <h2>Recent Sermons</h2>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "16px",
-              }}
-            >
-              {recentSermons.map((sermon, index) => (
-                <div key={index} css={cardStyles}>
-                  <div css={sermonCardStyles}>
-                    <div className="header">
-                      <span css={badgeStyles} className="secondary">
-                        {sermon.series}
-                      </span>
-                      <span className="duration">{sermon.duration}</span>
-                    </div>
-                    <h3 className="title">{sermon.title}</h3>
-                    <p className="speaker">{sermon.speaker}</p>
-                    <p className="date">{sermon.date}</p>
-                    <div className="actions">
-                      <button css={buttonStyles} className="outline">
-                        ▶️ Play
-                      </button>
-                      <button css={buttonStyles} className="outline">
-                        ⬇️ Download
-                      </button>
-                      <button css={buttonStyles} className="outline">
-                        📻 Stream
-                      </button>
-                    </div>
+                    <p className="message">{a.message}</p>
+                    <p className="date">{a.date}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </section>
+            {announcements.length > 3 && (
+              <button
+                css={viewMoreButton}
+                onClick={() => setShowAllAnnouncements(!showAllAnnouncements)}
+              >
+                {showAllAnnouncements ? "View Less" : "View More"}
+              </button>
+            )}
+          </div>
 
           {/* Events */}
-          <section css={sectionStyles} className="left-align" id="events">
-            <h2>Upcoming Events</h2>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "16px",
-              }}
-            >
-              {upcomingEvents.map((event, index) => (
-                <div key={index} css={cardStyles}>
-                  <div css={eventCardStyles}>
+          <div>
+            <h3 style={{ marginBottom: "16px" }}>Events</h3>
+            <div css={cardGrid}>
+              {(showAllEvents
+                ? upcomingEvents
+                : upcomingEvents.slice(0, 3)
+              ).map((e, idx) => (
+                <div key={idx} css={cardStyles}>
+                  <div css={announcementStyles}>
                     <div className="header">
                       <span css={badgeStyles} className="outline">
-                        {event.type}
+                        {e.type}
                       </span>
-                      <div className="icon">📅</div>
                     </div>
-                    <h3 className="title">{event.title}</h3>
-                    <div className="details">
-                      <div className="detail">
-                        <div className="icon">📅</div>
-                        <span>{event.date}</span>
-                      </div>
-                      <div className="detail">
-                        <div className="icon">🕐</div>
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="detail">
-                        <div className="icon">📍</div>
-                        <span>{event.location}</span>
-                      </div>
-                    </div>
+                    <h3>{e.title}</h3>
+                    <p className="message">
+                      {e.date} | {e.time} | {e.location}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
-          </section>
-        </div>
-
-        {/* Departments/Ministries */}
-        <section css={sectionStyles} id="departments">
-          <h2>Our Ministries</h2>
-          <div css={gridStyles} className="cols-3">
-            {departments.map((dept, index) => (
-              <div key={index} css={cardStyles}>
-                <div css={ministryCardStyles}>
-                  <div className="header">
-                    <div className="icon">{dept.icon}</div>
-                    <h3>{dept.name}</h3>
-                  </div>
-                  <p className="description">{dept.description}</p>
-                  <div className="contacts">
-                    <div className="contact">
-                      <div className="icon">👤</div>
-                      <span>{dept.leader}</span>
-                    </div>
-                    <div className="contact">
-                      <div className="icon">✉️</div>
-                      <span>{dept.contact}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {upcomingEvents.length > 3 && (
+              <button
+                css={viewMoreButton}
+                onClick={() => setShowAllEvents(!showAllEvents)}
+              >
+                {showAllEvents ? "View Less" : "View More"}
+              </button>
+            )}
           </div>
         </section>
 
-        {/* Giving Section */}
-        <section css={sectionStyles} id="giving">
-          <div css={[ctaStyles, { marginBottom: 0 }]} className="giving">
-            <div className="icon">💰</div>
-            <h2>Support Our Ministry</h2>
-            <p>
-              Your generous giving helps us reach more people with the Gospel
-              and serve our community.
-            </p>
-            <div className="buttons">
-              <button css={buttonStyles} className="secondary large">
-                Give Online
-              </button>
-              <button
-                css={[
-                  buttonStyles,
-                  css`
-                    background-color: transparent;
-                    border: 1px solid white;
-                    color: white;
+        {/* Churches & Sermons */}
+        <section css={sectionStyles} id="churches-sermons">
+          <h2>Churches & Sermons</h2>
 
-                    &:hover {
-                      background-color: white;
-                      color: #059669;
-                    }
-                  `,
-                ]}
-                className="large"
-              >
-                Other Ways to Give
-              </button>
+          {/* Sermons */}
+          <div style={{ marginBottom: "32px" }}>
+            <h3 style={{ marginBottom: "16px" }}>Sermons</h3>
+            <div css={cardGrid}>
+              {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
+                (s, idx) => (
+                  <div key={idx} css={cardStyles}>
+                    <div css={sermonCardStyles}>
+                      <div className="header">{s.duration}</div>
+                      <h3 className="title">{s.title}</h3>
+                      <p className="speaker">{s.speaker}</p>
+                      <p className="date">{s.date}</p>
+                    </div>
+                  </div>
+                )
+              )}
             </div>
+            {recentSermons.length > 3 && (
+              <button
+                css={viewMoreButton}
+                onClick={() => setShowAllSermons(!showAllSermons)}
+              >
+                {showAllSermons ? "View Less" : "View More"}
+              </button>
+            )}
+          </div>
+
+          {/* Ministries */}
+          <div>
+            <h3 style={{ marginBottom: "16px" }}>Ministries</h3>
+            <div css={cardGrid}>
+              {(showAllDepartments ? departments : departments.slice(0, 3)).map(
+                (d, idx) => (
+                  <div key={idx} css={cardStyles}>
+                    <div css={ministryCardStyles}>
+                      <div className="header">
+                        <div className="icon">{d.icon}</div>
+                        <h3>{d.name}</h3>
+                      </div>
+                      <p className="description">{d.description}</p>
+                      <div className="contacts">
+                        <div className="contact">
+                          <strong>Leader:</strong> {d.leader}
+                        </div>
+                        <div className="contact">
+                          <strong>Email:</strong> {d.contact}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+            {departments.length > 3 && (
+              <button
+                css={viewMoreButton}
+                onClick={() => setShowAllDepartments(!showAllDepartments)}
+              >
+                {showAllDepartments ? "View Less" : "View More"}
+              </button>
+            )}
           </div>
         </section>
       </main>
