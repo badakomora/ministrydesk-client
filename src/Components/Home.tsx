@@ -11,6 +11,10 @@ const globalStyles = css`
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
     color: #333;
@@ -409,24 +413,100 @@ export const Home = () => {
 
   // Sample Data with Church Names
   const announcements = [
-    { title: "Christmas Food Drive", message: "Help us bless families in need this Christmas.", date: "Dec 10, 2024", urgent: false, church: "PAG Nairobi" },
-    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5, 2024", urgent: true, church: "PAG Westlands" },
-    { title: "New Member Orientation", message: "Join Jan 7th at 2 PM for new member orientation.", date: "Nov 28, 2024", urgent: false, church: "PAG Karen" },
-    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25, 2024", urgent: false, church: "PAG Nairobi" },
+    {
+      title: "Christmas Food Drive",
+      message: "Help us bless families in need this Christmas.",
+      date: "Dec 10, 2024",
+      urgent: false,
+      church: "PAG Nairobi",
+    },
+    {
+      title: "Church Office Holiday Hours",
+      message: "Closed Dec 23-26 and Jan 1.",
+      date: "Dec 5, 2024",
+      urgent: true,
+      church: "PAG Westlands",
+    },
+    {
+      title: "New Member Orientation",
+      message: "Join Jan 7th at 2 PM for new member orientation.",
+      date: "Nov 28, 2024",
+      urgent: false,
+      church: "PAG Karen",
+    },
+    {
+      title: "Weekly Newsletter",
+      message: "Subscribe to stay updated.",
+      date: "Nov 25, 2024",
+      urgent: false,
+      church: "PAG Nairobi",
+    },
   ];
 
   const recentSermons = [
-    { title: "Walking in Faith", speaker: "Pastor Peter", date: "Dec 15, 2024", duration: "45 min", church: "PAG Nairobi" },
-    { title: "Power of Prayer", speaker: "Pastor Everlyne", date: "Dec 8, 2024", duration: "38 min", church: "PAG Westlands" },
-    { title: "God's Grace", speaker: "Pastor Mike", date: "Dec 1, 2024", duration: "42 min", church: "PAG Karen" },
-    { title: "Faith & Patience", speaker: "Pastor John", date: "Nov 24, 2024", duration: "50 min", church: "PAG Nairobi" },
+    {
+      title: "Walking in Faith",
+      speaker: "Pastor Peter",
+      date: "Dec 15, 2024",
+      duration: "45 min",
+      church: "PAG Nairobi",
+    },
+    {
+      title: "Power of Prayer",
+      speaker: "Pastor Everlyne",
+      date: "Dec 8, 2024",
+      duration: "38 min",
+      church: "PAG Westlands",
+    },
+    {
+      title: "God's Grace",
+      speaker: "Pastor Mike",
+      date: "Dec 1, 2024",
+      duration: "42 min",
+      church: "PAG Karen",
+    },
+    {
+      title: "Faith & Patience",
+      speaker: "Pastor John",
+      date: "Nov 24, 2024",
+      duration: "50 min",
+      church: "PAG Nairobi",
+    },
   ];
 
   const departments = [
-    { name: "Worship", description: "Leading in worship", icon: "🎵", leader: "Sarah Johnson", contact: "worship@pag.org", church: "PAG Nairobi" },
-    { name: "Youth", description: "Youth programs", icon: "👥", leader: "Mike Chen", contact: "youth@pag.org", church: "PAG Westlands" },
-    { name: "Children", description: "Children ministry", icon: "❤️", leader: "Mary Rodriguez", contact: "children@pag.org", church: "PAG Karen" },
-    { name: "Outreach", description: "Community service", icon: "🏢", leader: "James Wilson", contact: "outreach@pag.org", church: "PAG Nairobi" },
+    {
+      name: "Worship",
+      description: "Leading in worship",
+      icon: "🎵",
+      leader: "Sarah Johnson",
+      contact: "worship@pag.org",
+      church: "PAG Nairobi",
+    },
+    {
+      name: "Youth",
+      description: "Youth programs",
+      icon: "👥",
+      leader: "Mike Chen",
+      contact: "youth@pag.org",
+      church: "PAG Westlands",
+    },
+    {
+      name: "Children",
+      description: "Children ministry",
+      icon: "❤️",
+      leader: "Mary Rodriguez",
+      contact: "children@pag.org",
+      church: "PAG Karen",
+    },
+    {
+      name: "Outreach",
+      description: "Community service",
+      icon: "🏢",
+      leader: "James Wilson",
+      contact: "outreach@pag.org",
+      church: "PAG Nairobi",
+    },
   ];
 
   return (
@@ -441,10 +521,11 @@ export const Home = () => {
 
           {/* Desktop Nav */}
           <nav css={navStyles}>
+            <a href="#home">Home</a>
             <a href="#news-events">News & Events</a>
             <a href="#churches-sermons">Churches & Sermons</a>
-            <a href="#giving">Give</a>
-            <a href="#contact">My PAG</a>
+            <a href="#ministry-programs">Ministry Programs</a>
+            <a href="#account">My PAG</a>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -490,22 +571,34 @@ export const Home = () => {
 
         {/* Mobile Menu */}
         <nav css={mobileNavStyles(isMobileMenuOpen)}>
-          <a href="#news-events" onClick={() => setIsMobileMenuOpen(false)}>News & Events</a>
-          <a href="#churches-sermons" onClick={() => setIsMobileMenuOpen(false)}>Churches & Sermons</a>
-          <a href="#giving" onClick={() => setIsMobileMenuOpen(false)}>Give</a>
-          <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>My PAG</a>
+          <a href="#news-events" onClick={() => setIsMobileMenuOpen(false)}>
+            News & Events
+          </a>
+          <a
+            href="#churches-sermons"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Churches & Sermons
+          </a>
+          <a href="#ministry-programs" onClick={() => setIsMobileMenuOpen(false)}>
+            Ministry Programs
+          </a>
+          <a href="#account" onClick={() => setIsMobileMenuOpen(false)}>
+            My PAG
+          </a>
         </nav>
       </header>
 
       {/* Main */}
       <main css={mainStyles}>
         {/* Hero */}
-        <section css={heroStyles}>
+        <section css={heroStyles} id="home">
           <h1>
             Welcome to <span className="highlight">PAG Family</span>
           </h1>
           <p>
-            Access all P.A.G church resources, sermons, events, and ministry info. Stay connected with the PAG family.
+            Access all P.A.G church resources, sermons, events, and ministry
+            info. Stay connected with the PAG family.
           </p>
         </section>
 
@@ -515,13 +608,20 @@ export const Home = () => {
           <div style={{ marginBottom: "32px" }}>
             <h3 style={{ marginBottom: "16px" }}>News</h3>
             <div css={cardGrid}>
-              {(showAllAnnouncements ? announcements : announcements.slice(0, 3)).map((a, idx) => (
+              {(showAllAnnouncements
+                ? announcements
+                : announcements.slice(0, 3)
+              ).map((a, idx) => (
                 <div key={idx} css={[cardStyles, a.urgent && urgentCardStyles]}>
                   <div css={announcementStyles}>
                     <p className="church">{a.church}</p>
                     <div className="header">
                       <h3>{a.title}</h3>
-                      {a.urgent && <span css={badgeStyles} className="urgent">Urgent</span>}
+                      {a.urgent && (
+                        <span css={badgeStyles} className="urgent">
+                          Urgent
+                        </span>
+                      )}
                     </div>
                     <p className="message">{a.message}</p>
                     <p className="date">{a.date}</p>
@@ -530,7 +630,10 @@ export const Home = () => {
               ))}
             </div>
             {announcements.length > 3 && (
-              <button css={viewMoreButton} onClick={() => setShowAllAnnouncements(!showAllAnnouncements)}>
+              <button
+                css={viewMoreButton}
+                onClick={() => setShowAllAnnouncements(!showAllAnnouncements)}
+              >
                 {showAllAnnouncements ? "View Less" : "View More"}
               </button>
             )}
@@ -542,20 +645,25 @@ export const Home = () => {
           <h2>Churches & Sermons</h2>
           <div style={{ marginBottom: "32px" }}>
             <div css={cardGrid}>
-              {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map((s, idx) => (
-                <div key={idx} css={cardStyles}>
-                  <div css={sermonCardStyles}>
-                    <p className="church">{s.church}</p>
-                    <div className="header">{s.duration}</div>
-                    <h3 className="title">{s.title}</h3>
-                    <p className="speaker">{s.speaker}</p>
-                    <p className="date">{s.date}</p>
+              {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
+                (s, idx) => (
+                  <div key={idx} css={cardStyles}>
+                    <div css={sermonCardStyles}>
+                      <p className="church">{s.church}</p>
+                      <div className="header">{s.duration}</div>
+                      <h3 className="title">{s.title}</h3>
+                      <p className="speaker">{s.speaker}</p>
+                      <p className="date">{s.date}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
             {recentSermons.length > 3 && (
-              <button css={viewMoreButton} onClick={() => setShowAllSermons(!showAllSermons)}>
+              <button
+                css={viewMoreButton}
+                onClick={() => setShowAllSermons(!showAllSermons)}
+              >
                 {showAllSermons ? "View Less" : "View More"}
               </button>
             )}
@@ -565,42 +673,47 @@ export const Home = () => {
         {/* Ministry Programs */}
         <section css={sectionStyles} id="ministry-programs">
           <h2>Ministry Programs</h2>
-          <div>
-            <div css={cardGrid}>
-              {(showAllDepartments ? departments : departments.slice(0, 3)).map((d, idx) => (
+          <div css={cardGrid}>
+            {(showAllDepartments ? departments : departments.slice(0, 3)).map(
+              (d, idx) => (
                 <div key={idx} css={cardStyles}>
                   <div css={ministryCardStyles}>
+                    <p className="church">{d.church}</p>
                     <div className="header">
                       <div className="icon">{d.icon}</div>
                       <h3>{d.name}</h3>
                     </div>
                     <p className="description">{d.description}</p>
                     <div className="contacts">
-                      <p className="contact">{d.leader}</p>
-                      <p className="contact">{d.contact}</p>
-                      <p className="contact">{d.church}</p>
+                      <p className="contact">
+                        <strong>Leader:</strong> {d.leader}
+                      </p>
+                      <p className="contact">
+                        <strong>Contact:</strong> {d.contact}
+                      </p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-            {departments.length > 3 && (
-              <button css={viewMoreButton} onClick={() => setShowAllDepartments(!showAllDepartments)}>
-                {showAllDepartments ? "View Less" : "View More"}
-              </button>
+              )
             )}
           </div>
+          {departments.length > 3 && (
+            <button
+              css={viewMoreButton}
+              onClick={() => setShowAllDepartments(!showAllDepartments)}
+            >
+              {showAllDepartments ? "View Less" : "View More"}
+            </button>
+          )}
         </section>
       </main>
 
       {/* Footer */}
-      <footer css={footerStyles}>
-        <p>© {new Date().getFullYear()} PAG Family. All rights reserved.</p>
+      <footer css={footerStyles} id="account">
         <p>
-          <a href="#news-events">News & Events</a> | 
-          <a href="#churches-sermons">Churches & Sermons</a> | 
-          <a href="#ministry-programs">Ministry Programs</a> | 
-          <a href="#contact">My PAG</a>
+          © 2024 Pentecostal Assemblies of God. All rights reserved.
+          <br />
+          <a href=".">Privacy Policy</a> | <a href=".">Terms of Service</a>
         </p>
       </footer>
     </div>
