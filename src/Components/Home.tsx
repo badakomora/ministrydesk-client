@@ -93,6 +93,20 @@ const navStyles = css`
   }
 `;
 
+const myPagTabStyles = css`
+  background-color: #2563eb;
+  color: white !important;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #1d4ed8;
+    color: white !important;
+  }
+`;
+
 const mobileNavStyles = (isOpen: boolean) => css`
   display: ${isOpen ? "flex" : "none"};
   flex-direction: column;
@@ -525,7 +539,9 @@ export const Home = () => {
             <a href="#news-events">News & Events</a>
             <a href="#churches-sermons">Churches & Sermons</a>
             <a href="#ministry-programs">Ministry Programs</a>
-            <a href="#account">My PAG</a>
+            <a href="#account" css={myPagTabStyles}>
+              My PAG{" "}
+            </a>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -580,10 +596,17 @@ export const Home = () => {
           >
             Churches & Sermons
           </a>
-          <a href="#ministry-programs" onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="#ministry-programs"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
             Ministry Programs
           </a>
-          <a href="#account" onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="#account"
+            css={myPagTabStyles}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
             My PAG
           </a>
         </nav>
@@ -650,10 +673,10 @@ export const Home = () => {
                   <div key={idx} css={cardStyles}>
                     <div css={sermonCardStyles}>
                       <p className="church">{s.church}</p>
-                      <div className="header">{s.duration}</div>
+                      <p className="header">{s.date}</p>
                       <h3 className="title">{s.title}</h3>
-                      <p className="speaker">{s.speaker}</p>
-                      <p className="date">{s.date}</p>
+                      <p className="speaker">By {s.speaker}</p>
+                      <p className="date">{s.duration}</p>
                     </div>
                   </div>
                 )
@@ -685,12 +708,8 @@ export const Home = () => {
                     </div>
                     <p className="description">{d.description}</p>
                     <div className="contacts">
-                      <p className="contact">
-                        <strong>Leader:</strong> {d.leader}
-                      </p>
-                      <p className="contact">
-                        <strong>Contact:</strong> {d.contact}
-                      </p>
+                      <p className="contact">Leader: {d.leader}</p>
+                      <p className="contact">Contact: {d.contact}</p>
                     </div>
                   </div>
                 </div>
@@ -709,11 +728,13 @@ export const Home = () => {
       </main>
 
       {/* Footer */}
-      <footer css={footerStyles} id="account">
+      <footer css={footerStyles}>
         <p>
-          © 2024 Pentecostal Assemblies of God. All rights reserved.
-          <br />
-          <a href=".">Privacy Policy</a> | <a href=".">Terms of Service</a>
+          &copy; {new Date().getFullYear()} PAG Family. All rights reserved.
+        </p>
+        <p>
+          <a href="#privacy">Privacy Policy</a> |{" "}
+          <a href="#terms">Terms of Service</a>
         </p>
       </footer>
     </div>
