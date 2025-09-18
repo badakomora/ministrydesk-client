@@ -286,7 +286,6 @@ const viewMoreButton = css`
 // -------------------- Home Component --------------------
 export const Home = () => {
   const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
-  const [showAllEvents, setShowAllEvents] = useState(false);
   const [showAllSermons, setShowAllSermons] = useState(false);
   const [showAllDepartments, setShowAllDepartments] = useState(false);
 
@@ -318,36 +317,6 @@ export const Home = () => {
     },
   ];
 
-  const upcomingEvents = [
-    {
-      title: "Christmas Eve Service",
-      date: "Dec 24, 2024",
-      time: "7 PM",
-      location: "Main Sanctuary",
-      type: "Special Service",
-    },
-    {
-      title: "New Year Prayer Night",
-      date: "Dec 31, 2024",
-      time: "10 PM - 12:30 AM",
-      location: "Fellowship Hall",
-      type: "Prayer Meeting",
-    },
-    {
-      title: "Youth Winter Retreat",
-      date: "Jan 12-14, 2025",
-      time: "Fri 6 PM - Sun 4 PM",
-      location: "Mountain View Camp",
-      type: "Retreat",
-    },
-    {
-      title: "Community Outreach",
-      date: "Jan 20, 2025",
-      time: "9 AM - 3 PM",
-      location: "Local Park",
-      type: "Outreach",
-    },
-  ];
 
   const recentSermons = [
     {
@@ -433,8 +402,8 @@ export const Home = () => {
             Welcome to <span className="highlight">PAG Family</span>
           </h1>
           <p>
-            Access church resources, sermons, events, and ministry info. Stay
-            connected with the PAG family.
+            Access all P.A.G church resources, sermons, events, and ministry
+            info. Stay connected with the PAG family.
           </p>
         </section>
 
@@ -476,38 +445,6 @@ export const Home = () => {
             )}
           </div>
 
-          {/* Events */}
-          <div>
-            <h3 style={{ marginBottom: "16px" }}>Events</h3>
-            <div css={cardGrid}>
-              {(showAllEvents
-                ? upcomingEvents
-                : upcomingEvents.slice(0, 3)
-              ).map((e, idx) => (
-                <div key={idx} css={cardStyles}>
-                  <div css={announcementStyles}>
-                    <div className="header">
-                      <span css={badgeStyles} className="outline">
-                        {e.type}
-                      </span>
-                    </div>
-                    <h3>{e.title}</h3>
-                    <p className="message">
-                      {e.date} | {e.time} | {e.location}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {upcomingEvents.length > 3 && (
-              <button
-                css={viewMoreButton}
-                onClick={() => setShowAllEvents(!showAllEvents)}
-              >
-                {showAllEvents ? "View Less" : "View More"}
-              </button>
-            )}
-          </div>
         </section>
 
         {/* Churches & Sermons */}
@@ -516,7 +453,6 @@ export const Home = () => {
 
           {/* Sermons */}
           <div style={{ marginBottom: "32px" }}>
-            <h3 style={{ marginBottom: "16px" }}>Sermons</h3>
             <div css={cardGrid}>
               {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
                 (s, idx) => (
@@ -540,10 +476,13 @@ export const Home = () => {
               </button>
             )}
           </div>
+        </section>
+
+        <section css={sectionStyles} id="churches-sermons">
+          <h2>Ministry Programs</h2>
 
           {/* Ministries */}
           <div>
-            <h3 style={{ marginBottom: "16px" }}>Ministries</h3>
             <div css={cardGrid}>
               {(showAllDepartments ? departments : departments.slice(0, 3)).map(
                 (d, idx) => (
