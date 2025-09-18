@@ -244,7 +244,7 @@ const announcementStyles = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;  /* allow wrapping on small screens */
+    flex-wrap: wrap;
     margin-bottom: 8px;
 
     h3 {
@@ -255,8 +255,8 @@ const announcementStyles = css`
     }
 
     .urgent {
-      margin-top: 4px; /* small spacing if wrapped */
-      font-size: 11px; /* slightly smaller on mobile */
+      margin-top: 4px;
+      font-size: 11px;
       padding: 2px 6px;
     }
 
@@ -279,7 +279,6 @@ const announcementStyles = css`
     color: #9ca3af;
   }
 `;
-
 
 const sermonCardStyles = css`
   .church {
@@ -361,7 +360,6 @@ const ministryCardStyles = css`
   }
 `;
 
-
 const viewMoreButton = css`
   margin-top: 16px;
   background-color: #2563eb;
@@ -378,6 +376,30 @@ const viewMoreButton = css`
   }
 `;
 
+// -------------------- Footer --------------------
+const footerStyles = css`
+  background-color: #111827;
+  color: #f9fafb;
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 14px;
+
+  a {
+    color: #2563eb;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #1d4ed8;
+    }
+  }
+
+  p {
+    margin: 8px 0 0 0;
+  }
+`;
+
 // -------------------- Home Component --------------------
 export const Home = () => {
   const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
@@ -387,34 +409,10 @@ export const Home = () => {
 
   // Sample Data with Church Names
   const announcements = [
-    {
-      title: "Christmas Food Drive",
-      message: "Help us bless families in need this Christmas.",
-      date: "Dec 10, 2024",
-      urgent: false,
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Church Office Holiday Hours",
-      message: "Closed Dec 23-26 and Jan 1.",
-      date: "Dec 5, 2024",
-      urgent: true,
-      church: "PAG Westlands",
-    },
-    {
-      title: "New Member Orientation",
-      message: "Join Jan 7th at 2 PM for new member orientation.",
-      date: "Nov 28, 2024",
-      urgent: false,
-      church: "PAG Karen",
-    },
-    {
-      title: "Weekly Newsletter",
-      message: "Subscribe to stay updated.",
-      date: "Nov 25, 2024",
-      urgent: false,
-      church: "PAG Nairobi",
-    },
+    { title: "Christmas Food Drive", message: "Help us bless families in need this Christmas.", date: "Dec 10, 2024", urgent: false, church: "PAG Nairobi" },
+    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5, 2024", urgent: true, church: "PAG Westlands" },
+    { title: "New Member Orientation", message: "Join Jan 7th at 2 PM for new member orientation.", date: "Nov 28, 2024", urgent: false, church: "PAG Karen" },
+    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25, 2024", urgent: false, church: "PAG Nairobi" },
   ];
 
   const recentSermons = [
@@ -564,6 +562,7 @@ export const Home = () => {
           </div>
         </section>
 
+        {/* Ministry Programs */}
         <section css={sectionStyles} id="ministry-programs">
           <h2>Ministry Programs</h2>
           <div>
@@ -571,15 +570,15 @@ export const Home = () => {
               {(showAllDepartments ? departments : departments.slice(0, 3)).map((d, idx) => (
                 <div key={idx} css={cardStyles}>
                   <div css={ministryCardStyles}>
-                    <p className="church">{d.church}</p>
                     <div className="header">
                       <div className="icon">{d.icon}</div>
                       <h3>{d.name}</h3>
                     </div>
                     <p className="description">{d.description}</p>
                     <div className="contacts">
-                      <div className="contact"><strong>Leader:</strong> {d.leader}</div>
-                      <div className="contact"><strong>Email:</strong> {d.contact}</div>
+                      <p className="contact">{d.leader}</p>
+                      <p className="contact">{d.contact}</p>
+                      <p className="contact">{d.church}</p>
                     </div>
                   </div>
                 </div>
@@ -593,6 +592,17 @@ export const Home = () => {
           </div>
         </section>
       </main>
+
+      {/* Footer */}
+      <footer css={footerStyles}>
+        <p>© {new Date().getFullYear()} PAG Family. All rights reserved.</p>
+        <p>
+          <a href="#news-events">News & Events</a> | 
+          <a href="#churches-sermons">Churches & Sermons</a> | 
+          <a href="#ministry-programs">Ministry Programs</a> | 
+          <a href="#contact">My PAG</a>
+        </p>
+      </footer>
     </div>
   );
 };
