@@ -538,7 +538,7 @@ export const Home = () => {
             <a href="#home">Home</a>
             <a href="#news-events">News & Events</a>
             <a href="#churches-sermons">Churches & Sermons</a>
-            <a href="#ministry-programs">Ministry Programs</a>
+            <a href="#ministry-programs">Assembly Programs</a>
             <a href="#account" css={myPagTabStyles}>
               My PAG{" "}
             </a>
@@ -600,7 +600,7 @@ export const Home = () => {
             href="#ministry-programs"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            Ministry Programs
+            Assembly Programs
           </a>
           <a
             href="#account"
@@ -695,7 +695,7 @@ export const Home = () => {
 
         {/* Ministry Programs */}
         <section css={sectionStyles} id="ministry-programs">
-          <h2>Ministry Programs</h2>
+          <h2>Assembly Programs</h2>
           <div css={cardGrid}>
             {(showAllDepartments ? departments : departments.slice(0, 3)).map(
               (d, idx) => (
