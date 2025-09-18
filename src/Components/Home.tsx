@@ -16,13 +16,18 @@ const globalStyles = css`
     color: #333;
     min-height: 100vh;
   }
+
+  a {
+    text-decoration: none;
+  }
 `;
 
 // -------------------- Header --------------------
 const headerStyles = css`
   background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid #e5e7eb;
+  position: relative;
 `;
 
 const headerContentStyles = css`
@@ -32,7 +37,11 @@ const headerContentStyles = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px;
+  height: 56px;
+
+  @media (min-width: 768px) {
+    height: 64px;
+  }
 `;
 
 const logoStyles = css`
@@ -41,10 +50,10 @@ const logoStyles = css`
   gap: 12px;
 
   .icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     background-color: #2563eb;
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +63,7 @@ const logoStyles = css`
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: #111827;
   }
@@ -77,6 +86,31 @@ const navStyles = css`
         color: #2563eb;
       }
     }
+  }
+`;
+
+const mobileNavStyles = (isOpen: boolean) => css`
+  display: ${isOpen ? "flex" : "none"};
+  flex-direction: column;
+  gap: 16px;
+  position: absolute;
+  top: 56px;
+  right: 20px;
+  background-color: white;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+
+  a {
+    text-decoration: none;
+    color: #111827;
+    font-weight: 500;
+  }
+
+  @media (min-width: 768px) {
+    display: none;
   }
 `;
 
@@ -124,12 +158,23 @@ const sectionStyles = css`
     color: #111827;
     margin-bottom: 32px;
     text-align: center;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 60px;
+      height: 4px;
+      background-color: #2563eb;
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
   }
 `;
 
 const cardGrid = css`
   display: grid;
-  gap: 16px;
+  gap: 20px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
@@ -143,15 +188,15 @@ const cardGrid = css`
 // -------------------- Cards --------------------
 const cardStyles = css`
   background-color: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
   transition: all 0.3s;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -162,7 +207,7 @@ const urgentCardStyles = css`
 
 const badgeStyles = css`
   display: inline-block;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 9999px;
   font-size: 12px;
   font-weight: 600;
@@ -188,14 +233,44 @@ const announcementStyles = css`
   display: flex;
   flex-direction: column;
 
+  .church {
+    font-size: 12px;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
   .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;  /* allow wrapping on small screens */
     margin-bottom: 8px;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      margin-right: 8px;
+    }
+
+    .urgent {
+      margin-top: 4px; /* small spacing if wrapped */
+      font-size: 11px; /* slightly smaller on mobile */
+      padding: 2px 6px;
+    }
+
+    @media (min-width: 768px) {
+      .urgent {
+        margin-top: 0;
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+    }
   }
 
   .message {
-    color: #6b7280;
+    color: #4b5563;
     margin-bottom: 8px;
   }
 
@@ -205,7 +280,15 @@ const announcementStyles = css`
   }
 `;
 
+
 const sermonCardStyles = css`
+  .church {
+    font-size: 12px;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
   .header {
     font-size: 14px;
     color: #6b7280;
@@ -214,12 +297,13 @@ const sermonCardStyles = css`
 
   .title {
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    color: #111827;
   }
 
   .speaker {
     font-size: 14px;
-    color: #6b7280;
+    color: #4b5563;
     margin-bottom: 4px;
   }
 
@@ -230,6 +314,13 @@ const sermonCardStyles = css`
 `;
 
 const ministryCardStyles = css`
+  .church {
+    font-size: 12px;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
   .header {
     display: flex;
     align-items: center;
@@ -239,7 +330,7 @@ const ministryCardStyles = css`
     .icon {
       width: 40px;
       height: 40px;
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -250,12 +341,14 @@ const ministryCardStyles = css`
     h3 {
       font-weight: 600;
       margin: 0;
+      font-size: 16px;
+      color: #111827;
     }
   }
 
   .description {
     font-size: 14px;
-    color: #6b7280;
+    color: #4b5563;
     margin-bottom: 12px;
   }
 
@@ -263,9 +356,11 @@ const ministryCardStyles = css`
     font-size: 14px;
     .contact {
       margin-bottom: 4px;
+      color: #4b5563;
     }
   }
 `;
+
 
 const viewMoreButton = css`
   margin-top: 16px;
@@ -288,92 +383,52 @@ export const Home = () => {
   const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
   const [showAllSermons, setShowAllSermons] = useState(false);
   const [showAllDepartments, setShowAllDepartments] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Sample Data
+  // Sample Data with Church Names
   const announcements = [
     {
       title: "Christmas Food Drive",
       message: "Help us bless families in need this Christmas.",
       date: "Dec 10, 2024",
       urgent: false,
+      church: "PAG Nairobi",
     },
     {
       title: "Church Office Holiday Hours",
       message: "Closed Dec 23-26 and Jan 1.",
       date: "Dec 5, 2024",
       urgent: true,
+      church: "PAG Westlands",
     },
     {
       title: "New Member Orientation",
       message: "Join Jan 7th at 2 PM for new member orientation.",
       date: "Nov 28, 2024",
       urgent: false,
+      church: "PAG Karen",
     },
     {
       title: "Weekly Newsletter",
       message: "Subscribe to stay updated.",
       date: "Nov 25, 2024",
       urgent: false,
+      church: "PAG Nairobi",
     },
   ];
 
-
   const recentSermons = [
-    {
-      title: "Walking in Faith",
-      speaker: "Pastor Peter",
-      date: "Dec 15, 2024",
-      duration: "45 min",
-    },
-    {
-      title: "Power of Prayer",
-      speaker: "Pastor Everlyne",
-      date: "Dec 8, 2024",
-      duration: "38 min",
-    },
-    {
-      title: "God's Grace",
-      speaker: "Pastor Mike",
-      date: "Dec 1, 2024",
-      duration: "42 min",
-    },
-    {
-      title: "Faith & Patience",
-      speaker: "Pastor John",
-      date: "Nov 24, 2024",
-      duration: "50 min",
-    },
+    { title: "Walking in Faith", speaker: "Pastor Peter", date: "Dec 15, 2024", duration: "45 min", church: "PAG Nairobi" },
+    { title: "Power of Prayer", speaker: "Pastor Everlyne", date: "Dec 8, 2024", duration: "38 min", church: "PAG Westlands" },
+    { title: "God's Grace", speaker: "Pastor Mike", date: "Dec 1, 2024", duration: "42 min", church: "PAG Karen" },
+    { title: "Faith & Patience", speaker: "Pastor John", date: "Nov 24, 2024", duration: "50 min", church: "PAG Nairobi" },
   ];
 
   const departments = [
-    {
-      name: "Worship",
-      description: "Leading in worship",
-      icon: "🎵",
-      leader: "Sarah Johnson",
-      contact: "worship@pag.org",
-    },
-    {
-      name: "Youth",
-      description: "Youth programs",
-      icon: "👥",
-      leader: "Mike Chen",
-      contact: "youth@pag.org",
-    },
-    {
-      name: "Children",
-      description: "Children ministry",
-      icon: "❤️",
-      leader: "Mary Rodriguez",
-      contact: "children@pag.org",
-    },
-    {
-      name: "Outreach",
-      description: "Community service",
-      icon: "🏢",
-      leader: "James Wilson",
-      contact: "outreach@pag.org",
-    },
+    { name: "Worship", description: "Leading in worship", icon: "🎵", leader: "Sarah Johnson", contact: "worship@pag.org", church: "PAG Nairobi" },
+    { name: "Youth", description: "Youth programs", icon: "👥", leader: "Mike Chen", contact: "youth@pag.org", church: "PAG Westlands" },
+    { name: "Children", description: "Children ministry", icon: "❤️", leader: "Mary Rodriguez", contact: "children@pag.org", church: "PAG Karen" },
+    { name: "Outreach", description: "Community service", icon: "🏢", leader: "James Wilson", contact: "outreach@pag.org", church: "PAG Nairobi" },
   ];
 
   return (
@@ -385,13 +440,63 @@ export const Home = () => {
             <div className="icon">⛪</div>
             <h1>PAG Family</h1>
           </div>
+
+          {/* Desktop Nav */}
           <nav css={navStyles}>
             <a href="#news-events">News & Events</a>
             <a href="#churches-sermons">Churches & Sermons</a>
             <a href="#giving">Give</a>
             <a href="#contact">My PAG</a>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            css={css`
+              display: block;
+              background: none;
+              border: none;
+              cursor: pointer;
+              @media (min-width: 768px) {
+                display: none;
+              }
+
+              span {
+                display: block;
+                width: 24px;
+                height: 3px;
+                margin: 5px 0;
+                background-color: #111827;
+                transition: all 0.3s;
+              }
+
+              ${isMobileMenuOpen &&
+              `
+                span:nth-of-type(1) {
+                  transform: rotate(45deg) translate(5px, 5px);
+                }
+                span:nth-of-type(2) {
+                  opacity: 0;
+                }
+                span:nth-of-type(3) {
+                  transform: rotate(-45deg) translate(5px, -5px);
+                }
+              `}
+            `}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        <nav css={mobileNavStyles(isMobileMenuOpen)}>
+          <a href="#news-events" onClick={() => setIsMobileMenuOpen(false)}>News & Events</a>
+          <a href="#churches-sermons" onClick={() => setIsMobileMenuOpen(false)}>Churches & Sermons</a>
+          <a href="#giving" onClick={() => setIsMobileMenuOpen(false)}>Give</a>
+          <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>My PAG</a>
+        </nav>
       </header>
 
       {/* Main */}
@@ -402,32 +507,23 @@ export const Home = () => {
             Welcome to <span className="highlight">PAG Family</span>
           </h1>
           <p>
-            Access all P.A.G church resources, sermons, events, and ministry
-            info. Stay connected with the PAG family.
+            Access all P.A.G church resources, sermons, events, and ministry info. Stay connected with the PAG family.
           </p>
         </section>
 
         {/* News & Events */}
         <section css={sectionStyles} id="news-events">
           <h2>News & Events</h2>
-
-          {/* News */}
           <div style={{ marginBottom: "32px" }}>
             <h3 style={{ marginBottom: "16px" }}>News</h3>
             <div css={cardGrid}>
-              {(showAllAnnouncements
-                ? announcements
-                : announcements.slice(0, 3)
-              ).map((a, idx) => (
+              {(showAllAnnouncements ? announcements : announcements.slice(0, 3)).map((a, idx) => (
                 <div key={idx} css={[cardStyles, a.urgent && urgentCardStyles]}>
                   <div css={announcementStyles}>
+                    <p className="church">{a.church}</p>
                     <div className="header">
                       <h3>{a.title}</h3>
-                      {a.urgent && (
-                        <span css={badgeStyles} className="urgent">
-                          Urgent
-                        </span>
-                      )}
+                      {a.urgent && <span css={badgeStyles} className="urgent">Urgent</span>}
                     </div>
                     <p className="message">{a.message}</p>
                     <p className="date">{a.date}</p>
@@ -436,81 +532,61 @@ export const Home = () => {
               ))}
             </div>
             {announcements.length > 3 && (
-              <button
-                css={viewMoreButton}
-                onClick={() => setShowAllAnnouncements(!showAllAnnouncements)}
-              >
+              <button css={viewMoreButton} onClick={() => setShowAllAnnouncements(!showAllAnnouncements)}>
                 {showAllAnnouncements ? "View Less" : "View More"}
               </button>
             )}
           </div>
-
         </section>
 
         {/* Churches & Sermons */}
         <section css={sectionStyles} id="churches-sermons">
           <h2>Churches & Sermons</h2>
-
-          {/* Sermons */}
           <div style={{ marginBottom: "32px" }}>
             <div css={cardGrid}>
-              {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
-                (s, idx) => (
-                  <div key={idx} css={cardStyles}>
-                    <div css={sermonCardStyles}>
-                      <div className="header">{s.duration}</div>
-                      <h3 className="title">{s.title}</h3>
-                      <p className="speaker">{s.speaker}</p>
-                      <p className="date">{s.date}</p>
-                    </div>
+              {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map((s, idx) => (
+                <div key={idx} css={cardStyles}>
+                  <div css={sermonCardStyles}>
+                    <p className="church">{s.church}</p>
+                    <div className="header">{s.duration}</div>
+                    <h3 className="title">{s.title}</h3>
+                    <p className="speaker">{s.speaker}</p>
+                    <p className="date">{s.date}</p>
                   </div>
-                )
-              )}
+                </div>
+              ))}
             </div>
             {recentSermons.length > 3 && (
-              <button
-                css={viewMoreButton}
-                onClick={() => setShowAllSermons(!showAllSermons)}
-              >
+              <button css={viewMoreButton} onClick={() => setShowAllSermons(!showAllSermons)}>
                 {showAllSermons ? "View Less" : "View More"}
               </button>
             )}
           </div>
         </section>
 
-        <section css={sectionStyles} id="churches-sermons">
+        <section css={sectionStyles} id="ministry-programs">
           <h2>Ministry Programs</h2>
-
-          {/* Ministries */}
           <div>
             <div css={cardGrid}>
-              {(showAllDepartments ? departments : departments.slice(0, 3)).map(
-                (d, idx) => (
-                  <div key={idx} css={cardStyles}>
-                    <div css={ministryCardStyles}>
-                      <div className="header">
-                        <div className="icon">{d.icon}</div>
-                        <h3>{d.name}</h3>
-                      </div>
-                      <p className="description">{d.description}</p>
-                      <div className="contacts">
-                        <div className="contact">
-                          <strong>Leader:</strong> {d.leader}
-                        </div>
-                        <div className="contact">
-                          <strong>Email:</strong> {d.contact}
-                        </div>
-                      </div>
+              {(showAllDepartments ? departments : departments.slice(0, 3)).map((d, idx) => (
+                <div key={idx} css={cardStyles}>
+                  <div css={ministryCardStyles}>
+                    <p className="church">{d.church}</p>
+                    <div className="header">
+                      <div className="icon">{d.icon}</div>
+                      <h3>{d.name}</h3>
+                    </div>
+                    <p className="description">{d.description}</p>
+                    <div className="contacts">
+                      <div className="contact"><strong>Leader:</strong> {d.leader}</div>
+                      <div className="contact"><strong>Email:</strong> {d.contact}</div>
                     </div>
                   </div>
-                )
-              )}
+                </div>
+              ))}
             </div>
             {departments.length > 3 && (
-              <button
-                css={viewMoreButton}
-                onClick={() => setShowAllDepartments(!showAllDepartments)}
-              >
+              <button css={viewMoreButton} onClick={() => setShowAllDepartments(!showAllDepartments)}>
                 {showAllDepartments ? "View Less" : "View More"}
               </button>
             )}
