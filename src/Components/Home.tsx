@@ -1,421 +1,393 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { useState } from "react";
+import React, { useState } from "react";
+import { css, keyframes } from "@emotion/react";
+
+// -------------------- Animations --------------------
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+`;
 
 // -------------------- Global Styles --------------------
 const globalStyles = css`
   * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
-
-  html {
-    scroll-behavior: smooth;
+  html,
+  body,
+  #root {
+    height: 100%;
   }
-
   body {
-    background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
-    color: #333;
-    min-height: 100vh;
+    margin: 0;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+      Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #f8fbff 0%, #f1f6ff 50%, #eef2ff 100%);
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.45;
   }
-
   a {
-    text-decoration: none;
+    color: inherit;
   }
 `;
 
 // -------------------- Header --------------------
 const headerStyles = css`
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid #e5e7eb;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.03);
 `;
 
 const headerContentStyles = css`
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 12px 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 56px;
-
-  @media (min-width: 768px) {
-    height: 64px;
-  }
+  gap: 16px;
+  justify-content: space-between;
 `;
 
 const logoStyles = css`
   display: flex;
   align-items: center;
   gap: 12px;
-
-  .icon {
-    width: 36px;
-    height: 36px;
-    background-color: #2563eb;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
     color: white;
-    font-weight: bold;
-    font-size: 18px;
-  }
-
-  h1 {
-    font-size: 22px;
     font-weight: 700;
-    color: #111827;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+  }
+  h1 {
+    font-size: 18px;
+    margin: 0;
+    letter-spacing: -0.2px;
+  }
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: #475569;
   }
 `;
 
 const navStyles = css`
   display: none;
+  gap: 22px;
+  align-items: center;
 
   @media (min-width: 768px) {
     display: flex;
-    gap: 32px;
+  }
 
-    a {
-      text-decoration: none;
-      color: #6b7280;
-      font-weight: 500;
-      transition: color 0.2s;
+  a {
+    color: #475569;
+    font-weight: 600;
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: all 180ms ease;
+    text-decoration: none;
+  }
 
-      &:hover {
-        color: #2563eb;
-      }
-    }
+  a:hover {
+    background: rgba(37, 99, 235, 0.06);
+    color: #0f172a;
   }
 `;
 
 const myPagTabStyles = css`
-  background-color: #2563eb;
-  color: white !important;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #1d4ed8;
-    color: white !important;
-  }
+  display: inline-block;
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  color: #fff !important;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.14);
 `;
 
-const mobileNavStyles = (isOpen: boolean) => css`
-  display: ${isOpen ? "flex" : "none"};
-  flex-direction: column;
-  gap: 16px;
-  position: absolute;
-  top: 56px;
-  right: 20px;
-  background-color: white;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  z-index: 1000;
-
-  a {
-    text-decoration: none;
-    color: #111827;
-    font-weight: 500;
-  }
-
+const mobileMenuBtn = (open: boolean) => css`
+  display: inline-grid;
+  grid-template-rows: repeat(3, 4px);
+  gap: 6px;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-items: center;
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  background: ${open ? "rgba(15,23,42,0.06)" : "transparent"};
+  cursor: pointer;
   @media (min-width: 768px) {
     display: none;
   }
 `;
 
-// -------------------- Layout --------------------
+const mobileNavStyles = (isOpen: boolean) => css`
+  display: ${isOpen ? "flex" : "none"};
+  position: absolute;
+  right: 18px;
+  top: 72px;
+  width: calc(100% - 36px);
+  max-width: 380px;
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.12);
+  border: 1px solid rgba(2, 6, 23, 0.04);
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+// -------------------- Layout & Hero --------------------
 const mainStyles = css`
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 48px 20px;
+  max-width: 1200px;
+  margin: 28px auto 80px;
+  padding: 0 20px;
 `;
 
 const heroStyles = css`
-  text-align: center;
-  margin-bottom: 64px;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 54px 28px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    rgba(99, 102, 241, 0.14),
+    rgba(37, 99, 235, 0.06)
+  );
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.06);
+
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 420px;
+    padding: 64px;
+  }
+
+  .content {
+    z-index: 2;
+  }
 
   h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 24px;
-
-    @media (min-width: 768px) {
-      font-size: 3rem;
-    }
-
-    .highlight {
-      color: #2563eb;
-    }
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    line-height: 1.05;
+    color: #071133;
   }
 
   p {
-    font-size: 1.25rem;
-    color: #6b7280;
-    max-width: 768px;
-    margin: 0 auto 32px;
-    line-height: 1.6;
+    margin: 0 0 18px 0;
+    color: #334155;
+    font-size: 16px;
+  }
+
+  .ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .visual {
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.55),
+      rgba(255, 255, 255, 0.25)
+    );
+    box-shadow: inset 0 -6px 30px rgba(15, 23, 42, 0.02);
+    animation: ${float} 6s ease-in-out infinite;
+  }
+
+  .hero-card {
+    width: 100%;
+    max-width: 360px;
+    text-align: left;
   }
 `;
 
+const ctaPrimary = css`
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+`;
+
+const ctaGhost = css`
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+`;
+
+// -------------------- Sections & Cards --------------------
 const sectionStyles = css`
-  margin-bottom: 64px;
+  margin-top: 42px;
+`;
 
+const sectionHeader = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
   h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 32px;
-    text-align: center;
-    position: relative;
-
-    &::after {
-      content: "";
-      display: block;
-      width: 60px;
-      height: 4px;
-      background-color: #2563eb;
-      margin: 12px auto 0;
-      border-radius: 2px;
-    }
+    margin: 0;
+    font-size: 20px;
+  }
+  .sub {
+    color: #64748b;
+    font-size: 14px;
   }
 `;
 
 const cardGrid = css`
   display: grid;
-  gap: 20px;
-
-  @media (min-width: 768px) {
+  gap: 18px;
+  grid-template-columns: repeat(1, 1fr);
+  @media (min-width: 720px) {
     grid-template-columns: repeat(2, 1fr);
   }
-
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
   }
 `;
 
-// -------------------- Cards --------------------
 const cardStyles = css`
-  background-color: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  transition: all 0.3s;
-
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid rgba(2, 6, 23, 0.04);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
+  transition: transform 220ms ease, box-shadow 220ms ease;
   &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 26px 60px rgba(2, 6, 23, 0.08);
   }
 `;
 
 const urgentCardStyles = css`
-  border: 1px solid #fed7aa;
-  background-color: #fff7ed;
+  background: linear-gradient(180deg, #fffaf0, #fff6ed);
+  border: 1px solid rgba(249, 115, 22, 0.12);
 `;
 
 const badgeStyles = css`
   display: inline-block;
-  padding: 4px 10px;
-  border-radius: 9999px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
   font-size: 12px;
-  font-weight: 600;
-
-  &.secondary {
-    background-color: #f3f4f6;
-    color: #374151;
-  }
-
-  &.urgent {
-    background-color: #dc2626;
-    color: white;
-  }
-
-  &.outline {
-    background-color: transparent;
-    border: 1px solid #e5e7eb;
-    color: #6b7280;
-  }
 `;
 
 const announcementStyles = css`
-  display: flex;
-  flex-direction: column;
-
   .church {
     font-size: 12px;
-    color: #2563eb;
-    font-weight: 600;
-    margin-bottom: 6px;
+    color: #4f46e5;
+    font-weight: 700;
   }
-
   .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-
-    h3 {
-      font-size: 16px;
-      font-weight: 700;
-      color: #111827;
-      margin-right: 8px;
-    }
-
-    .urgent {
-      margin-top: 4px;
-      font-size: 11px;
-      padding: 2px 6px;
-    }
-
-    @media (min-width: 768px) {
-      .urgent {
-        margin-top: 0;
-        font-size: 12px;
-        padding: 4px 10px;
-      }
-    }
+    justify-content: space-between;
+    gap: 8px;
   }
-
   .message {
-    color: #4b5563;
-    margin-bottom: 8px;
+    color: #475569;
+    margin-top: 8px;
   }
-
   .date {
-    font-size: 12px;
-    color: #9ca3af;
+    margin-top: 12px;
+    color: #94a3b8;
+    font-size: 13px;
   }
 `;
 
 const sermonCardStyles = css`
   .church {
     font-size: 12px;
-    color: #2563eb;
-    font-weight: 600;
-    margin-bottom: 6px;
+    color: #4f46e5;
+    font-weight: 700;
   }
-
-  .header {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 8px;
-  }
-
   .title {
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
   }
-
-  .speaker {
-    font-size: 14px;
-    color: #4b5563;
-    margin-bottom: 4px;
-  }
-
-  .date {
-    font-size: 12px;
-    color: #9ca3af;
+  .muted {
+    color: #64748b;
   }
 `;
 
 const ministryCardStyles = css`
   .church {
     font-size: 12px;
-    color: #2563eb;
-    font-weight: 600;
-    margin-bottom: 6px;
+    color: #4f46e5;
+    font-weight: 700;
   }
-
   .header {
     display: flex;
-    align-items: center;
     gap: 12px;
-    margin-bottom: 12px;
-
-    .icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #2563eb;
-      font-size: 20px;
-    }
-
-    h3 {
-      font-weight: 600;
-      margin: 0;
-      font-size: 16px;
-      color: #111827;
-    }
+    align-items: center;
   }
-
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(99, 102, 241, 0.12);
+    font-size: 22px;
+  }
   .description {
-    font-size: 14px;
-    color: #4b5563;
-    margin-bottom: 12px;
-  }
-
-  .contacts {
-    font-size: 14px;
-    .contact {
-      margin-bottom: 4px;
-      color: #4b5563;
-    }
+    margin-top: 8px;
+    color: #475569;
   }
 `;
 
 const viewMoreButton = css`
-  margin-top: 16px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
+  margin-top: 14px;
+  display: inline-block;
+  border-radius: 10px;
+  padding: 10px 14px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #1d4ed8;
-  }
+  font-weight: 700;
+  border: none;
+  background: transparent;
 `;
 
 // -------------------- Footer --------------------
 const footerStyles = css`
-  background-color: #111827;
-  color: #f9fafb;
-  padding: 32px 20px;
+  margin-top: 48px;
+  background: linear-gradient(180deg, #0f172a, #071133);
+  color: #e6eef8;
+  padding: 34px 20px;
+  border-radius: 16px;
   text-align: center;
-  font-size: 14px;
-
-  a {
-    color: #2563eb;
-    text-decoration: none;
-    margin: 0 8px;
-    transition: color 0.2s;
-
-    &:hover {
-      color: #1d4ed8;
-    }
-  }
-
-  p {
-    margin: 8px 0 0 0;
-  }
 `;
 
 // -------------------- Home Component --------------------
@@ -425,7 +397,6 @@ export const Home = () => {
   const [showAllDepartments, setShowAllDepartments] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Sample Data with Church Names
   const announcements = [
     {
       title: "Christmas Food Drive",
@@ -525,68 +496,80 @@ export const Home = () => {
 
   return (
     <div css={globalStyles}>
-      {/* Header */}
-      <header css={headerStyles}>
+      <header css={headerStyles} aria-label="Site header">
         <div css={headerContentStyles}>
           <div css={logoStyles}>
-            <div className="icon">⛪</div>
-            <h1>PAG Family</h1>
+            <div className="mark" aria-hidden>
+              ⛪
+            </div>
+            <div>
+              <h1>PAG Family</h1>
+              <p>Connecting churches & people</p>
+            </div>
           </div>
 
-          {/* Desktop Nav */}
-          <nav css={navStyles}>
+          <nav css={navStyles} aria-label="Primary navigation">
             <a href="#home">Home</a>
             <a href="#news-events">News & Events</a>
             <a href="#churches-sermons">Churches & Sermons</a>
             <a href="#ministry-programs">Assembly Programs</a>
-            <a href="#account" css={myPagTabStyles}>
-              My PAG{" "}
+            <a css={myPagTabStyles} href="#account">
+              My PAG
             </a>
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            css={css`
-              display: block;
-              background: none;
-              border: none;
-              cursor: pointer;
-              @media (min-width: 768px) {
-                display: none;
-              }
-
-              span {
-                display: block;
-                width: 24px;
-                height: 3px;
-                margin: 5px 0;
-                background-color: #111827;
-                transition: all 0.3s;
-              }
-
-              ${isMobileMenuOpen &&
-              `
-                span:nth-of-type(1) {
-                  transform: rotate(45deg) translate(5px, 5px);
-                }
-                span:nth-of-type(2) {
-                  opacity: 0;
-                }
-                span:nth-of-type(3) {
-                  transform: rotate(-45deg) translate(5px, -5px);
-                }
-              `}
-            `}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              css={mobileMenuBtn(isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setIsMobileMenuOpen((s) => !s)}
+            >
+              <span
+                style={{
+                  width: 18,
+                  height: 3,
+                  background: "#0f172a",
+                  display: "block",
+                  borderRadius: 3,
+                  transform: isMobileMenuOpen
+                    ? "rotate(45deg) translate(3px, 3px)"
+                    : "none",
+                  transition: "all 180ms",
+                }}
+              />
+              <span
+                style={{
+                  width: 18,
+                  height: 3,
+                  background: "#0f172a",
+                  display: "block",
+                  borderRadius: 3,
+                  opacity: isMobileMenuOpen ? 0 : 1,
+                  transition: "all 180ms",
+                }}
+              />
+              <span
+                style={{
+                  width: 18,
+                  height: 3,
+                  background: "#0f172a",
+                  display: "block",
+                  borderRadius: 3,
+                  transform: isMobileMenuOpen
+                    ? "rotate(-45deg) translate(3px, -3px)"
+                    : "none",
+                  transition: "all 180ms",
+                }}
+              />
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Menu */}
-        <nav css={mobileNavStyles(isMobileMenuOpen)}>
+        <nav
+          css={mobileNavStyles(isMobileMenuOpen)}
+          aria-label="Mobile navigation"
+        >
           <a href="#news-events" onClick={() => setIsMobileMenuOpen(false)}>
             News & Events
           </a>
@@ -603,8 +586,8 @@ export const Home = () => {
             Assembly Programs
           </a>
           <a
-            href="#account"
             css={myPagTabStyles}
+            href="#account"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             My PAG
@@ -612,114 +595,267 @@ export const Home = () => {
         </nav>
       </header>
 
-      {/* Main */}
       <main css={mainStyles}>
-        {/* Hero */}
-        <section css={heroStyles} id="home">
-          <h1>
-            Welcome to <span className="highlight">PAG Family</span>
-          </h1>
-          <p>
-            Access all P.A.G church resources, sermons, events, and ministry
-            info. Stay connected with the PAG family.
-          </p>
-        </section>
+        <div id="home" css={heroStyles} role="region" aria-label="Hero">
+          <div className="content">
+            <h1>
+              Welcome to <span style={{ color: "#7c3aed" }}>PAG Family</span>
+            </h1>
+            <p>
+              Access sermons, events and ministry info across the PAG family.
+              Connect with local churches, join programs, and stay updated.
+            </p>
 
-        {/* News & Events */}
-        <section css={sectionStyles} id="news-events">
-          <h2>News & Events</h2>
-          <div style={{ marginBottom: "32px" }}>
-            <h3 style={{ marginBottom: "16px" }}>News</h3>
-            <div css={cardGrid}>
-              {(showAllAnnouncements
-                ? announcements
-                : announcements.slice(0, 3)
-              ).map((a, idx) => (
-                <div key={idx} css={[cardStyles, a.urgent && urgentCardStyles]}>
-                  <div css={announcementStyles}>
-                    <p className="church">{a.church}</p>
-                    <div className="header">
-                      <h3>{a.title}</h3>
+            <div className="ctas">
+              <button
+                css={ctaPrimary}
+                onClick={() => {
+                  const el = document.querySelector("#news-events");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                Explore News
+              </button>
+              <button
+                css={ctaGhost}
+                onClick={() => {
+                  const el = document.querySelector("#ministry-programs");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                View Programs
+              </button>
+            </div>
+
+            <div
+              style={{
+                marginTop: 18,
+                display: "flex",
+                gap: 12,
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 10,
+                    background: "#34d399",
+                  }}
+                />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700 }}>
+                    2000+ Members
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748b" }}>
+                    Across all PAG churches
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 10,
+                    background: "#60a5fa",
+                  }}
+                />
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700 }}>
+                    Weekly Sermons
+                  </div>
+                  <div style={{ fontSize: 13, color: "#64748b" }}>
+                    Listen, reflect, grow
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="visual">
+            <div className="hero-card">
+              <img
+                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=3a13a4f9b9b0d8a6b4f1b8f7e6e4a1d2"
+                alt="church gathering"
+                style={{ width: "100%", borderRadius: 10, display: "block" }}
+              />
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontWeight: 800 }}>
+                  This Sunday: Community Outreach
+                </div>
+                <div style={{ color: "#6b7280", marginTop: 6 }}>
+                  Join hands for a local food distribution program.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section
+          id="news-events"
+          css={sectionStyles}
+          aria-label="News and events"
+        >
+          <div css={sectionHeader}>
+            <h2>News & Events</h2>
+            <div className="sub">Latest announcements across the churches</div>
+          </div>
+
+          <div css={cardGrid}>
+            {(showAllAnnouncements
+              ? announcements
+              : announcements.slice(0, 3)
+            ).map((a, idx) => (
+              <article
+                key={idx}
+                css={[cardStyles, a.urgent && urgentCardStyles]}
+                aria-live={a.urgent ? "polite" : undefined}
+              >
+                <div css={announcementStyles}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <div>
+                      <div className="church">{a.church}</div>
+                      <h3 style={{ margin: "8px 0 0 0" }}>{a.title}</h3>
+                    </div>
+                    <div>
                       {a.urgent && (
-                        <span css={badgeStyles} className="urgent">
+                        <span
+                          css={[badgeStyles]}
+                          style={{ background: "#ef4444", color: "#fff" }}
+                        >
                           Urgent
                         </span>
                       )}
                     </div>
-                    <p className="message">{a.message}</p>
-                    <p className="date">{a.date}</p>
                   </div>
+
+                  <p className="message">{a.message}</p>
+                  <div className="date">{a.date}</div>
                 </div>
-              ))}
-            </div>
-            {announcements.length > 3 && (
-              <button
-                css={viewMoreButton}
-                onClick={() => setShowAllAnnouncements(!showAllAnnouncements)}
-              >
-                {showAllAnnouncements ? "View Less" : "View More"}
-              </button>
-            )}
+              </article>
+            ))}
           </div>
+
+          {announcements.length > 3 && (
+            <button
+              css={viewMoreButton}
+              onClick={() => setShowAllAnnouncements((s) => !s)}
+            >
+              {showAllAnnouncements ? "View Less" : "View More"}
+            </button>
+          )}
         </section>
 
-        {/* Churches & Sermons */}
-        <section css={sectionStyles} id="churches-sermons">
-          <h2>Churches & Sermons</h2>
-          <div style={{ marginBottom: "32px" }}>
-            <div css={cardGrid}>
-              {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
-                (s, idx) => (
-                  <div key={idx} css={cardStyles}>
-                    <div css={sermonCardStyles}>
-                      <p className="church">{s.church}</p>
-                      <p className="header">{s.date}</p>
-                      <h3 className="title">{s.title}</h3>
-                      <p className="speaker">By {s.speaker}</p>
-                      <p className="date">{s.duration}</p>
+        <section
+          id="churches-sermons"
+          css={sectionStyles}
+          aria-label="Churches and sermons"
+        >
+          <div css={sectionHeader}>
+            <h2>Churches & Sermons</h2>
+            <div className="sub">Recent sermons you can stream or download</div>
+          </div>
+
+          <div css={cardGrid}>
+            {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
+              (s, idx) => (
+                <article key={idx} css={cardStyles}>
+                  <div css={sermonCardStyles}>
+                    <div className="church">{s.church}</div>
+                    <div style={{ marginTop: 8 }}>
+                      <div className="title">{s.title}</div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginTop: 8,
+                        }}
+                      >
+                        <div className="muted">{s.speaker}</div>
+                        <div className="muted">
+                          {s.duration} • {s.date}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                )
-              )}
-            </div>
-            {recentSermons.length > 3 && (
-              <button
-                css={viewMoreButton}
-                onClick={() => setShowAllSermons(!showAllSermons)}
-              >
-                {showAllSermons ? "View Less" : "View More"}
-              </button>
+                </article>
+              )
             )}
           </div>
+
+          {recentSermons.length > 3 && (
+            <button
+              css={viewMoreButton}
+              onClick={() => setShowAllSermons((s) => !s)}
+            >
+              {showAllSermons ? "View Less" : "View More"}
+            </button>
+          )}
         </section>
 
-        {/* Ministry Programs */}
-        <section css={sectionStyles} id="ministry-programs">
-          <h2>Assembly Programs</h2>
+        <section
+          id="ministry-programs"
+          css={sectionStyles}
+          aria-label="Ministry programs"
+        >
+          <div css={sectionHeader}>
+            <h2>Assembly Programs</h2>
+            <div className="sub">Get involved with a ministry near you</div>
+          </div>
+
           <div css={cardGrid}>
             {(showAllDepartments ? departments : departments.slice(0, 3)).map(
               (d, idx) => (
                 <div key={idx} css={cardStyles}>
                   <div css={ministryCardStyles}>
-                    <p className="church">{d.church}</p>
-                    <div className="header">
-                      <div className="icon">{d.icon}</div>
-                      <h3>{d.name}</h3>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <div>
+                        <div className="church">{d.church}</div>
+                        <div className="header">
+                          <div className="icon" aria-hidden>
+                            {d.icon}
+                          </div>
+                          <h3 style={{ margin: 0 }}>{d.name}</h3>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 12, color: "#94a3b8" }}>
+                          {d.leader}
+                        </div>
+                        <div style={{ fontSize: 13, marginTop: 6 }}>
+                          {d.contact}
+                        </div>
+                      </div>
                     </div>
+
                     <p className="description">{d.description}</p>
-                    <div className="contacts">
-                      <p className="contact">Leader: {d.leader}</p>
-                      <p className="contact">Contact: {d.contact}</p>
-                    </div>
                   </div>
                 </div>
               )
             )}
           </div>
+
           {departments.length > 3 && (
             <button
               css={viewMoreButton}
-              onClick={() => setShowAllDepartments(!showAllDepartments)}
+              onClick={() => setShowAllDepartments((s) => !s)}
             >
               {showAllDepartments ? "View Less" : "View More"}
             </button>
@@ -727,15 +863,31 @@ export const Home = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer css={footerStyles}>
-        <p>
-          &copy; {new Date().getFullYear()} PAG Family. All rights reserved.
-        </p>
-        <p>
-          <a href="#privacy">Privacy Policy</a> |{" "}
-          <a href="#terms">Terms of Service</a>
-        </p>
+      <footer css={footerStyles} role="contentinfo">
+        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+          <div style={{ fontWeight: 800, fontSize: 18 }}>PAG Family</div>
+          <div style={{ color: "#cfe3ff", marginTop: 8 }}>
+            Bringing churches together to serve the community.
+          </div>
+
+          <div
+            style={{
+              marginTop: 18,
+              display: "flex",
+              justifyContent: "center",
+              gap: 14,
+              flexWrap: "wrap",
+            }}
+          >
+            <a href=".">Privacy Policy</a>
+            <a href=".">Terms of Service</a>
+            <a href=".">Contact</a>
+          </div>
+
+          <p style={{ marginTop: 18, color: "#cfe3ff" }}>
+            © {new Date().getFullYear()} PAG Family. All rights reserved.
+          </p>
+        </div>
       </footer>
     </div>
   );
