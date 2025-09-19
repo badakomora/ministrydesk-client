@@ -236,14 +236,7 @@ const ctaPrimary = css`
   cursor: pointer;
 `;
 
-const ctaGhost = css`
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-`;
+
 
 // -------------------- Sections & Cards --------------------
 const sectionStyles = css`
@@ -616,15 +609,15 @@ export const Home = () => {
               >
                 Explore News
               </button>
-              <button
+              {/* <button
                 css={ctaGhost}
                 onClick={() => {
                   const el = document.querySelector("#ministry-programs");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }}
               >
-                View Programs
-              </button>
+                Assemby Programs
+              </button> */}
             </div>
 
             <div
@@ -666,10 +659,10 @@ export const Home = () => {
                 />
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700 }}>
-                    Weekly Sermons
+                    Weekly Program
                   </div>
                   <div style={{ fontSize: 13, color: "#64748b" }}>
-                    Listen, reflect, grow
+                    Men Fellowship
                   </div>
                 </div>
               </div>
@@ -684,11 +677,9 @@ export const Home = () => {
                 style={{ width: "100%", borderRadius: 10, display: "block" }}
               />
               <div style={{ marginTop: 12 }}>
-                <div style={{ fontWeight: 800 }}>
-                  This Sunday: Community Outreach
-                </div>
+                <div style={{ fontWeight: 800 }}>Theme of the week</div>
                 <div style={{ color: "#6b7280", marginTop: 6 }}>
-                  Join hands for a local food distribution program.
+                  Standing strong together.
                 </div>
               </div>
             </div>
