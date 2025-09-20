@@ -23,14 +23,23 @@ const globalStyles = css`
     margin: 0;
     font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
       Roboto, "Helvetica Neue", Arial;
-    background: linear-gradient(180deg, #f8fbff 0%, #f1f6ff 50%, #eef2ff 100%);
-    color: #0f172a;
+    background: linear-gradient(180deg, #fdfdfd 0%, #f9fafc 40%, #f3f7fc 100%)
+      fixed;
+    color: #1e293b;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.45;
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Merriweather", Georgia, serif;
+    color: #1e293b;
   }
   a {
     color: inherit;
+    text-decoration: none;
   }
 `;
 
@@ -39,20 +48,10 @@ const headerStyles = css`
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.03);
-`;
-
-const headerContentStyles = css`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  justify-content: space-between;
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+  border-bottom: 2px solid #e2e8f0;
 `;
 
 const logoStyles = css`
@@ -60,327 +59,365 @@ const logoStyles = css`
   align-items: center;
   gap: 12px;
   .mark {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
     display: grid;
     place-items: center;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    background: linear-gradient(135deg, #2563eb, #fbbf24);
     color: white;
     font-weight: 700;
-    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+    font-size: 20px;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
   }
   h1 {
-    font-size: 18px;
+    font-size: 20px;
     margin: 0;
-    letter-spacing: -0.2px;
+    font-weight: 800;
   }
   p {
     margin: 0;
     font-size: 12px;
-    color: #475569;
+    color: #64748b;
   }
 `;
 
-const navStyles = css`
-  display: none;
-  gap: 22px;
+// -------------------- Hero --------------------
+const heroStyles = css`
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 60px 28px;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
   align-items: center;
+  background: linear-gradient(
+    145deg,
+    rgba(250, 250, 255, 0.9),
+    rgba(226, 232, 240, 0.9)
+  );
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
 
-  @media (min-width: 768px) {
-    display: flex;
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 420px;
+    padding: 80px 64px;
   }
 
-  a {
+  h1 {
+    margin: 0 0 14px 0;
+    font-size: 32px;
+    font-family: "Merriweather", Georgia, serif;
+    color: #1e293b;
+  }
+
+  p {
+    margin: 0 0 20px 0;
     color: #475569;
+    font-size: 17px;
+  }
+
+  .visual {
+    border-radius: 14px;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: inset 0 -6px 30px rgba(15, 23, 42, 0.05),
+      0 12px 40px rgba(0, 0, 0, 0.08);
+    animation: ${float} 8s ease-in-out infinite;
+  }
+`;
+
+// -------------------- CTA --------------------
+const ctaPrimary = css`
+  background: linear-gradient(90deg, #2563eb, #fbbf24);
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+  transition: all 220ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.3);
+  }
+`;
+
+// -------------------- Cards --------------------
+const cardStyles = css`
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 26px 60px rgba(2, 6, 23, 0.1);
+  }
+`;
+
+// -------------------- Footer --------------------
+const footerStyles = css`
+  margin-top: 60px;
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  color: #f8fafc;
+  padding: 40px 20px;
+  border-radius: 20px 20px 0 0;
+  text-align: center;
+
+  a {
+    color: #fbbf24;
     font-weight: 600;
-    padding: 8px 10px;
-    border-radius: 8px;
-    transition: all 180ms ease;
     text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+`;
+
+// -------------------- Header Content --------------------
+const headerContentStyles = css`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+`;
+
+// -------------------- Navigation --------------------
+const navStyles = css`
+  display: flex;
+  gap: 22px;
+
+  a {
+    font-weight: 600;
+    color: #1e293b;
+    text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   a:hover {
-    background: rgba(37, 99, 235, 0.06);
-    color: #0f172a;
+    color: #2563eb;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
 const myPagTabStyles = css`
-  display: inline-block;
-  background: linear-gradient(90deg, #2563eb, #7c3aed);
-  color: #fff !important;
-  padding: 8px 14px;
-  border-radius: 10px;
+  background: #2563eb;
+  color: white !important;
+  padding: 8px 16px;
+  border-radius: 999px;
   font-weight: 700;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.14);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 `;
 
-const mobileMenuBtn = (open: boolean) => css`
-  display: inline-grid;
-  grid-template-rows: repeat(3, 4px);
-  gap: 6px;
-  width: 34px;
-  height: 34px;
-  align-items: center;
-  justify-items: center;
-  padding: 6px;
-  border-radius: 8px;
-  border: none;
-  background: ${open ? "rgba(15,23,42,0.06)" : "transparent"};
-  cursor: pointer;
-  @media (min-width: 768px) {
-    display: none;
+// -------------------- Mobile Menu --------------------
+const mobileMenuBtn = (isOpen: boolean) => css`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: ${isOpen ? "#2563eb" : "transparent"};
+    color: ${isOpen ? "white" : "#1e293b"};
+    border: 2px solid #2563eb;
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
   }
 `;
 
 const mobileNavStyles = (isOpen: boolean) => css`
   display: ${isOpen ? "flex" : "none"};
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
   position: absolute;
-  right: 18px;
   top: 72px;
+  right: 18px;
   width: calc(100% - 36px);
-  max-width: 380px;
+  max-width: 360px;
   background: white;
   border-radius: 14px;
-  padding: 14px;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.12);
-  border: 1px solid rgba(2, 6, 23, 0.04);
-  @media (min-width: 768px) {
-    display: none;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.15);
+  z-index: 50;
+
+  a {
+    font-weight: 600;
+    color: #1e293b;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #2563eb;
   }
 `;
 
-// -------------------- Layout & Hero --------------------
+// -------------------- Main --------------------
 const mainStyles = css`
   max-width: 1200px;
-  margin: 28px auto 80px;
-  padding: 0 20px;
+  margin: 0 auto;
+  padding: 32px 20px;
 `;
 
-const heroStyles = css`
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  padding: 54px 28px;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: 1fr;
-  align-items: center;
-  background: linear-gradient(
-    180deg,
-    rgba(99, 102, 241, 0.14),
-    rgba(37, 99, 235, 0.06)
-  );
-  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.06);
-
-  @media (min-width: 900px) {
-    grid-template-columns: 1fr 420px;
-    padding: 64px;
-  }
-
-  .content {
-    z-index: 2;
-  }
-
-  h1 {
-    margin: 0 0 10px 0;
-    font-size: 28px;
-    line-height: 1.05;
-    color: #071133;
-  }
-
-  p {
-    margin: 0 0 18px 0;
-    color: #334155;
-    font-size: 16px;
-  }
-
-  .ctas {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .visual {
-    border-radius: 12px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.55),
-      rgba(255, 255, 255, 0.25)
-    );
-    box-shadow: inset 0 -6px 30px rgba(15, 23, 42, 0.02);
-    animation: ${float} 6s ease-in-out infinite;
-  }
-
-  .hero-card {
-    width: 100%;
-    max-width: 360px;
-    text-align: left;
-  }
-`;
-
-const ctaPrimary = css`
-  background: linear-gradient(90deg, #2563eb, #7c3aed);
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
-`;
-
-
-
-// -------------------- Sections & Cards --------------------
+// -------------------- Sections --------------------
 const sectionStyles = css`
-  margin-top: 42px;
+  margin-top: 80px;
 `;
 
 const sectionHeader = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 30px;
+  text-align: center;
+
   h2 {
+    font-size: 26px;
     margin: 0;
-    font-size: 20px;
+    color: #1e293b;
   }
+
   .sub {
+    margin-top: 6px;
+    font-size: 15px;
     color: #64748b;
-    font-size: 14px;
   }
 `;
 
 const cardGrid = css`
   display: grid;
-  gap: 18px;
-  grid-template-columns: repeat(1, 1fr);
-  @media (min-width: 720px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (min-width: 1024px) {
+  gap: 22px;
+
+  @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
   }
 `;
 
-const cardStyles = css`
-  background: white;
-  border-radius: 14px;
-  padding: 18px;
-  border: 1px solid rgba(2, 6, 23, 0.04);
-  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.04);
-  transition: transform 220ms ease, box-shadow 220ms ease;
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 26px 60px rgba(2, 6, 23, 0.08);
-  }
+// -------------------- Announcements --------------------
+const urgentCardStyles = css`
+  border-left: 5px solid #ef4444;
 `;
 
-const urgentCardStyles = css`
-  background: linear-gradient(180deg, #fffaf0, #fff6ed);
-  border: 1px solid rgba(249, 115, 22, 0.12);
+const announcementStyles = css`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .title {
+    font-weight: 700;
+    font-size: 17px;
+    color: #1e293b;
+  }
+
+  .desc {
+    font-size: 15px;
+    color: #475569;
+  }
 `;
 
 const badgeStyles = css`
   display: inline-block;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-weight: 700;
   font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
 `;
 
-const announcementStyles = css`
-  .church {
-    font-size: 12px;
-    color: #4f46e5;
-    font-weight: 700;
-  }
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .message {
-    color: #475569;
-    margin-top: 8px;
-  }
-  .date {
-    margin-top: 12px;
-    color: #94a3b8;
-    font-size: 13px;
+// -------------------- View More Button --------------------
+const viewMoreButton = css`
+  display: block;
+  margin: 24px auto 0;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
   }
 `;
 
+// -------------------- Sermons --------------------
 const sermonCardStyles = css`
   .church {
-    font-size: 12px;
-    color: #4f46e5;
     font-weight: 700;
+    font-size: 15px;
+    color: #2563eb;
   }
   .title {
     font-size: 16px;
-    font-weight: 700;
-    color: #0f172a;
-  }
-  .muted {
-    color: #64748b;
+    font-weight: 600;
+    color: #1e293b;
   }
 `;
 
+// -------------------- Ministries --------------------
 const ministryCardStyles = css`
-  .church {
-    font-size: 12px;
-    color: #4f46e5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .name {
     font-weight: 700;
+    font-size: 16px;
+    color: #1e293b;
   }
-  .header {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  .icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    background: rgba(99, 102, 241, 0.12);
-    font-size: 22px;
-  }
-  .description {
-    margin-top: 8px;
+
+  .desc {
+    font-size: 14px;
     color: #475569;
   }
 `;
-
-const viewMoreButton = css`
-  margin-top: 14px;
-  display: inline-block;
-  border-radius: 10px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 700;
-  border: none;
-  background: transparent;
-`;
-
-// -------------------- Footer --------------------
-const footerStyles = css`
-  margin-top: 48px;
-  background: linear-gradient(180deg, #0f172a, #071133);
-  color: #e6eef8;
-  padding: 34px 20px;
-  border-radius: 16px;
+// -------------------- Theme of the Week --------------------
+const themeOfWeekStyles = css`
+  margin: 50px auto;
+  padding: 28px 24px;
+  border-radius: 14px;
   text-align: center;
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border: 1px solid #e2e8f0;
+  max-width: 700px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+
+  h3 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 700;
+    color: #2563eb; /* Blue accent */
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+
+  .divider {
+    margin: 14px auto 18px;
+    width: 60px;
+    height: 3px;
+    border-radius: 2px;
+    background: #fbbf24; /* Gold line for elegance */
+  }
+
+  .text {
+    font-family: "Merriweather", Georgia, serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.4;
+  }
 `;
 
 // -------------------- Home Component --------------------
@@ -389,6 +426,30 @@ export const Home = () => {
   const [showAllSermons, setShowAllSermons] = useState(false);
   const [showAllDepartments, setShowAllDepartments] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  React.useEffect(() => {
+    const header = document.querySelector("header");
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+
+    const handleClick = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (
+        target.tagName === "A" &&
+        target.getAttribute("href")?.startsWith("#")
+      ) {
+        e.preventDefault();
+        const id = target.getAttribute("href")!.slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          const y =
+            el.getBoundingClientRect().top + window.scrollY - headerHeight - 10; // offset
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }
+    };
+
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
+  }, []);
 
   const announcements = [
     {
@@ -518,43 +579,38 @@ export const Home = () => {
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               onClick={() => setIsMobileMenuOpen((s) => !s)}
             >
-              <span
-                style={{
-                  width: 18,
-                  height: 3,
-                  background: "#0f172a",
-                  display: "block",
-                  borderRadius: 3,
-                  transform: isMobileMenuOpen
-                    ? "rotate(45deg) translate(3px, 3px)"
-                    : "none",
-                  transition: "all 180ms",
-                }}
-              />
-              <span
-                style={{
-                  width: 18,
-                  height: 3,
-                  background: "#0f172a",
-                  display: "block",
-                  borderRadius: 3,
-                  opacity: isMobileMenuOpen ? 0 : 1,
-                  transition: "all 180ms",
-                }}
-              />
-              <span
-                style={{
-                  width: 18,
-                  height: 3,
-                  background: "#0f172a",
-                  display: "block",
-                  borderRadius: 3,
-                  transform: isMobileMenuOpen
-                    ? "rotate(-45deg) translate(3px, -3px)"
-                    : "none",
-                  transition: "all 180ms",
-                }}
-              />
+              {isMobileMenuOpen ? (
+                // Close (X) Icon
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              ) : (
+                // Hamburger (☰) Icon
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="4" y1="6" x2="20" y2="6" />
+                  <line x1="4" y1="12" x2="20" y2="12" />
+                  <line x1="4" y1="18" x2="20" y2="18" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
@@ -563,6 +619,9 @@ export const Home = () => {
           css={mobileNavStyles(isMobileMenuOpen)}
           aria-label="Mobile navigation"
         >
+          <a href="#home" onClick={() => setIsMobileMenuOpen(false)}>
+            Home
+          </a>
           <a href="#news-events" onClick={() => setIsMobileMenuOpen(false)}>
             News & Events
           </a>
@@ -676,12 +735,11 @@ export const Home = () => {
                 alt="church gathering"
                 style={{ width: "100%", borderRadius: 10, display: "block" }}
               />
-              <div style={{ marginTop: 12 }}>
-                <div style={{ fontWeight: 800 }}>Theme of the week</div>
-                <div style={{ color: "#6b7280", marginTop: 6 }}>
-                  Standing strong together.
-                </div>
-              </div>
+              <section css={themeOfWeekStyles} aria-label="Theme of the week">
+                <h3>Theme of the Week</h3>
+                <div className="divider" />
+                <div className="text">Standing strong together.</div>
+              </section>
             </div>
           </div>
         </div>
