@@ -124,23 +124,7 @@ const cardStyles = css`
 `;
 
 // -------------------- Footer --------------------
-const footerStyles = css`
-  margin-top: 60px;
-  background: linear-gradient(180deg, #1e293b, #0f172a);
-  color: #f8fafc;
-  padding: 40px 20px;
-  border-radius: 20px 20px 0 0;
-  text-align: center;
 
-  a {
-    color: #fbbf24;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-`;
 
 
 
@@ -692,32 +676,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
         </section>
       </main>
 
-      <footer css={footerStyles} role="contentinfo">
-        <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-          <div style={{ fontWeight: 800, fontSize: 18 }}>PAG Family</div>
-          <div style={{ color: "#cfe3ff", marginTop: 8 }}>
-            Bringing churches together to serve the community.
-          </div>
-
-          <div
-            style={{
-              marginTop: 18,
-              display: "flex",
-              justifyContent: "center",
-              gap: 14,
-              flexWrap: "wrap",
-            }}
-          >
-            <a href=".">Privacy Policy</a>
-            <a href=".">Terms of Service</a>
-            <a href=".">Contact</a>
-          </div>
-
-          <p style={{ marginTop: 18, color: "#cfe3ff" }}>
-            © {new Date().getFullYear()} PAG Family. All rights reserved.
-          </p>
-        </div>
-      </footer>
+     
     </div>
   );
 };
