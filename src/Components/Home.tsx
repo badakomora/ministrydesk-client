@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from "react";
+import React from "react";
 import { css, keyframes } from "@emotion/react";
 
 // -------------------- Animations --------------------
@@ -43,8 +43,6 @@ const globalStyles = css`
   }
 `;
 
-
-
 // -------------------- Hero --------------------
 const heroStyles = css`
   position: relative;
@@ -70,8 +68,6 @@ const heroStyles = css`
   h1 {
     margin: 0 0 14px 0;
     font-size: 32px;
-    font-family: "Merriweather", Georgia, serif;
-    color: #1e293b;
   }
 
   p {
@@ -123,19 +119,13 @@ const cardStyles = css`
   }
 `;
 
-// -------------------- Footer --------------------
-
-
-
-
-// -------------------- Main --------------------
+// -------------------- Layout Styles --------------------
 const mainStyles = css`
   max-width: 1200px;
   margin: 0 auto;
   padding: 32px 20px;
 `;
 
-// -------------------- Sections --------------------
 const sectionStyles = css`
   margin-top: 80px;
 `;
@@ -246,6 +236,7 @@ const ministryCardStyles = css`
     color: #475569;
   }
 `;
+
 // -------------------- Theme of the Week --------------------
 const themeOfWeekStyles = css`
   margin: 50px auto;
@@ -261,7 +252,7 @@ const themeOfWeekStyles = css`
     font-size: 18px;
     margin: 0;
     font-weight: 700;
-    color: #2563eb; /* Blue accent */
+    color: #2563eb;
     text-transform: uppercase;
     letter-spacing: 0.07em;
   }
@@ -271,7 +262,7 @@ const themeOfWeekStyles = css`
     width: 60px;
     height: 3px;
     border-radius: 2px;
-    background: #fbbf24; /* Gold line for elegance */
+    background: #fbbf24;
   }
 
   .text {
@@ -286,37 +277,9 @@ const themeOfWeekStyles = css`
 interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
+
 // -------------------- Home Component --------------------
 export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
-  const [showAllAnnouncements, setShowAllAnnouncements] = useState(false);
-  const [showAllSermons, setShowAllSermons] = useState(false);
-  const [showAllDepartments, setShowAllDepartments] = useState(false);
-  
-  React.useEffect(() => {
-    const header = document.querySelector("header");
-    const headerHeight = header ? header.getBoundingClientRect().height : 0;
-
-    const handleClick = (e: Event) => {
-      const target = e.target as HTMLAnchorElement;
-      if (
-        target.tagName === "A" &&
-        target.getAttribute("href")?.startsWith("#")
-      ) {
-        e.preventDefault();
-        const id = target.getAttribute("href")!.slice(1);
-        const el = document.getElementById(id);
-        if (el) {
-          const y =
-            el.getBoundingClientRect().top + window.scrollY - headerHeight - 10; // offset
-          window.scrollTo({ top: y, behavior: "smooth" });
-        }
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
-  }, []);
-
   const announcements = [
     {
       title: "Christmas Food Drive",
@@ -416,9 +379,9 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
 
   return (
     <div css={globalStyles}>
-    
       <main css={mainStyles}>
-        <div id="home" css={heroStyles} role="region" aria-label="Hero">
+        {/* ---------- HERO ---------- */}
+        <div id="home" css={heroStyles}>
           <div className="content">
             <h1>
               Welcome to <span style={{ color: "#7c3aed" }}>PAG Family</span>
@@ -428,131 +391,61 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               Connect with local churches, join programs, and stay updated.
             </p>
 
-            <div className="ctas">
-              <button
-                css={ctaPrimary}
-                onClick={() => {
-                  const el = document.querySelector("#news-events");
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                Explore News
-              </button>
-            </div>
-
-            <div
-              style={{
-                marginTop: 18,
-                display: "flex",
-                gap: 12,
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
+            <button
+              css={ctaPrimary}
+              onClick={() =>
+                document
+                  .querySelector("#news-events")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
             >
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 10,
-                    background: "#34d399",
-                  }}
-                />
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>
-                    2000+ Members
-                  </div>
-                  <div style={{ fontSize: 13, color: "#64748b" }}>
-                    Across all PAG churches
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 10,
-                    background: "#60a5fa",
-                  }}
-                />
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>
-                    Weekly Program
-                  </div>
-                  <div style={{ fontSize: 13, color: "#64748b" }}>
-                    Men Fellowship
-                  </div>
-                </div>
-              </div>
-            </div>
+              Explore News
+            </button>
           </div>
 
           <div className="visual">
-            <div className="hero-card">
-              <img
-                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=3a13a4f9b9b0d8a6b4f1b8f7e6e4a1d2"
-                alt="church gathering"
-                style={{ width: "100%", borderRadius: 10, display: "block" }}
-              />
-              <section css={themeOfWeekStyles} aria-label="Theme of the week">
-                <h3>Theme of the Week</h3>
-                <div className="divider" />
-                <div className="text">Standing strong together.</div>
-              </section>
-            </div>
+            <img
+              src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3"
+              alt="church gathering"
+              style={{ width: "100%", borderRadius: 10, display: "block" }}
+            />
+            <section css={themeOfWeekStyles}>
+              <h3>Theme of the Week</h3>
+              <div className="divider" />
+              <div className="text">Standing strong together.</div>
+            </section>
           </div>
         </div>
 
-        <section
-          id="news-events"
-          css={sectionStyles}
-          aria-label="News and events"
-        >
+        {/* ---------- NEWS ---------- */}
+        <section id="news-events" css={sectionStyles}>
           <div css={sectionHeader}>
             <h2>News & Events</h2>
             <div className="sub">Latest announcements across the churches</div>
           </div>
 
           <div css={cardGrid}>
-            {(showAllAnnouncements
-              ? announcements
-              : announcements.slice(0, 3)
-            ).map((a, idx) => (
+            {announcements.slice(0, 3).map((a, idx) => (
               <article
                 key={idx}
                 css={[cardStyles, a.urgent && urgentCardStyles]}
-                aria-live={a.urgent ? "polite" : undefined}
+                onClick={() => setActiveTab("Item")}
               >
-                <div
-                  css={announcementStyles}
-                  onClick={() => setActiveTab("Item")}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: 10,
-                    }}
-                  >
+                <div css={announcementStyles}>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <div>
                       <div className="church">{a.church}</div>
-                      <h3 style={{ margin: "8px 0 0 0" }}>{a.title}</h3>
+                      <h3>{a.title}</h3>
                     </div>
-                    <div>
-                      {a.urgent && (
-                        <span
-                          css={[badgeStyles]}
-                          style={{ background: "#ef4444", color: "#fff" }}
-                        >
-                          Urgent
-                        </span>
-                      )}
-                    </div>
+                    {a.urgent && (
+                      <span
+                        css={badgeStyles}
+                        style={{ background: "#ef4444", color: "#fff" }}
+                      >
+                        Urgent
+                      </span>
+                    )}
                   </div>
-
                   <p className="message">{a.message}</p>
                   <div className="date">{a.date}</div>
                 </div>
@@ -561,122 +454,88 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           </div>
 
           {announcements.length > 3 && (
-            <button
-              css={viewMoreButton}
-              onClick={() => setShowAllAnnouncements((s) => !s)}
-            >
-              {showAllAnnouncements ? "View Less" : "View More"}
+            <button css={viewMoreButton} onClick={() => setActiveTab("List")}>
+              View More
             </button>
           )}
         </section>
 
-        <section
-          id="churches-sermons"
-          css={sectionStyles}
-          aria-label="Churches and sermons"
-        >
+        {/* ---------- SERMONS ---------- */}
+        <section id="churches-sermons" css={sectionStyles}>
           <div css={sectionHeader}>
             <h2>Churches & Sermons</h2>
             <div className="sub">Recent sermons you can stream or download</div>
           </div>
 
           <div css={cardGrid}>
-            {(showAllSermons ? recentSermons : recentSermons.slice(0, 3)).map(
-              (s, idx) => (
-                <article key={idx} css={cardStyles}>
-                  <div css={sermonCardStyles}>
-                    <div className="church">{s.church}</div>
-                    <div style={{ marginTop: 8 }}>
-                      <div className="title">{s.title}</div>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginTop: 8,
-                        }}
-                      >
-                        <div className="muted">{s.speaker}</div>
-                        <div className="muted">
-                          {s.duration} • {s.date}
-                        </div>
+            {recentSermons.slice(0, 3).map((s, idx) => (
+              <article key={idx} css={cardStyles}>
+                <div css={sermonCardStyles}>
+                  <div className="church">{s.church}</div>
+                  <div style={{ marginTop: 8 }}>
+                    <div className="title">{s.title}</div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: 8,
+                      }}
+                    >
+                      <div>{s.speaker}</div>
+                      <div>
+                        {s.duration} • {s.date}
                       </div>
                     </div>
                   </div>
-                </article>
-              )
-            )}
+                </div>
+              </article>
+            ))}
           </div>
 
           {recentSermons.length > 3 && (
-            <button
-              css={viewMoreButton}
-              onClick={() => setShowAllSermons((s) => !s)}
-            >
-              {showAllSermons ? "View Less" : "View More"}
+            <button css={viewMoreButton} onClick={() => setActiveTab("List")}>
+              View More
             </button>
           )}
         </section>
 
-        <section
-          id="ministry-programs"
-          css={sectionStyles}
-          aria-label="Ministry programs"
-        >
+        {/* ---------- MINISTRIES ---------- */}
+        <section id="ministry-programs" css={sectionStyles}>
           <div css={sectionHeader}>
             <h2>Assembly Programs</h2>
             <div className="sub">Get involved with a ministry near you</div>
           </div>
 
           <div css={cardGrid}>
-            {(showAllDepartments ? departments : departments.slice(0, 3)).map(
-              (d, idx) => (
-                <div key={idx} css={cardStyles}>
-                  <div css={ministryCardStyles}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <div>
-                        <div className="church">{d.church}</div>
-                        <div className="header">
-                          <div className="icon" aria-hidden>
-                            {d.icon}
-                          </div>
-                          <h3 style={{ margin: 0 }}>{d.name}</h3>
-                        </div>
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 12, color: "#94a3b8" }}>
-                          {d.leader}
-                        </div>
-                        <div style={{ fontSize: 13, marginTop: 6 }}>
-                          {d.contact}
-                        </div>
-                      </div>
+            {departments.slice(0, 3).map((d, idx) => (
+              <div key={idx} css={cardStyles}>
+                <div css={ministryCardStyles}>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div>
+                      <div className="church">{d.church}</div>
+                      <h3>{d.icon} {d.name}</h3>
                     </div>
-
-                    <p className="description">{d.description}</p>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontSize: 12, color: "#94a3b8" }}>
+                        {d.leader}
+                      </div>
+                      <div style={{ fontSize: 13 }}>{d.contact}</div>
+                    </div>
                   </div>
+                  <p>{d.description}</p>
                 </div>
-              )
-            )}
+              </div>
+            ))}
           </div>
 
           {departments.length > 3 && (
-            <button
-              css={viewMoreButton}
-              onClick={() => setShowAllDepartments((s) => !s)}
-            >
-              {showAllDepartments ? "View Less" : "View More"}
+            <button css={viewMoreButton} onClick={() => setActiveTab("List")}>
+              View More
             </button>
           )}
         </section>
       </main>
-
-     
     </div>
   );
 };
+ 
