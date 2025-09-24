@@ -160,33 +160,6 @@ const modalContent = css`
   animation: ${fadeIn} 0.3s ease-out;
 `;
 
-const modalHeader = css`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-
-  h2 {
-    font-size: 20px;
-    font-weight: 800;
-    color: #1e293b;
-    margin: 0;
-  }
-
-  button {
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-    color: #64748b;
-    transition: color 0.2s ease;
-  }
-
-  button:hover {
-    color: #ef4444;
-  }
-`;
-
 const tabs = css`
   display: flex;
   justify-content: center;
@@ -253,11 +226,56 @@ const formStyles = css`
   }
 `;
 
+const churchDropdownWrapper = css`
+  position: relative;
+`;
+
+const churchList = css`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  margin-top: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+  z-index: 200;
+
+  div {
+    padding: 10px 14px;
+    cursor: pointer;
+  }
+
+  div:hover {
+    background: #f1f5f9;
+  }
+`;
+
 // -------------------- Component --------------------
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab, setTab] = useState<"login" | "register">("login");
+
+  // search engine state for churches
+  const churches = [
+    "Central PAG",
+    "East PAG",
+    "West PAG",
+    "South PAG",
+    "North PAG",
+    "Kampala PAG",
+    "Nairobi PAG",
+    "Mombasa PAG",
+  ];
+  const [search, setSearch] = useState("");
+  const [selectedChurch, setSelectedChurch] = useState("");
+
+  const filteredChurches = churches.filter((c) =>
+    c.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <>
@@ -340,12 +358,6 @@ export const Navbar = () => {
       {isModalOpen && (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {/* Header */}
-            <center>
-              <h2>{tab === "login" ? "Welcome Back" : "Join PAG Family"}</h2>
-            </center>
-            <div css={modalHeader}></div>
-
             {/* Tabs */}
             <div css={tabs}>
               <button
@@ -375,13 +387,39 @@ export const Navbar = () => {
                 <input type="tel" placeholder="Phone Number" required />
                 <input type="email" placeholder="Email (optional)" />
 
-                <select required>
-                  <option value="">Select My PAG Church</option>
-                  <option value="central">Central PAG</option>
-                  <option value="east">East PAG</option>
-                  <option value="west">West PAG</option>
-                  <option value="south">South PAG</option>
-                </select>
+                {/* Searchable Church Dropdown */}
+                <div css={churchDropdownWrapper}>
+                  <input
+                    type="text"
+                    placeholder="Search and select your church"
+                    value={selectedChurch || search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                      setSelectedChurch("");
+                    }}
+                    required
+                  />
+                  {search && !selectedChurch && (
+                    <div css={churchList}>
+                      {filteredChurches.length > 0 ? (
+                        filteredChurches.map((church) => (
+                          <div
+                            key={church}
+                            onClick={() => {
+                              setSelectedChurch(church);
+                              setSearch("");
+                            }}
+                          >
+                            {church}
+                          </div>
+                        ))
+                      ) : (
+                        <div>No church found</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <select required>
                   <option value="">Select Role</option>
                   <option value="member">Member</option>
@@ -406,20 +444,6 @@ export const Navbar = () => {
                 <button type="submit">Register</button>
               </form>
             )}
-            <center>
-              <br />
-              <a
-                href="."
-                style={{ textDecoration: "none", color: "black" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsModalOpen(false);
-                }}
-                aria-label="Close modal"
-              >
-                Close
-              </a>
-            </center>
           </div>
         </div>
       )}
