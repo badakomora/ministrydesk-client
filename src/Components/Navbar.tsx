@@ -460,6 +460,7 @@ export const Navbar = () => {
                 textAlign: "center",
                 marginTop: "12px",
                 textDecoration: "none",
+                color: "black",
               }}
               onClick={(e) => {
                 e.preventDefault();

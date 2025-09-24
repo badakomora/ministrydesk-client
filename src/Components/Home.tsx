@@ -43,59 +43,10 @@ const globalStyles = css`
   }
 `;
 
-// -------------------- Hero --------------------
-const heroStyles = css`
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 60px 28px;
-  display: grid;
-  gap: 40px;
-  grid-template-columns: 1fr;
-  align-items: center;
-  box-shadow: 18px rgba(0, 0, 0, 0.05);
-
-  @media (min-width: 900px) {
-    grid-template-columns: 1fr 420px;
-    padding: 90px 70px;
-  }
-
-  h1 {
-    margin: 0 0 18px 0;
-    font-size: 34px;
-    font-weight: 800;
-  }
-
-  p {
-    margin: 0 0 26px 0;
-    color: #475569;
-    font-size: 18px;
-  }
-
-  .visual {
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 16px 50px rgba(15, 23, 42, 0.08);
-    animation: ${float} 8s ease-in-out infinite;
-
-    img {
-      width: 100%;
-      display: block;
-    }
-  }
-`;
-
-const statsHighlight = css`
-  margin: 20px 0;
-  padding: 14px 20px;
-  background: linear-gradient(90deg, #2563eb1a, #fbbf241a);
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #1e293b;
-  text-align: center;
-  max-width: 360px;
+// Blinking animation
+const blink = keyframes`
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
 `;
 
 // -------------------- CTA --------------------
@@ -104,6 +55,7 @@ const ctaPrimary = css`
   color: #fff;
   border: none;
   padding: 14px 26px;
+  margin-top: 10px;
   border-radius: 999px;
   font-size: 16px;
   font-weight: 700;
@@ -129,6 +81,143 @@ const cardStyles = css`
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 50px rgba(2, 6, 23, 0.08);
+  }
+`;
+
+// -------------------- Hero --------------------
+const heroStyles = css`
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  padding: 70px 32px;
+  display: grid;
+  gap: 50px;
+  grid-template-columns: 1fr;
+  align-items: center;
+  background: linear-gradient(135deg, #eef2ff, #fefce8);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 450px;
+    padding: 100px 80px;
+  }
+
+  /* Decorative glowing circles */
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.4;
+    z-index: 0;
+  }
+  &::before {
+    top: -60px;
+    left: -60px;
+    width: 240px;
+    height: 240px;
+    background: #93c5fd;
+  }
+  &::after {
+    bottom: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    background: #fde68a;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+  }
+
+  h1 {
+    margin: 0 0 20px 0;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #111827;
+
+    @media (min-width: 900px) {
+      font-size: 52px;
+    }
+
+    span {
+      background: linear-gradient(90deg, #7c3aed, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  p {
+    margin: 0 0 30px 0;
+    color: #475569;
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 540px;
+  }
+
+  .visual {
+    position: relative;
+    z-index: 2;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    animation: ${float} 8s ease-in-out infinite;
+
+    img {
+      width: 100%;
+      display: block;
+    }
+
+    section {
+      margin-top: -40px;
+      position: relative;
+      z-index: 3;
+    }
+  }
+`;
+
+// -------------------- Stats Highlight --------------------
+const statsHighlight = css`
+  margin-top: 28px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+  backdrop-filter: blur(12px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+
+  transition: all 0.25s ease;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &::before {
+      content: "•";
+      font-size: 22px;
+      animation: ${blink} 1.4s infinite;
+    }
+  }
+
+  > div:first-of-type::before {
+    color: #2563eb; /* blue dot */
+  }
+
+  > div:last-of-type::before {
+    color: #fbbf24; /* yellow dot */
   }
 `;
 
@@ -446,9 +535,10 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
 
             {/* Highlight Stats */}
             <div css={statsHighlight}>
-              2000+ members across all PAG and Week Men Fellowship
-            </div>
+              <div>2000+ members across all PAG and</div>
 
+              <div>Men Fellowship Week </div>
+            </div>
             {/* Hero CTA */}
             <button
               css={ctaPrimary}
