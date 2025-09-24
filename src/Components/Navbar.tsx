@@ -360,6 +360,15 @@ export const Navbar = () => {
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
             {/* Tabs */}
             <div css={tabs}>
+              <div css={logoStyles}>
+                <div className="mark" aria-hidden>
+                  ⛪
+                </div>
+                <div>
+                  <h1>PAG Family</h1>
+                  <p>Connecting churches & people</p>
+                </div>
+              </div>
               <button
                 className={tab === "login" ? "active" : "inactive"}
                 onClick={() => setTab("login")}
@@ -444,6 +453,21 @@ export const Navbar = () => {
                 <button type="submit">Register</button>
               </form>
             )}
+            <a
+              href="."
+              style={{
+                display: "block",
+                textAlign: "center",
+                marginTop: "12px",
+                textDecoration: "none",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModalOpen(false);
+              }}
+            >
+              close
+            </a>
           </div>
         </div>
       )}
