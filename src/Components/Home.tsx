@@ -23,19 +23,19 @@ const globalStyles = css`
     margin: 0;
     font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
       Roboto, "Helvetica Neue", Arial;
-    background: linear-gradient(180deg, #fdfdfd 0%, #f9fafc 40%, #f3f7fc 100%)
-      fixed;
+    background: #f8fafc;
     color: #1e293b;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.6;
+    line-height: 1.7;
   }
   h1,
   h2,
   h3,
   h4 {
     font-family: "Merriweather", Georgia, serif;
-    color: #1e293b;
+    color: #0f172a;
+    line-height: 1.3;
   }
   a {
     color: inherit;
@@ -50,106 +50,107 @@ const heroStyles = css`
   overflow: hidden;
   padding: 60px 28px;
   display: grid;
-  gap: 24px;
+  gap: 40px;
   grid-template-columns: 1fr;
   align-items: center;
-  background: linear-gradient(
-    145deg,
-    rgba(250, 250, 255, 0.9),
-    rgba(226, 232, 240, 0.9)
-  );
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+  box-shadow: 18px rgba(0, 0, 0, 0.05);
 
   @media (min-width: 900px) {
     grid-template-columns: 1fr 420px;
-    padding: 80px 64px;
+    padding: 90px 70px;
   }
 
   h1 {
-    margin: 0 0 14px 0;
-    font-size: 32px;
+    margin: 0 0 18px 0;
+    font-size: 34px;
+    font-weight: 800;
   }
 
   p {
-    margin: 0 0 20px 0;
+    margin: 0 0 26px 0;
     color: #475569;
-    font-size: 17px;
+    font-size: 18px;
   }
 
   .visual {
     border-radius: 14px;
-    padding: 20px;
-    background: #ffffff;
-    box-shadow: inset 0 -6px 30px rgba(15, 23, 42, 0.05),
-      0 12px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    box-shadow: 0 16px 50px rgba(15, 23, 42, 0.08);
     animation: ${float} 8s ease-in-out infinite;
+
+    img {
+      width: 100%;
+      display: block;
+    }
   }
 `;
 
 // -------------------- CTA --------------------
 const ctaPrimary = css`
   background: linear-gradient(90deg, #2563eb, #fbbf24);
-  color: white;
+  color: #fff;
   border: none;
-  padding: 14px 22px;
+  padding: 14px 26px;
   border-radius: 999px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
-  transition: all 220ms ease;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+  transition: all 200ms ease;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 26px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 10px 28px rgba(37, 99, 235, 0.3);
   }
 `;
 
 // -------------------- Cards --------------------
 const cardStyles = css`
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+  transition: transform 200ms ease, box-shadow 200ms ease;
 
   &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 26px 60px rgba(2, 6, 23, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(2, 6, 23, 0.08);
   }
 `;
 
-// -------------------- Layout Styles --------------------
+// -------------------- Layout --------------------
 const mainStyles = css`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 20px;
+  padding: 40px 22px;
 `;
 
 const sectionStyles = css`
-  margin-top: 80px;
+  margin-top: 90px;
 `;
 
 const sectionHeader = css`
-  margin-bottom: 30px;
+  margin-bottom: 36px;
   text-align: center;
 
   h2 {
-    font-size: 26px;
+    font-size: 28px;
     margin: 0;
-    color: #1e293b;
+    font-weight: 800;
+    color: #0f172a;
   }
 
   .sub {
-    margin-top: 6px;
-    font-size: 15px;
+    margin-top: 8px;
+    font-size: 16px;
     color: #64748b;
   }
 `;
 
 const cardGrid = css`
   display: grid;
-  gap: 22px;
+  gap: 24px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
@@ -158,42 +159,57 @@ const cardGrid = css`
 
 // -------------------- Announcements --------------------
 const urgentCardStyles = css`
-  border-left: 5px solid #ef4444;
+  border-left: 6px solid #ef4444;
 `;
 
 const announcementStyles = css`
   display: flex;
   flex-direction: column;
-  gap: 8px;
 
-  .title {
-    font-weight: 700;
-    font-size: 17px;
-    color: #1e293b;
+  .church {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb;
   }
 
-  .desc {
+  h3 {
+    margin: 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .message {
     font-size: 15px;
     color: #475569;
+  }
+
+  .date {
+    font-size: 13px;
+    color: #94a3b8;
   }
 `;
 
 const badgeStyles = css`
   display: inline-block;
   font-size: 12px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 600;
+  padding: 4px;
+  border-radius: 999px;
+  font-weight: 700;
+  background: #ef4444;
+  color: #fff;
+  height: 100%;
 `;
 
-// -------------------- View More Button --------------------
+// -------------------- View More --------------------
 const viewMoreButton = css`
   display: block;
-  margin: 24px auto 0;
-  padding: 10px 20px;
+  margin: 32px auto 0;
+  padding: 12px 26px;
   border-radius: 999px;
   background: #2563eb;
-  color: white;
+  color: #fff;
+  font-size: 15px;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -208,14 +224,14 @@ const viewMoreButton = css`
 // -------------------- Sermons --------------------
 const sermonCardStyles = css`
   .church {
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: 600;
+    font-size: 14px;
     color: #2563eb;
   }
   .title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #1e293b;
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
   }
 `;
 
@@ -223,7 +239,6 @@ const sermonCardStyles = css`
 const ministryCardStyles = css`
   display: flex;
   flex-direction: column;
-  gap: 10px;
 
   .name {
     font-weight: 700;
@@ -239,26 +254,25 @@ const ministryCardStyles = css`
 
 // -------------------- Theme of the Week --------------------
 const themeOfWeekStyles = css`
-  margin: 50px auto;
+  margin: 40px auto 0;
   padding: 28px 24px;
   border-radius: 14px;
   text-align: center;
   background: linear-gradient(135deg, #ffffff, #f9fafb);
-  border: 1px solid #e2e8f0;
-  max-width: 700px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  max-width: 680px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 
   h3 {
     font-size: 18px;
     margin: 0;
-    font-weight: 700;
+    font-weight: 800;
     color: #2563eb;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
   }
 
   .divider {
-    margin: 14px auto 18px;
+    margin: 16px auto 20px;
     width: 60px;
     height: 3px;
     border-radius: 2px;
@@ -267,10 +281,10 @@ const themeOfWeekStyles = css`
 
   .text {
     font-family: "Merriweather", Georgia, serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: #111827;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 `;
 
@@ -377,6 +391,38 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     },
   ];
 
+  // Helper to change tab without letting layout changes cause a jump.
+  const handleSetTab = (
+    tab: string,
+    e?: React.MouseEvent | React.KeyboardEvent
+  ) => {
+    // stop any default action (clicks from anchors / buttons)
+    if (e && typeof (e as any).preventDefault === "function") {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    // preserve current scroll position
+    const x = window.scrollX;
+    const y = window.scrollY;
+
+    // set the tab
+    setActiveTab(tab);
+
+    // restore scroll after DOM updates/reflow (most robust)
+    // using requestAnimationFrame ensures it runs after the re-render/layout pass
+    requestAnimationFrame(() => {
+      window.scrollTo({ left: x, top: y, behavior: "auto" });
+    });
+  };
+
+  const handleKeyDownActivate = (e: React.KeyboardEvent, tab: string): void => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleSetTab(tab, e);
+    }
+  };
+
   return (
     <div css={globalStyles}>
       <main css={mainStyles}>
@@ -391,6 +437,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               Connect with local churches, join programs, and stay updated.
             </p>
 
+            {/* Hero CTA intentionally scrolls to news-events */}
             <button
               css={ctaPrimary}
               onClick={() =>
@@ -429,10 +476,16 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               <article
                 key={idx}
                 css={[cardStyles, a.urgent && urgentCardStyles]}
-                onClick={() => setActiveTab("Item")}
+                role="button"
+                tabIndex={0}
+                onClick={(e) => handleSetTab("Item", e)}
+                onKeyDown={(e) => handleKeyDownActivate(e, "Item")}
+                style={{ cursor: "pointer" }}
               >
                 <div css={announcementStyles}>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     <div>
                       <div className="church">{a.church}</div>
                       <h3>{a.title}</h3>
@@ -454,7 +507,11 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           </div>
 
           {announcements.length > 3 && (
-            <button css={viewMoreButton} onClick={() => setActiveTab("List")}>
+            <button
+              css={viewMoreButton}
+              onClick={(e) => handleSetTab("List", e)}
+              aria-label="View more announcements"
+            >
               View More
             </button>
           )}
@@ -493,7 +550,11 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           </div>
 
           {recentSermons.length > 3 && (
-            <button css={viewMoreButton} onClick={() => setActiveTab("List")}>
+            <button
+              css={viewMoreButton}
+              onClick={(e) => handleSetTab("List", e)}
+              aria-label="View more sermons"
+            >
               View More
             </button>
           )}
@@ -510,26 +571,34 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             {departments.slice(0, 3).map((d, idx) => (
               <div key={idx} css={cardStyles}>
                 <div css={ministryCardStyles}>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     <div>
                       <div className="church">{d.church}</div>
-                      <h3>{d.icon} {d.name}</h3>
+                      <h3>
+                        {d.icon} {d.name}
+                      </h3>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 12, color: "#94a3b8" }}>
                         {d.leader}
                       </div>
                       <div style={{ fontSize: 13 }}>{d.contact}</div>
+                      <p>{d.description}</p>
                     </div>
                   </div>
-                  <p>{d.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {departments.length > 3 && (
-            <button css={viewMoreButton} onClick={() => setActiveTab("List")}>
+            <button
+              css={viewMoreButton}
+              onClick={(e) => handleSetTab("List", e)}
+              aria-label="View more ministries"
+            >
               View More
             </button>
           )}
@@ -538,4 +607,3 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     </div>
   );
 };
- 
