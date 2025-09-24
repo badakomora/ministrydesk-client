@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
 // -------------------- Header --------------------
@@ -63,6 +63,7 @@ const navStyles = css`
     color: #1e293b;
     text-decoration: none;
     transition: color 0.2s ease;
+    cursor: pointer;
   }
 
   a:hover {
@@ -120,6 +121,7 @@ const mobileNavStyles = (isOpen: boolean) => css`
     font-weight: 600;
     color: #1e293b;
     text-decoration: none;
+    cursor: pointer;
   }
 
   a:hover {
@@ -127,104 +129,300 @@ const mobileNavStyles = (isOpen: boolean) => css`
   }
 `;
 
+// -------------------- Modal Styles --------------------
+const fadeIn = keyframes`
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+`;
+
+const modalOverlay = css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 41, 59, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: ${fadeIn} 0.25s ease-out;
+`;
+
+const modalContent = css`
+  background: linear-gradient(to bottom right, #ffffff, #f8fafc);
+  border-radius: 18px;
+  padding: 28px 26px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: ${fadeIn} 0.3s ease-out;
+`;
+
+const modalHeader = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #64748b;
+    transition: color 0.2s ease;
+  }
+
+  button:hover {
+    color: #ef4444;
+  }
+`;
+
+const tabs = css`
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 24px;
+
+  button {
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+  }
+
+  .inactive {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+`;
+
+const formStyles = css`
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  input,
+  select {
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: #2563eb;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background: #1d4ed8;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+  }
+`;
+
 // -------------------- Component --------------------
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tab, setTab] = useState<"login" | "register">("login");
 
   return (
-    <header css={headerStyles} aria-label="Site header">
-      <div css={headerContentStyles}>
-        {/* Logo */}
-        <div css={logoStyles}>
-          <div className="mark" aria-hidden>
-            ⛪
+    <>
+      <header css={headerStyles} aria-label="Site header">
+        <div css={headerContentStyles}>
+          {/* Logo */}
+          <div css={logoStyles}>
+            <div className="mark" aria-hidden>
+              ⛪
+            </div>
+            <div>
+              <h1>PAG Family</h1>
+              <p>Connecting churches & people</p>
+            </div>
           </div>
-          <div>
-            <h1>PAG Family</h1>
-            <p>Connecting churches & people</p>
+
+          {/* Desktop Nav */}
+          <nav css={navStyles} aria-label="Primary navigation">
+            <a href=".">Home</a>
+            <a href=".">News & Events</a>
+            <a href=".">Churches & Sermons</a>
+            <a href=".">Assembly Programs</a>
+            <a
+              href="."
+              css={myPagTabStyles}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModalOpen(true);
+              }}
+            >
+              My PAG
+            </a>
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              css={mobileMenuBtn(isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setIsMobileMenuOpen((s) => !s)}
+            >
+              {isMobileMenuOpen ? "✕" : "☰"}
+            </button>
           </div>
         </div>
 
-        {/* Desktop Nav */}
-        <nav css={navStyles} aria-label="Primary navigation">
-          <a href="#home">Home</a>
-          <a href="#news-events">News & Events</a>
-          <a href="#churches-sermons">Churches & Sermons</a>
-          <a href="#ministry-programs">Assembly Programs</a>
-          <a css={myPagTabStyles} href="#account">
+        {/* Mobile Nav */}
+        <nav
+          css={mobileNavStyles(isMobileMenuOpen)}
+          aria-label="Mobile navigation"
+        >
+          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+            Home
+          </a>
+          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+            News & Events
+          </a>
+          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+            Churches & Sermons
+          </a>
+          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+            Assembly Programs
+          </a>
+          <a
+            href="."
+            css={myPagTabStyles}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              setIsModalOpen(true);
+            }}
+          >
             My PAG
           </a>
         </nav>
+      </header>
 
-        {/* Mobile Menu Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button
-            css={mobileMenuBtn(isMobileMenuOpen)}
-            aria-expanded={isMobileMenuOpen}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            onClick={() => setIsMobileMenuOpen((s) => !s)}
-          >
-            {isMobileMenuOpen ? (
-              // Close (X)
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+      {/* Modal */}
+      {isModalOpen && (
+        <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
+          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <center>
+              <h2>{tab === "login" ? "Welcome Back" : "Join PAG Family"}</h2>
+            </center>
+            <div css={modalHeader}></div>
+
+            {/* Tabs */}
+            <div css={tabs}>
+              <button
+                className={tab === "login" ? "active" : "inactive"}
+                onClick={() => setTab("login")}
               >
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+                Login
+              </button>
+              <button
+                className={tab === "register" ? "active" : "inactive"}
+                onClick={() => setTab("register")}
+              >
+                Register
+              </button>
+            </div>
+
+            {/* Forms */}
+            {tab === "login" ? (
+              <form css={formStyles}>
+                <input type="tel" placeholder="Phone Number" required />
+                <input type="password" placeholder="Password" required />
+                <button type="submit">Login</button>
+              </form>
             ) : (
-              // Hamburger (☰)
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="4" y1="6" x2="20" y2="6" />
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="18" x2="20" y2="18" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
+              <form css={formStyles}>
+                <input type="text" placeholder="Full Name" required />
+                <input type="tel" placeholder="Phone Number" required />
+                <input type="email" placeholder="Email (optional)" />
 
-      {/* Mobile Nav */}
-      <nav
-        css={mobileNavStyles(isMobileMenuOpen)}
-        aria-label="Mobile navigation"
-      >
-        <a href="#home" onClick={() => setIsMobileMenuOpen(false)}>
-          Home
-        </a>
-        <a href="#news-events" onClick={() => setIsMobileMenuOpen(false)}>
-          News & Events
-        </a>
-        <a href="#churches-sermons" onClick={() => setIsMobileMenuOpen(false)}>
-          Churches & Sermons
-        </a>
-        <a href="#ministry-programs" onClick={() => setIsMobileMenuOpen(false)}>
-          Assembly Programs
-        </a>
-        <a
-          css={myPagTabStyles}
-          href="#account"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          My PAG
-        </a>
-      </nav>
-    </header>
+                <select required>
+                  <option value="">Select My PAG Church</option>
+                  <option value="central">Central PAG</option>
+                  <option value="east">East PAG</option>
+                  <option value="west">West PAG</option>
+                  <option value="south">South PAG</option>
+                </select>
+                <select required>
+                  <option value="">Select Role</option>
+                  <option value="member">Member</option>
+                  <option value="pastor">Pastor</option>
+                  <option value="bishop">Bishop</option>
+                  <option value="overseer">Overseer</option>
+                  <option value="secretary">Secretary</option>
+                  <option value="treasurer">Treasurer</option>
+                  <option value="ced">CED</option>
+                  <option value="choir">Choir</option>
+                  <option value="usher">Usher</option>
+                  <option value="youth">Youth</option>
+                  <option value="women">Women Dept</option>
+                  <option value="men">Men Dept</option>
+                </select>
+                <input type="password" placeholder="Password" required />
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  required
+                />
+                <button type="submit">Register</button>
+              </form>
+            )}
+            <center>
+              <br />
+              <a
+                href="."
+                style={{ textDecoration: "none", color: "black" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalOpen(false);
+                }}
+                aria-label="Close modal"
+              >
+                Close
+              </a>
+            </center>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

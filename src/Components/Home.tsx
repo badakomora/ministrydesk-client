@@ -85,6 +85,19 @@ const heroStyles = css`
   }
 `;
 
+const statsHighlight = css`
+  margin: 20px 0;
+  padding: 14px 20px;
+  background: linear-gradient(90deg, #2563eb1a, #fbbf241a);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  max-width: 360px;
+`;
+
 // -------------------- CTA --------------------
 const ctaPrimary = css`
   background: linear-gradient(90deg, #2563eb, #fbbf24);
@@ -396,21 +409,15 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     tab: string,
     e?: React.MouseEvent | React.KeyboardEvent
   ) => {
-    // stop any default action (clicks from anchors / buttons)
     if (e && typeof (e as any).preventDefault === "function") {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    // preserve current scroll position
     const x = window.scrollX;
     const y = window.scrollY;
-
-    // set the tab
     setActiveTab(tab);
 
-    // restore scroll after DOM updates/reflow (most robust)
-    // using requestAnimationFrame ensures it runs after the re-render/layout pass
     requestAnimationFrame(() => {
       window.scrollTo({ left: x, top: y, behavior: "auto" });
     });
@@ -437,7 +444,12 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               Connect with local churches, join programs, and stay updated.
             </p>
 
-            {/* Hero CTA intentionally scrolls to news-events */}
+            {/* Highlight Stats */}
+            <div css={statsHighlight}>
+              2000+ members across all PAG and Week Men Fellowship
+            </div>
+
+            {/* Hero CTA */}
             <button
               css={ctaPrimary}
               onClick={() =>
@@ -597,7 +609,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             <button
               css={viewMoreButton}
               onClick={(e) => handleSetTab("List", e)}
-              aria-label="View more ministries"
+              aria-label="View more programs"
             >
               View More
             </button>
@@ -607,3 +619,5 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     </div>
   );
 };
+
+export default Home;
