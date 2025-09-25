@@ -182,17 +182,20 @@ const Item: React.FC = () => {
           worship, and fellowship. This season brings growth, unity, and
           opportunities to strengthen our impact in the community and beyond.
         </p>
-
+        <small>Preacher: Pst Peter Komora Andrew</small>
+        <small>Date: Sunday 14th, Jan 2025 </small>
+        <br />
+        <br />
         <div css={styles.features}>
-          <div css={styles.chip}>🙏 Spirit-filled Fellowship</div>
-          <div css={styles.chip}>📖 Rooted in the Word</div>
-          <div css={styles.chip}>🤝 Strong Family Bonds</div>
-          <div css={styles.chip}>🌍 Community Impact</div>
+          <div css={styles.chip}>🙏 John 3:13</div>
+          <div css={styles.chip}>📖 2nd Corinthiaans 6:35</div>
+          <div css={styles.chip}>🤝 Psalms 18:24</div>
+          <div css={styles.chip}>🌍 Revelation 7:2</div>
         </div>
 
         <div css={styles.ctaRow}>
           <button css={[styles.btn, styles.btnPrimary]}>
-            Join Us in Prayer
+            Contribute Offering
           </button>
           <button css={[styles.btn, styles.btnGhost]}>Upcoming Events</button>
           <button css={[styles.btn, styles.btnGhost]}>Read More Updates</button>

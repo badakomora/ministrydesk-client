@@ -148,7 +148,7 @@ const heroStyles = css`
   gap: 50px;
   grid-template-columns: 1fr;
   align-items: center;
-  background: linear-gradient(135deg, #eef2ff, #fefce8);
+  background: linear-gradient(135deg, rgba(250,250,255,0.9), rgba(226,232,240,0.9));
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 
   @media (min-width: 900px) {
