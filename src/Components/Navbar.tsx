@@ -228,13 +228,19 @@ const formStyles = css`
 
 const churchDropdownWrapper = css`
   position: relative;
+  width: 100%; /* make wrapper match other inputs */
+
+  input {
+    width: 100%; /* force input to be same width */
+    box-sizing: border-box;
+  }
 `;
 
 const churchList = css`
   position: absolute;
   top: 100%;
+  width: 100%; /* match parent width */
   left: 0;
-  right: 0;
   background: white;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
@@ -246,6 +252,8 @@ const churchList = css`
   div {
     padding: 10px 14px;
     cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   div:hover {
@@ -444,7 +452,7 @@ export const Navbar = () => {
                   <option value="women">Women Dept</option>
                   <option value="men">Men Dept</option>
                 </select>
-                <input type="password" placeholder="Password" required />
+                <input type="password" placeholder="Create Password" required />
                 <input
                   type="password"
                   placeholder="Confirm Password"

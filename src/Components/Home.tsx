@@ -3,11 +3,6 @@ import React from "react";
 import { css, keyframes } from "@emotion/react";
 
 // -------------------- Animations --------------------
-const float = keyframes`
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
-`;
 
 // -------------------- Global Styles --------------------
 const globalStyles = css`
@@ -43,11 +38,81 @@ const globalStyles = css`
   }
 `;
 
-// Blinking animation
+
+// -------------------- Animations --------------------
+const float = keyframes`
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+`;
+
 const blink = keyframes`
   0%, 50%, 100% { opacity: 1; }
   25%, 75% { opacity: 0; }
 `;
+
+
+// NEW: slide right to left animation
+const slideRightLeft = keyframes`
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+`;
+
+// -------------------- Theme of the Week --------------------
+const themeOfWeekStyles = css`
+  margin: 40px auto 0;
+  padding: 28px 24px;
+  border-radius: 14px;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  max-width: 680px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+
+  h3 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 800;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .divider {
+    margin: 16px auto 20px;
+    width: 60px;
+    height: 3px;
+    border-radius: 2px;
+    background: #fbbf24;
+  }
+
+  .text {
+    font-family: "Merriweather", Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.5;
+    display: inline-block;
+    white-space: nowrap;
+    animation: ${slideRightLeft} 6s linear infinite;
+  }
+`;
+
 
 // -------------------- CTA --------------------
 const ctaPrimary = css`
@@ -354,41 +419,7 @@ const ministryCardStyles = css`
   }
 `;
 
-// -------------------- Theme of the Week --------------------
-const themeOfWeekStyles = css`
-  margin: 40px auto 0;
-  padding: 28px 24px;
-  border-radius: 14px;
-  text-align: center;
-  background: linear-gradient(135deg, #ffffff, #f9fafb);
-  max-width: 680px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 
-  h3 {
-    font-size: 18px;
-    margin: 0;
-    font-weight: 800;
-    color: #2563eb;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .divider {
-    margin: 16px auto 20px;
-    width: 60px;
-    height: 3px;
-    border-radius: 2px;
-    background: #fbbf24;
-  }
-
-  .text {
-    font-family: "Merriweather", Georgia, serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: #111827;
-    line-height: 1.5;
-  }
-`;
 
 interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -561,7 +592,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             <section css={themeOfWeekStyles}>
               <h3>Theme of the Week</h3>
               <div className="divider" />
-              <div className="text">Standing strong together.</div>
+              <div className="text">Standing strong together in Christ our Lord.</div>
             </section>
           </div>
         </div>
