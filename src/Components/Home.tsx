@@ -38,7 +38,6 @@ const globalStyles = css`
   }
 `;
 
-
 // -------------------- Animations --------------------
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -50,7 +49,6 @@ const blink = keyframes`
   0%, 50%, 100% { opacity: 1; }
   25%, 75% { opacity: 0; }
 `;
-
 
 // NEW: slide right to left animation
 const slideRightLeft = keyframes`
@@ -112,7 +110,6 @@ const themeOfWeekStyles = css`
     animation: ${slideRightLeft} 6s linear infinite;
   }
 `;
-
 
 // -------------------- CTA --------------------
 const ctaPrimary = css`
@@ -419,8 +416,6 @@ const ministryCardStyles = css`
   }
 `;
 
-
-
 interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -592,7 +587,9 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             <section css={themeOfWeekStyles}>
               <h3>Theme of the Week</h3>
               <div className="divider" />
-              <div className="text">Standing strong together in Christ our Lord.</div>
+              <div className="text">
+                Standing strong together in Christ our Lord.
+              </div>
             </section>
           </div>
         </div>
