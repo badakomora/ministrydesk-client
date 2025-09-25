@@ -75,11 +75,10 @@ const slideRightLeft = keyframes`
 // -------------------- Theme of the Week --------------------
 const themeOfWeekStyles = css`
   margin: 40px auto 0;
-  padding: 28px 24px;
+  padding: 15px;
   border-radius: 14px;
   text-align: center;
   background: linear-gradient(135deg, #ffffff, #f9fafb);
-  max-width: 680px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 
   p {
@@ -90,7 +89,7 @@ const themeOfWeekStyles = css`
 
   .divider {
     margin: 16px auto 20px;
-    width: 60px;
+    width: 20%;
     height: 3px;
     border-radius: 2px;
     background: #fbbf24;
@@ -98,7 +97,7 @@ const themeOfWeekStyles = css`
 
   .text {
     color: #111827;
-    display: inline-block;
+    display: block;
     white-space: nowrap;
     animation: ${slideRightLeft} 7s linear infinite;
   }

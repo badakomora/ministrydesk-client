@@ -205,6 +205,7 @@ const formStyles = css`
   input:focus,
   select:focus {
     outline: none;
+    padding: 12px 14px;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
   }
