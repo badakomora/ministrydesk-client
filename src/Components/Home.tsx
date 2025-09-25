@@ -82,13 +82,10 @@ const themeOfWeekStyles = css`
   max-width: 680px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 
-  h3 {
+  p {
     font-size: 18px;
     margin: 0;
-    font-weight: 800;
     color: #2563eb;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
   }
 
   .divider {
@@ -100,14 +97,10 @@ const themeOfWeekStyles = css`
   }
 
   .text {
-    font-family: "Merriweather", Georgia, serif;
-    font-size: 22px;
-    font-weight: 700;
     color: #111827;
-    line-height: 1.5;
     display: inline-block;
     white-space: nowrap;
-    animation: ${slideRightLeft} 6s linear infinite;
+    animation: ${slideRightLeft} 7s linear infinite;
   }
 `;
 
@@ -244,28 +237,21 @@ const heroStyles = css`
 // -------------------- Stats Highlight --------------------
 const statsHighlight = css`
   margin-top: 28px;
-  border-radius: 16px;
   font-size: 17px;
   font-weight: 600;
   color: #1e293b;
   backdrop-filter: blur(12px);
-
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 30px;
-  flex-wrap: wrap;
-
+  gap: 15px;
   transition: all 0.25s ease;
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   }
 
-  > div {
+  > small {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 
     &::before {
       content: "•";
@@ -554,16 +540,15 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             <h1>
               Welcome to <span style={{ color: "#7c3aed" }}>PAG Family</span>
             </h1>
-            <p>
+            <small>
               Access sermons, events and ministry info across the PAG family.
               Connect with local churches, join programs, and stay updated.
-            </p>
+            </small>
 
             {/* Highlight Stats */}
             <div css={statsHighlight}>
-              <div>2000+ members across all PAG and</div>
-
-              <div>Men Fellowship Week </div>
+              <small>2000+ members across all PAG</small>
+              <small>Men Fellowship Week </small>
             </div>
             {/* Hero CTA */}
             <button
@@ -585,11 +570,11 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               style={{ width: "100%", borderRadius: 10, display: "block" }}
             />
             <section css={themeOfWeekStyles}>
-              <h3>Theme of the Week</h3>
+              <p>Theme of the Week</p>
               <div className="divider" />
-              <div className="text">
+              <p className="text">
                 Standing strong together in Christ our Lord.
-              </div>
+              </p>
             </section>
           </div>
         </div>

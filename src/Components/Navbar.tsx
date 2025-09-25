@@ -56,6 +56,7 @@ const logoStyles = css`
 
 const navStyles = css`
   display: flex;
+  align-items: center;
   gap: 22px;
 
   a {
