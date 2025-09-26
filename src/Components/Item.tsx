@@ -17,7 +17,7 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "1fr 420px",
     gap: "40px",
-    alignItems: "center",
+    alignItems: "start",
     "@media (max-width: 880px)": {
       gridTemplateColumns: "1fr",
     },
@@ -157,6 +157,49 @@ const styles = {
     fontSize: "14px",
     color: "#64748b",
   }),
+  commentInput: css({
+    width: "100%",
+    padding: "10px",
+    borderRadius: "10px",
+    border: "1px solid #cbd5e1",
+    marginBottom: "12px",
+    fontSize: "14px",
+  }),
+  commentBtn: css({
+    padding: "8px 16px",
+    borderRadius: "999px",
+    fontWeight: 600,
+    cursor: "pointer",
+    border: "none",
+    background: "#2563eb",
+    color: "white",
+    "&:hover": {
+      background: "#1d4ed8",
+    },
+    marginBottom: "20px",
+  }),
+  commentList: css({
+    maxHeight: "200px",
+    overflowY: "auto",
+    textAlign: "left",
+  }),
+  commentItem: css({
+    padding: "8px",
+    borderBottom: "1px solid #e2e8f0",
+  }),
+  commentAuthor: css({
+    fontWeight: 700,
+    fontSize: "13px",
+  }),
+  commentText: css({
+    fontSize: "14px",
+    color: "#475569",
+  }),
+};
+
+type Comment = {
+  author: string;
+  text: string;
 };
 
 const Item: React.FC = () => {
@@ -167,23 +210,40 @@ const Item: React.FC = () => {
   ];
 
   const [index, setIndex] = useState(0);
+  const [commentText, setCommentText] = useState("");
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      author: "Staff John",
+      text: "Welcome everyone! Share your prayer requests here.",
+    },
+  ]);
 
   const next = () => setIndex((index + 1) % images.length);
   const prev = () => setIndex((index - 1 + images.length) % images.length);
+
+  const addComment = () => {
+    if (!commentText.trim()) return;
+    setComments([...comments, { author: "Member", text: commentText }]);
+    setCommentText("");
+  };
 
   return (
     <main css={styles.container} role="main">
       <section css={styles.hero}>
         <div css={styles.kicker}>PAG Diani</div>
         <h1 css={styles.headline}>A Special Update for the PAG Family</h1>
+        <small>Sermon by: Pst Peter Komora Andrew</small>
+        <br />
+        <small>Date: Sunday 14th, Jan 2025 </small>
+        <br />
+        <br />
         <p css={styles.lead}>
           We are blessed to share this comprehensive update with our beloved PAG
           family. As one body in Christ, we continue to walk together in prayer,
           worship, and fellowship. This season brings growth, unity, and
           opportunities to strengthen our impact in the community and beyond.
         </p>
-        <small>Preacher: Pst Peter Komora Andrew</small>
-        <small>Date: Sunday 14th, Jan 2025 </small>
+
         <br />
         <br />
         <div css={styles.features}>
@@ -195,10 +255,15 @@ const Item: React.FC = () => {
 
         <div css={styles.ctaRow}>
           <button css={[styles.btn, styles.btnPrimary]}>
+            Offer tithes and donations
+          </button>
+          <button css={[styles.btn, styles.btnGhost]}>
+            Request Special prayers
+          </button>
+          <button css={[styles.btn, styles.btnGhost]}>
+            {" "}
             Contribute Offering
           </button>
-          <button css={[styles.btn, styles.btnGhost]}>Upcoming Events</button>
-          <button css={[styles.btn, styles.btnGhost]}>Read More Updates</button>
         </div>
       </section>
 
@@ -231,27 +296,26 @@ const Item: React.FC = () => {
           ))}
         </div>
 
-        <h3>Why stay connected as a PAG Family?</h3>
+        <h3>Continue the Discussion & Engagement Forum</h3>
 
-        <div css={styles.tick}>
-          <div style={{ fontSize: 20 }}>✅</div>
-          <div>
-            <div style={{ fontWeight: 700 }}>United in Faith</div>
-            <div css={styles.small}>
-              Together, we grow stronger in prayer, worship, and service.
-            </div>
-          </div>
-        </div>
+        <input
+          css={styles.commentInput}
+          type="text"
+          placeholder="Write a comment..."
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+        />
+        <button css={styles.commentBtn} onClick={addComment}>
+          Post Comment
+        </button>
 
-        <div css={styles.tick}>
-          <div style={{ fontSize: 20 }}>🌟</div>
-          <div>
-            <div style={{ fontWeight: 700 }}>Community Impact</div>
-            <div css={styles.small}>
-              As a family, we bring light and transformation to our
-              neighborhoods and beyond.
+        <div css={styles.commentList}>
+          {comments.map((c, i) => (
+            <div key={i} css={styles.commentItem}>
+              <div css={styles.commentAuthor}>{c.author}:</div>
+              <div css={styles.commentText}>{c.text}</div>
             </div>
-          </div>
+          ))}
         </div>
       </aside>
     </main>
