@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import type React from "react";
 import { css, keyframes } from "@emotion/react";
 
 // -------------------- Animations --------------------
@@ -53,7 +53,7 @@ const blink = keyframes`
 // NEW: slide right to left animation
 const slideRightLeft = keyframes`
   0% {
-    transform: translateX(100%);
+    transform: translateX(50%);
     opacity: 0;
   }
   20% {
@@ -67,7 +67,7 @@ const slideRightLeft = keyframes`
     opacity: 1;
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
     opacity: 0;
   }
 `;
@@ -247,6 +247,7 @@ const statsHighlight = css`
   display: flex;
   gap: 15px;
   transition: all 0.25s ease;
+
   &:hover {
     transform: translateY(-3px);
   }
@@ -263,12 +264,18 @@ const statsHighlight = css`
     }
   }
 
-  > div:first-of-type::before {
-    color: #2563eb; /* blue dot */
+  /* assign different colors to the dots */
+  > small:nth-of-type(1)::before {
+    color: #2563eb; /* blue */
   }
-
-  > div:last-of-type::before {
-    color: #fbbf24; /* yellow dot */
+  > small:nth-of-type(2)::before {
+    color: #fbbf24; /* yellow */
+  }
+  > small:nth-of-type(3)::before {
+    color: #ef4444; /* red */
+  }
+  > small:nth-of-type(4)::before {
+    color: #22c55e; /* green */
   }
 `;
 
@@ -508,31 +515,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     },
   ];
 
-  // Helper to change tab without letting layout changes cause a jump.
-  const handleSetTab = (
-    tab: string,
-    e?: React.MouseEvent | React.KeyboardEvent
-  ) => {
-    if (e && typeof (e as any).preventDefault === "function") {
-      e.preventDefault();
-      e.stopPropagation();
-    }
 
-    const x = window.scrollX;
-    const y = window.scrollY;
-    setActiveTab(tab);
-
-    requestAnimationFrame(() => {
-      window.scrollTo({ left: x, top: y, behavior: "auto" });
-    });
-  };
-
-  const handleKeyDownActivate = (e: React.KeyboardEvent, tab: string): void => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleSetTab(tab, e);
-    }
-  };
 
   return (
     <div css={globalStyles}>
@@ -596,8 +579,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                 css={[cardStyles, a.urgent && urgentCardStyles]}
                 role="button"
                 tabIndex={0}
-                onClick={(e) => handleSetTab("Item", e)}
-                onKeyDown={(e) => handleKeyDownActivate(e, "Item")}
+                onClick={(e) => setActiveTab("News")}
                 style={{ cursor: "pointer" }}
               >
                 <div css={announcementStyles}>
@@ -627,7 +609,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           {announcements.length > 3 && (
             <button
               css={viewMoreButton}
-              onClick={(e) => handleSetTab("List", e)}
+              onClick={(e) => setActiveTab("NewsList")}
               aria-label="View more announcements"
             >
               View More
@@ -644,7 +626,11 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
 
           <div css={cardGrid}>
             {recentSermons.slice(0, 3).map((s, idx) => (
-              <article key={idx} css={cardStyles}>
+              <article
+                key={idx}
+                onClick={(e) => setActiveTab("Sermons")}
+                css={cardStyles}
+              >
                 <div css={sermonCardStyles}>
                   <div className="church">{s.church}</div>
                   <div style={{ marginTop: 8 }}>
@@ -670,7 +656,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           {recentSermons.length > 3 && (
             <button
               css={viewMoreButton}
-              onClick={(e) => handleSetTab("List", e)}
+              onClick={(e) => setActiveTab("SermonsList")}
               aria-label="View more sermons"
             >
               View More
@@ -687,7 +673,11 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
 
           <div css={cardGrid}>
             {departments.slice(0, 3).map((d, idx) => (
-              <div key={idx} css={cardStyles}>
+              <div
+                key={idx}
+                onClick={(e) => setActiveTab("AssemblyPrograms")}
+                css={cardStyles}
+              >
                 <div css={ministryCardStyles}>
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
@@ -714,7 +704,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           {departments.length > 3 && (
             <button
               css={viewMoreButton}
-              onClick={(e) => handleSetTab("List", e)}
+              onClick={(e) => setActiveTab("AssemblyProgramsList")}
               aria-label="View more programs"
             >
               View More

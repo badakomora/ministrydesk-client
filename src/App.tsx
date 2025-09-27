@@ -11,10 +11,14 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      {activeTab === "Item" ? (
+      {activeTab === "NewsItem" ||
+      activeTab === "SermonsItem" ||
+      activeTab === "AssemblyProgramsItem" ? (
         <Item />
-      ) : activeTab === "List" ? (
-        <List />
+      ) : activeTab === "NewsList" ||
+      activeTab === "SermonsList" ||
+      activeTab === "AssemblyProgramsList" ? (
+        <List activeTab={activeTab} />
       ) : (
         <Home setActiveTab={setActiveTab} />
       )}

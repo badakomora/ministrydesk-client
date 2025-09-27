@@ -157,43 +157,68 @@ const styles = {
     fontSize: "14px",
     color: "#64748b",
   }),
+
+  // --- Discussion / Comment Styling ---
+  commentArea: css({
+    marginTop: "24px",
+    textAlign: "left",
+  }),
   commentInput: css({
-    width: "100%",
-    padding: "10px",
-    borderRadius: "10px",
+    width: "90%",
+    padding: "12px 14px",
+    borderRadius: "14px",
     border: "1px solid #cbd5e1",
     marginBottom: "12px",
-    fontSize: "14px",
+    fontSize: "15px",
+    outline: "none",
+    transition: "all 0.2s ease",
+    background: "#f8fafc",
+    "&:focus": {
+      borderColor: "#2563eb",
+      boxShadow: "0 0 0 3px rgba(37,99,235,0.15)",
+      background: "#ffffff",
+    },
   }),
   commentBtn: css({
-    padding: "8px 16px",
+    padding: "10px 20px",
     borderRadius: "999px",
     fontWeight: 600,
     cursor: "pointer",
     border: "none",
-    background: "#2563eb",
+    background: "linear-gradient(90deg, #2563eb, #fbbf24)",
     color: "white",
+    boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
+    transition: "all 0.25s ease",
     "&:hover": {
-      background: "#1d4ed8",
+      transform: "translateY(-2px)",
+      boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
     },
-    marginBottom: "20px",
+    marginBottom: "18px",
   }),
   commentList: css({
-    maxHeight: "200px",
+    maxHeight: "220px",
     overflowY: "auto",
-    textAlign: "left",
+    background: "linear-gradient(145deg, #f9fafb, #ffffff)",
+    borderRadius: "14px",
+    border: "1px solid #e2e8f0",
+    padding: "12px",
+    boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   }),
   commentItem: css({
-    padding: "8px",
+    padding: "10px 12px",
     borderBottom: "1px solid #e2e8f0",
+    "&:last-of-type": { borderBottom: "none" },
   }),
   commentAuthor: css({
     fontWeight: 700,
-    fontSize: "13px",
+    fontSize: "14px",
+    color: "#1e293b",
+    marginBottom: "2px",
   }),
   commentText: css({
     fontSize: "14px",
     color: "#475569",
+    lineHeight: 1.4,
   }),
 };
 
@@ -237,6 +262,7 @@ const Item: React.FC = () => {
         <small>Date: Sunday 14th, Jan 2025 </small>
         <br />
         <br />
+        <br />
         <p css={styles.lead}>
           We are blessed to share this comprehensive update with our beloved PAG
           family. As one body in Christ, we continue to walk together in prayer,
@@ -261,10 +287,13 @@ const Item: React.FC = () => {
             Request Special prayers
           </button>
           <button css={[styles.btn, styles.btnGhost]}>
-            {" "}
             Contribute Offering
           </button>
         </div>
+        <br />
+        <p>
+          <b>Note</b>: <small css={styles.lead}>Every sunday is a tithe giving day</small>.
+        </p>
       </section>
 
       <aside css={styles.aside}>
@@ -296,26 +325,28 @@ const Item: React.FC = () => {
           ))}
         </div>
 
-        <h3>Continue the Discussion & Engagement Forum</h3>
+        <div css={styles.commentArea}>
+          <h4>Continue the Discussion & Engagement Forum</h4>
 
-        <input
-          css={styles.commentInput}
-          type="text"
-          placeholder="Write a comment..."
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-        />
-        <button css={styles.commentBtn} onClick={addComment}>
-          Post Comment
-        </button>
+          <input
+            css={styles.commentInput}
+            type="text"
+            placeholder="Write a comment..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+          />
+          <button css={styles.commentBtn} onClick={addComment}>
+            Post Comment
+          </button>
 
-        <div css={styles.commentList}>
-          {comments.map((c, i) => (
-            <div key={i} css={styles.commentItem}>
-              <div css={styles.commentAuthor}>{c.author}:</div>
-              <div css={styles.commentText}>{c.text}</div>
-            </div>
-          ))}
+          <div css={styles.commentList}>
+            {comments.map((c, i) => (
+              <div key={i} css={styles.commentItem}>
+                <div css={styles.commentAuthor}>{c.author}:</div>
+                <div css={styles.commentText}>{c.text}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </aside>
     </main>

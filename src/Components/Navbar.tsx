@@ -308,6 +308,7 @@ export const Navbar = () => {
             <a href=".">News & Events</a>
             <a href=".">Churches & Sermons</a>
             <a href=".">Assembly Programs</a>
+            <a href=".">PAG Programs</a>
             <a
               href="."
               css={myPagTabStyles}
@@ -349,6 +350,9 @@ export const Navbar = () => {
           </a>
           <a href="." onClick={() => setIsMobileMenuOpen(false)}>
             Assembly Programs
+          </a>
+          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+            PAG Programs
           </a>
           <a
             href="."
@@ -397,13 +401,14 @@ export const Navbar = () => {
             {tab === "login" ? (
               <form css={formStyles}>
                 <input type="tel" placeholder="Phone Number" required />
-                <input type="password" placeholder="Password" required />
+                {/* <input type="password" placeholder="Password" required /> */}
                 <button type="submit">Login</button>
               </form>
             ) : (
               <form css={formStyles}>
                 <input type="text" placeholder="Full Name" required />
                 <input type="tel" placeholder="Phone Number" required />
+                <input type="number" placeholder="ID Number" required />
                 <input type="email" placeholder="Email (optional)" />
 
                 {/* Searchable Church Dropdown */}
