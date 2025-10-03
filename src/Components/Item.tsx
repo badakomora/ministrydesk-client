@@ -227,7 +227,11 @@ type Comment = {
   text: string;
 };
 
-const Item: React.FC = () => {
+interface componentProps {
+  activeTab: string;
+}
+
+const Item: React.FC<componentProps> = ({ activeTab }) => {
   const images = [
     "https://img.freepik.com/premium-photo/workers-forming-human-pyramid-symbolizing-support-teamwork-labor-day_875755-23315.jpg",
     "https://st2.depositphotos.com/4353975/7779/i/450/depositphotos_77796948-stock-photo-silhouette-of-helping-hand-between.jpg",
@@ -257,7 +261,10 @@ const Item: React.FC = () => {
       <section css={styles.hero}>
         <div css={styles.kicker}>PAG Diani</div>
         <h1 css={styles.headline}>A Special Update for the PAG Family</h1>
-        <small>Sermon by: Pst Peter Komora Andrew</small>
+        <small>
+          {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by  : Pst"} Peter Komora
+          Andrew
+        </small>
         <br />
         <small>Date: Sunday 14th, Jan 2025 </small>
         <br />
@@ -272,28 +279,37 @@ const Item: React.FC = () => {
 
         <br />
         <br />
-        <div css={styles.features}>
-          <div css={styles.chip}>🙏 John 3:13</div>
-          <div css={styles.chip}>📖 2nd Corinthiaans 6:35</div>
-          <div css={styles.chip}>🤝 Psalms 18:24</div>
-          <div css={styles.chip}>🌍 Revelation 7:2</div>
-        </div>
-
-        <div css={styles.ctaRow}>
-          <button css={[styles.btn, styles.btnPrimary]}>
-            Offer tithes and donations
-          </button>
-          <button css={[styles.btn, styles.btnGhost]}>
-            Request Special prayers
-          </button>
-          <button css={[styles.btn, styles.btnGhost]}>
-            Contribute Offering
-          </button>
-        </div>
-        <br />
-        <p>
-          <b>Note</b>: <small css={styles.lead}>Every sunday is a tithe giving day</small>.
-        </p>
+        {activeTab === "SermonsItem" ? (
+          <>
+            <div css={styles.features}>
+              <div css={styles.chip}>🙏 John 3:13</div>
+              <div css={styles.chip}>📖 2nd Corinthiaans 6:35</div>
+              <div css={styles.chip}>🤝 Psalms 18:24</div>
+              <div css={styles.chip}>🌍 Revelation 7:2</div>
+            </div>
+            <div css={styles.ctaRow}>
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Offer tithes and donations
+              </button>
+              <button css={[styles.btn, styles.btnGhost]}>
+                Request Special prayers
+              </button>
+              <button css={[styles.btn, styles.btnGhost]}>
+                Contribute Offering
+              </button>
+            </div>
+            <br />
+            <p>
+              <b>Note</b>:{" "}
+              <small css={styles.lead}>
+                Every sunday is a tithe giving day
+              </small>
+              .
+            </p>
+          </>
+        ) : (
+          ""
+        )}
       </section>
 
       <aside css={styles.aside}>

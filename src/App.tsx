@@ -14,7 +14,7 @@ function App() {
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
       activeTab === "AssemblyProgramsItem" ? (
-        <Item />
+        <Item activeTab={activeTab} />
       ) : activeTab === "NewsList" ||
       activeTab === "SermonsList" ||
       activeTab === "AssemblyProgramsList" ? (

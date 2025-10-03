@@ -515,8 +515,6 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     },
   ];
 
-
-
   return (
     <div css={globalStyles}>
       <main css={mainStyles}>
@@ -579,7 +577,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                 css={[cardStyles, a.urgent && urgentCardStyles]}
                 role="button"
                 tabIndex={0}
-                onClick={(e) => setActiveTab("News")}
+                onClick={(e) => setActiveTab("NewsItem")}
                 style={{ cursor: "pointer" }}
               >
                 <div css={announcementStyles}>
@@ -628,7 +626,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             {recentSermons.slice(0, 3).map((s, idx) => (
               <article
                 key={idx}
-                onClick={(e) => setActiveTab("Sermons")}
+                onClick={(e) => setActiveTab("SermonsItem")}
                 css={cardStyles}
               >
                 <div css={sermonCardStyles}>
@@ -675,7 +673,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             {departments.slice(0, 3).map((d, idx) => (
               <div
                 key={idx}
-                onClick={(e) => setActiveTab("AssemblyPrograms")}
+                onClick={(e) => setActiveTab("AssemblyProgramsItem")}
                 css={cardStyles}
               >
                 <div css={ministryCardStyles}>
