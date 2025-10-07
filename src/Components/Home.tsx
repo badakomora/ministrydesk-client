@@ -636,7 +636,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
+                        justifyContent: "space-between", 
                         marginTop: 8,
                       }}
                     >
