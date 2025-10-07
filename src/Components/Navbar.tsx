@@ -401,7 +401,7 @@ export const Navbar = () => {
             {tab === "login" ? (
               <form css={formStyles}>
                 <input type="tel" placeholder="Phone Number" required />
-                {/* <input type="password" placeholder="Password" required /> */}
+                {/* <input type="password" placehold  er="Password" required /> */}
                 <a href="." style={{ textDecoration: "none", color: "black" }}>
                   Forgot Password?
                 </a>
