@@ -107,7 +107,7 @@ const styles = {
     boxShadow: "0 12px 36px rgba(0,0,0,0.04)",
     textAlign: "center",
   }),
-  imgWrapper: css({
+  mediaWrapper: css({
     position: "relative",
     borderRadius: "14px",
     overflow: "hidden",
@@ -118,6 +118,11 @@ const styles = {
   img: css({
     width: "100%",
     height: "auto",
+    display: "block",
+  }),
+  video: css({
+    width: "100%",
+    borderRadius: "14px",
     display: "block",
   }),
   navBtn: css({
@@ -146,19 +151,11 @@ const styles = {
       background: active ? "#2563eb" : "#cbd5e1",
       cursor: "pointer",
     }),
-  tick: css({
-    display: "flex",
-    alignItems: "flex-start",
-    gap: "12px",
-    textAlign: "left",
-    marginBottom: "16px",
+  audioPlayer: css({
+    width: "100%",
+    marginTop: "15px",
+    borderRadius: "12px",
   }),
-  small: css({
-    fontSize: "14px",
-    color: "#64748b",
-  }),
-
-  // --- Discussion / Comment Styling ---
   commentArea: css({
     marginTop: "24px",
     textAlign: "left",
@@ -171,7 +168,6 @@ const styles = {
     marginBottom: "12px",
     fontSize: "15px",
     outline: "none",
-    transition: "all 0.2s ease",
     background: "#f8fafc",
     "&:focus": {
       borderColor: "#2563eb",
@@ -232,23 +228,23 @@ interface componentProps {
 }
 
 const Item: React.FC<componentProps> = ({ activeTab }) => {
-  const images = [
-    "https://img.freepik.com/premium-photo/workers-forming-human-pyramid-symbolizing-support-teamwork-labor-day_875755-23315.jpg",
-    "https://st2.depositphotos.com/4353975/7779/i/450/depositphotos_77796948-stock-photo-silhouette-of-helping-hand-between.jpg",
-    "https://images.stockcake.com/public/d/0/a/d0a3eee8-7063-4dad-aa0b-e9b46c94cd94_large/unity-in-diversity-stockcake.jpg",
+  // Each item can be image or video
+  const carouselItems = [
+    { type: "image", src: "https://img.freepik.com/premium-photo/workers-forming-human-pyramid-symbolizing-support-teamwork-labor-day_875755-23315.jpg" },
+    { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    { type: "image", src: "https://images.stockcake.com/public/d/0/a/d0a3eee8-7063-4dad-aa0b-e9b46c94cd94_large/unity-in-diversity-stockcake.jpg" },
   ];
+
+  const audioSrc = "https://www.w3schools.com/html/horse.mp3"; // example
 
   const [index, setIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([
-    {
-      author: "Staff John",
-      text: "Welcome everyone! Share your prayer requests here.",
-    },
+    { author: "Staff John", text: "Welcome everyone! Share your prayer requests here." },
   ]);
 
-  const next = () => setIndex((index + 1) % images.length);
-  const prev = () => setIndex((index - 1 + images.length) % images.length);
+  const next = () => setIndex((index + 1) % carouselItems.length);
+  const prev = () => setIndex((index - 1 + carouselItems.length) % carouselItems.length);
 
   const addComment = () => {
     if (!commentText.trim()) return;
@@ -256,20 +252,19 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
     setCommentText("");
   };
 
+  const currentItem = carouselItems[index];
+
   return (
-    <main css={styles.container} role="main">
+    <main css={styles.container}>
       <section css={styles.hero}>
         <div css={styles.kicker}>PAG Diani</div>
         <h1 css={styles.headline}>A Special Update for the PAG Family</h1>
         <small>
-          {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by  : Pst"} Peter Komora
-          Andrew
+          {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by : Pst"} Peter Komora Andrew
         </small>
         <br />
-        <small>Date: Sunday 14th, Jan 2025 </small>
-        <br />
-        <br />
-        <br />
+        <small>Date: Sunday 14th, Jan 2025</small>
+        <br /><br /><br />
         <p css={styles.lead}>
           We are blessed to share this comprehensive update with our beloved PAG
           family. As one body in Christ, we continue to walk together in prayer,
@@ -277,73 +272,59 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
           opportunities to strengthen our impact in the community and beyond.
         </p>
 
-        <br />
-        <br />
-        {activeTab === "SermonsItem" ? (
+        {activeTab === "SermonsItem" && (
           <>
             <div css={styles.features}>
               <div css={styles.chip}>🙏 John 3:13</div>
-              <div css={styles.chip}>📖 2nd Corinthiaans 6:35</div>
+              <div css={styles.chip}>📖 2nd Corinthians 6:35</div>
               <div css={styles.chip}>🤝 Psalms 18:24</div>
               <div css={styles.chip}>🌍 Revelation 7:2</div>
             </div>
             <div css={styles.ctaRow}>
-              <button css={[styles.btn, styles.btnPrimary]}>
-                Offer tithes and donations
-              </button>
-              <button css={[styles.btn, styles.btnGhost]}>
-                Request Special prayers
-              </button>
-              <button css={[styles.btn, styles.btnGhost]}>
-                Contribute Offering
-              </button>
+              <button css={[styles.btn, styles.btnPrimary]}>Offer tithes and donations</button>
+              <button css={[styles.btn, styles.btnGhost]}>Request Special prayers</button>
+              <button css={[styles.btn, styles.btnGhost]}>Contribute Offering</button>
             </div>
-            <br />
             <p>
-              <b>Note</b>:{" "}
-              <small css={styles.lead}>
-                Every sunday is a tithe giving day
-              </small>
-              .
+              <b>Note</b>: <small css={styles.lead}>Every Sunday is a tithe giving day.</small>
             </p>
           </>
-        ) : (
-          ""
         )}
       </section>
 
       <aside css={styles.aside}>
-        <div css={styles.imgWrapper}>
-          <img css={styles.img} src={images[index]} alt="Church community" />
-          <button
-            css={[styles.navBtn, { left: "10px" }]}
-            onClick={prev}
-            aria-label="Previous slide"
-          >
+        <div css={styles.mediaWrapper}>
+          {currentItem.type === "image" ? (
+            <img css={styles.img} src={currentItem.src} alt="Slide" />
+          ) : (
+            <video css={styles.video} controls>
+              <source src={currentItem.src} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          )}
+          <button css={[styles.navBtn, { left: "10px" }]} onClick={prev}>
             ‹
           </button>
-          <button
-            css={[styles.navBtn, { right: "10px" }]}
-            onClick={next}
-            aria-label="Next slide"
-          >
+          <button css={[styles.navBtn, { right: "10px" }]} onClick={next}>
             ›
           </button>
         </div>
 
         <div css={styles.dots}>
-          {images.map((_, i) => (
-            <div
-              key={i}
-              css={styles.dot(i === index)}
-              onClick={() => setIndex(i)}
-            />
+          {carouselItems.map((_, i) => (
+            <div key={i} css={styles.dot(i === index)} onClick={() => setIndex(i)} />
           ))}
         </div>
 
+        {/* Audio player below carousel */}
+        <audio css={styles.audioPlayer} controls>
+          <source src={audioSrc} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+
+        {/* Comment Section */}
         <div css={styles.commentArea}>
           <h4>Continue the Discussion & Engagement Forum</h4>
-
           <input
             css={styles.commentInput}
             type="text"
@@ -351,9 +332,7 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
           />
-          <button css={styles.commentBtn} onClick={addComment}>
-            Post Comment
-          </button>
+          <button css={styles.commentBtn} onClick={addComment}>Post Comment</button>
 
           <div css={styles.commentList}>
             {comments.map((c, i) => (

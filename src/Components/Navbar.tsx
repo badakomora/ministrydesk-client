@@ -402,6 +402,9 @@ export const Navbar = () => {
               <form css={formStyles}>
                 <input type="tel" placeholder="Phone Number" required />
                 {/* <input type="password" placeholder="Password" required /> */}
+                <a href="." style={{ textDecoration: "none", color: "black" }}>
+                  Forgot Password?
+                </a>
                 <button type="submit">Login</button>
               </form>
             ) : (
