@@ -263,8 +263,12 @@ const churchList = css`
   }
 `;
 
+interface componentProps {
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+}
+
 // -------------------- Component --------------------
-export const Navbar = () => {
+export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab, setTab] = useState<"login" | "register">("login");
@@ -304,11 +308,51 @@ export const Navbar = () => {
 
           {/* Desktop Nav */}
           <nav css={navStyles} aria-label="Primary navigation">
-            <a href=".">Home</a>
-            <a href=".">News & Events</a>
-            <a href=".">Churches & Sermons</a>
-            <a href=".">Assembly Programs</a>
-            <a href=".">PAG Programs</a>
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("home");
+              }}
+            >
+              Home
+            </a>
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("NewsList");
+              }}
+            >
+              News & Events
+            </a>
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("SermonsList");
+              }}
+            >
+              Churches & Sermons
+            </a>
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("AssemblyProgramsList");
+              }}
+            >
+              Assembly Programs
+            </a>
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("PAGProgramsList");
+              }}
+            >
+              PAG Programs
+            </a>
             <a
               href="."
               css={myPagTabStyles}
@@ -339,16 +383,44 @@ export const Navbar = () => {
           css={mobileNavStyles(isMobileMenuOpen)}
           aria-label="Mobile navigation"
         >
-          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="."
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab("home");
+              setIsMobileMenuOpen(false);
+            }}
+          >
             Home
           </a>
-          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="."
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab("NewsList");
+              setIsMobileMenuOpen(false);
+            }}
+          >
             News & Events
           </a>
-          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="."
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab("SermonsList");
+              setIsMobileMenuOpen(false);
+            }}
+          >
             Churches & Sermons
           </a>
-          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="."
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab("AssemblyProgramsList");
+              setIsMobileMenuOpen(false);
+            }}
+          >
             Assembly Programs
           </a>
           <a href="." onClick={() => setIsMobileMenuOpen(false)}>

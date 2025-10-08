@@ -160,6 +160,31 @@ const styles = {
     marginTop: "24px",
     textAlign: "left",
   }),
+
+  eventsBox: css({
+    background: "linear-gradient(145deg, #f9fafb, #ffffff)",
+    borderRadius: "14px",
+    border: "1px solid #e2e8f0",
+    padding: "16px",
+    marginBottom: "18px",
+    boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
+  }),
+
+  eventsTitle: css({
+    marginBottom: "10px",
+    color: "#2563eb",
+    fontWeight: 700,
+    fontSize: "15px",
+  }),
+
+  eventsList: css({
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+    color: "#475569",
+    fontSize: "14px",
+    lineHeight: 1.6,
+  }),
   commentInput: css({
     width: "90%",
     padding: "12px 14px",
@@ -230,9 +255,15 @@ interface componentProps {
 const Item: React.FC<componentProps> = ({ activeTab }) => {
   // Each item can be image or video
   const carouselItems = [
-    { type: "image", src: "https://img.freepik.com/premium-photo/workers-forming-human-pyramid-symbolizing-support-teamwork-labor-day_875755-23315.jpg" },
+    {
+      type: "image",
+      src: "https://img.freepik.com/premium-photo/workers-forming-human-pyramid-symbolizing-support-teamwork-labor-day_875755-23315.jpg",
+    },
     { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
-    { type: "image", src: "https://images.stockcake.com/public/d/0/a/d0a3eee8-7063-4dad-aa0b-e9b46c94cd94_large/unity-in-diversity-stockcake.jpg" },
+    {
+      type: "image",
+      src: "https://images.stockcake.com/public/d/0/a/d0a3eee8-7063-4dad-aa0b-e9b46c94cd94_large/unity-in-diversity-stockcake.jpg",
+    },
   ];
 
   const audioSrc = "https://www.w3schools.com/html/horse.mp3"; // example
@@ -240,11 +271,15 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
   const [index, setIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([
-    { author: "Staff John", text: "Welcome everyone! Share your prayer requests here." },
+    {
+      author: "Staff John",
+      text: "Welcome everyone! Share your prayer requests here.",
+    },
   ]);
 
   const next = () => setIndex((index + 1) % carouselItems.length);
-  const prev = () => setIndex((index - 1 + carouselItems.length) % carouselItems.length);
+  const prev = () =>
+    setIndex((index - 1 + carouselItems.length) % carouselItems.length);
 
   const addComment = () => {
     if (!commentText.trim()) return;
@@ -260,11 +295,14 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
         <div css={styles.kicker}>PAG Diani</div>
         <h1 css={styles.headline}>A Special Update for the PAG Family</h1>
         <small>
-          {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by : Pst"} Peter Komora Andrew
+          {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by : Pst"}{" "}
+          Peter Komora Andrew
         </small>
         <br />
         <small>Date: Sunday 14th, Jan 2025</small>
-        <br /><br /><br />
+        <br />
+        <br />
+        <br />
         <p css={styles.lead}>
           We are blessed to share this comprehensive update with our beloved PAG
           family. As one body in Christ, we continue to walk together in prayer,
@@ -272,7 +310,24 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
           opportunities to strengthen our impact in the community and beyond.
         </p>
 
-        {activeTab === "SermonsItem" && (
+        {activeTab === "AssemblyProgramsItem" ? (
+          <div css={styles.eventsBox}>
+            <h5 css={styles.eventsTitle}>🕊️ Order of Events</h5>
+            <ul css={styles.eventsList}>
+              <li>1️⃣ Opening Prayer & Praise Session</li>
+              <li>2️⃣ Scripture Reading</li>
+              <li>3️⃣ Choir Presentation</li>
+              <li>4️⃣ Sermon by Pst Peter Komora Andrew</li>
+              <li>5️⃣ Tithes & Offering</li>
+              <li>6️⃣ Announcements</li>
+              <li>7️⃣ Closing Prayer & Fellowship</li>
+            </ul>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {activeTab === "SermonsItem" || activeTab === "AssemblyProgramsItem" ? (
           <>
             <div css={styles.features}>
               <div css={styles.chip}>🙏 John 3:13</div>
@@ -281,14 +336,19 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
               <div css={styles.chip}>🌍 Revelation 7:2</div>
             </div>
             <div css={styles.ctaRow}>
-              <button css={[styles.btn, styles.btnPrimary]}>Offer tithes and donations</button>
-              <button css={[styles.btn, styles.btnGhost]}>Request Special prayers</button>
-              <button css={[styles.btn, styles.btnGhost]}>Contribute Offering</button>
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Offer tithes and donations
+              </button>
+              <button css={[styles.btn, styles.btnGhost]}>
+                Request Special prayers
+              </button>
+              <button css={[styles.btn, styles.btnGhost]}>
+                Contribute Offering
+              </button>
             </div>
-            <p>
-              <b>Note</b>: <small css={styles.lead}>Every Sunday is a tithe giving day.</small>
-            </p>
           </>
+        ) : (
+          ""
         )}
       </section>
 
@@ -312,7 +372,11 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
 
         <div css={styles.dots}>
           {carouselItems.map((_, i) => (
-            <div key={i} css={styles.dot(i === index)} onClick={() => setIndex(i)} />
+            <div
+              key={i}
+              css={styles.dot(i === index)}
+              onClick={() => setIndex(i)}
+            />
           ))}
         </div>
 
@@ -324,7 +388,11 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
 
         {/* Comment Section */}
         <div css={styles.commentArea}>
-          <h4>Continue the Discussion & Engagement Forum</h4>
+          <h4>
+            {activeTab === "AssemblyProgramsItem"
+              ? "Community Updates"
+              : "Continue the Discussion & Engagement Forum"}
+          </h4>
           <input
             css={styles.commentInput}
             type="text"
@@ -332,7 +400,9 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
           />
-          <button css={styles.commentBtn} onClick={addComment}>Post Comment</button>
+          <button css={styles.commentBtn} onClick={addComment}>
+            Post Comment
+          </button>
 
           <div css={styles.commentList}>
             {comments.map((c, i) => (

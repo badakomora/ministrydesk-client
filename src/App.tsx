@@ -1,6 +1,6 @@
 import { Home } from "./Components/Home";
 
-import { useState } from "react";
+import {useState } from "react";
 import Item from "./Components/Item";
 import { Navbar } from "./Components/Navbar";
 import { Footer } from "./Components/Footer";
@@ -10,14 +10,14 @@ function App() {
   const [activeTab, setActiveTab] = useState("Home");
   return (
     <div className="App">
-      <Navbar />
+      <Navbar setActiveTab={setActiveTab} />
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
       activeTab === "AssemblyProgramsItem" ? (
         <Item activeTab={activeTab} />
       ) : activeTab === "NewsList" ||
-      activeTab === "SermonsList" ||
-      activeTab === "AssemblyProgramsList" ? (
+        activeTab === "SermonsList" ||
+        activeTab === "AssemblyProgramsList" ? (
         <List activeTab={activeTab} />
       ) : (
         <Home setActiveTab={setActiveTab} />

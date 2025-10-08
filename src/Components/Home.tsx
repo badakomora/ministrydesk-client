@@ -525,8 +525,9 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               Welcome to <span style={{ color: "#7c3aed" }}>PAG Family</span>
             </h1>
             <small>
-              Access sermons, events and ministry info across the PAG family.
-              Connect with local churches, join programs, and stay updated.
+              Access sermons, events, and ministry updates from the entire PAG
+              family. Connect with local churches, participate in programs, and
+              stay informed. Remember, every Sunday is a day for giving tithes.
             </small>
 
             {/* Highlight Stats */}
@@ -636,7 +637,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between", 
+                        justifyContent: "space-between",
                         marginTop: 8,
                       }}
                     >
