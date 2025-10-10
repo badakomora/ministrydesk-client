@@ -46,65 +46,186 @@ const listStyles = css`
   }
 
   .card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 18px;
+    border-radius: 14px;
+    padding: 18px 20px;
     border: 1px solid #e2e8f0;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
-    }
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+    cursor: pointer;
 
     h3 {
       margin: 0 0 6px;
       font-size: 18px;
-      color: #111827;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     p {
-      margin: 0 0 8px;
+      margin: 0 0 10px;
       font-size: 15px;
-      color: #475569;
     }
 
     small {
-      color: #64748b;
+      color: #475569;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .announcement {
+    background: #fefce8;
+    border-left: 5px solid #facc15;
+
+    h3 {
+      color: #854d0e;
+    }
+
+    p {
+      color: #92400e;
+    }
+
+    &:hover {
+      background: #fef08a;
+    }
+  }
+
+  .sermon {
+    background: #eff6ff;
+    border-left: 5px solid #3b82f6;
+
+    h3 {
+      color: #1e3a8a;
+    }
+
+    p {
+      color: #1d4ed8;
+    }
+
+    &:hover {
+      background: #dbeafe;
+    }
+  }
+
+  .program {
+    background: #ecfdf5;
+    border-left: 5px solid #10b981;
+
+    h3 {
+      color: #064e3b;
+    }
+
+    p {
+      color: #047857;
+    }
+
+    &:hover {
+      background: #d1fae5;
+    }
+  }
+
+  .icon {
+    font-size: 17px;
   }
 `;
 
 type componentProps = {
   activeTab: string;
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const List: React.FC<componentProps> = ({ activeTab }) => {
+export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
   const [search, setSearch] = useState("");
 
   const announcements = [
-    { title: "Christmas Food Drive", message: "Help families in need.", date: "Dec 10", church: "PAG Nairobi" },
-    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5", church: "PAG Westlands" },
-    { title: "New Member Orientation", message: "Jan 7th at 2 PM.", date: "Nov 28", church: "PAG Karen" },
-    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25", church: "PAG Nairobi" },
+    {
+      title: "Christmas Food Drive",
+      message: "Help families in need.",
+      date: "Dec 10",
+      church: "PAG Nairobi",
+    },
+    {
+      title: "Church Office Holiday Hours",
+      message: "Closed Dec 23-26 and Jan 1.",
+      date: "Dec 5",
+      church: "PAG Westlands",
+    },
+    {
+      title: "New Member Orientation",
+      message: "Jan 7th at 2 PM.",
+      date: "Nov 28",
+      church: "PAG Karen",
+    },
+    {
+      title: "Weekly Newsletter",
+      message: "Subscribe to stay updated.",
+      date: "Nov 25",
+      church: "PAG Nairobi",
+    },
   ];
 
   const sermons = [
-    { title: "Walking in Faith", speaker: "Pastor Peter", date: "Dec 15", church: "PAG Nairobi" },
-    { title: "Power of Prayer", speaker: "Pastor Everlyne", date: "Dec 8", church: "PAG Westlands" },
-    { title: "God's Grace", speaker: "Pastor Mike", date: "Dec 1", church: "PAG Karen" },
-    { title: "Faith & Patience", speaker: "Pastor John", date: "Nov 24", church: "PAG Nairobi" },
+    {
+      title: "Walking in Faith (Audio)",
+      speaker: "Pastor Peter",
+      date: "Dec 15",
+      church: "PAG Nairobi",
+    },
+    {
+      title: "Power of Prayer (Video)",
+      speaker: "Pastor Everlyne",
+      date: "Dec 8",
+      church: "PAG Westlands",
+    },
+    {
+      title: "God's Grace (Audio)",
+      speaker: "Pastor Mike",
+      date: "Dec 1",
+      church: "PAG Karen",
+    },
+    {
+      title: "Faith & Patience (Video)",
+      speaker: "Pastor John",
+      date: "Nov 24",
+      church: "PAG Nairobi",
+    },
   ];
 
   const programs = [
-    { name: "Worship", desc: "Leading in worship", leader: "Sarah Johnson", church: "PAG Nairobi" },
-    { name: "Youth", desc: "Youth programs", leader: "Mike Chen", church: "PAG Westlands" },
-    { name: "Children", desc: "Children ministry", leader: "Mary Rodriguez", church: "PAG Karen" },
-    { name: "Outreach", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
+    {
+      name: "Worship",
+      desc: "Leading in worship",
+      leader: "Sarah Johnson",
+      church: "PAG Nairobi",
+    },
+    {
+      name: "Youth",
+      desc: "Youth programs",
+      leader: "Mike Chen",
+      church: "PAG Westlands",
+    },
+    {
+      name: "Children",
+      desc: "Children ministry",
+      leader: "Mary Rodriguez",
+      church: "PAG Karen",
+    },
+    {
+      name: "Outreach",
+      desc: "Community service",
+      leader: "James Wilson",
+      church: "PAG Nairobi",
+    },
   ];
 
-  // Filtering logic for each tab
   const filteredAnnouncements = announcements.filter(
     (a) =>
       a.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -127,11 +248,17 @@ export const List: React.FC<componentProps> = ({ activeTab }) => {
       p.church.toLowerCase().includes(search.toLowerCase())
   );
 
+  const getSermonIcon = (title: string, church: string) => {
+    const text = (title + church).toLowerCase();
+    if (text.includes("video")) return "🎥";
+    return "🎧";
+  };
+
   return (
     <div css={listStyles}>
       {activeTab === "NewsList" && (
         <div className="section">
-          <h2>All News & Events</h2>
+          <h2>📢 All News & Events</h2>
           <div className="searchBox">
             <input
               type="text"
@@ -140,13 +267,15 @@ export const List: React.FC<componentProps> = ({ activeTab }) => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="grid">
+          <div className="grid" onClick={() => setActiveTab("NewsItem")}>
             {filteredAnnouncements.length > 0 ? (
               filteredAnnouncements.map((a, idx) => (
-                <div key={idx} className="card">
-                  <h3>{a.title}</h3>
+                <div key={idx} className="card announcement">
+                  <h3>📰 {a.title}</h3>
                   <p>{a.message}</p>
-                  <small>{a.date} • {a.church}</small>
+                  <small>
+                    ⛪ {a.church} • {a.date}
+                  </small>
                 </div>
               ))
             ) : (
@@ -158,7 +287,7 @@ export const List: React.FC<componentProps> = ({ activeTab }) => {
 
       {activeTab === "SermonsList" && (
         <div className="section">
-          <h2>All Sermons</h2>
+          <h2>🎙️ All Sermons</h2>
           <div className="searchBox">
             <input
               type="text"
@@ -167,13 +296,17 @@ export const List: React.FC<componentProps> = ({ activeTab }) => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="grid">
+          <div className="grid" onClick={() => setActiveTab("SermonsItem")}>
             {filteredSermons.length > 0 ? (
               filteredSermons.map((s, idx) => (
-                <div key={idx} className="card">
-                  <h3>{s.title}</h3>
+                <div key={idx} className="card sermon">
+                  <h3>
+                    {getSermonIcon(s.title, s.church)} {s.title}
+                  </h3>
                   <p>Speaker: {s.speaker}</p>
-                  <small>{s.date} • {s.church}</small>
+                  <small>
+                    ⛪ {s.church} • {s.date}
+                  </small>
                 </div>
               ))
             ) : (
@@ -185,7 +318,7 @@ export const List: React.FC<componentProps> = ({ activeTab }) => {
 
       {activeTab === "AssemblyProgramsList" && (
         <div className="section">
-          <h2>All Assembly Programs</h2>
+          <h2>🤝 All Assembly Programs</h2>
           <div className="searchBox">
             <input
               type="text"
@@ -194,13 +327,18 @@ export const List: React.FC<componentProps> = ({ activeTab }) => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="grid">
+          <div
+            className="grid"
+            onClick={() => setActiveTab("AssemblyProgramsItem")}
+          >
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((p, idx) => (
-                <div key={idx} className="card">
-                  <h3>{p.name}</h3>
+                <div key={idx} className="card program">
+                  <h3>🌿 {p.name}</h3>
                   <p>{p.desc}</p>
-                  <small>Leader: {p.leader} • {p.church}</small>
+                  <small>
+                    ⛪ {p.church} • Leader: {p.leader}
+                  </small>
                 </div>
               ))
             ) : (

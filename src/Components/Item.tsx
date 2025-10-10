@@ -160,7 +160,6 @@ const styles = {
     marginTop: "24px",
     textAlign: "left",
   }),
-
   eventsBox: css({
     background: "linear-gradient(145deg, #f9fafb, #ffffff)",
     borderRadius: "14px",
@@ -169,14 +168,12 @@ const styles = {
     marginBottom: "18px",
     boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   }),
-
   eventsTitle: css({
     marginBottom: "10px",
     color: "#2563eb",
     fontWeight: 700,
     fontSize: "15px",
   }),
-
   eventsList: css({
     listStyle: "none",
     padding: 0,
@@ -243,6 +240,45 @@ const styles = {
   }),
 };
 
+const blink = keyframes`
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+`;
+
+const statsHighlight = css`
+  font-size: 17px;
+  font-weight: 600;
+  color: #1e293b;
+  backdrop-filter: blur(12px);
+  display: flex;
+  transition: all 0.25s ease;
+  &:hover {
+    transform: translateY(-3px);
+  }
+  > small {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    &::before {
+      content: "•";
+      font-size: 22px;
+      animation: ${blink} 1.4s infinite;
+    }
+  }
+  > small:nth-of-type(1)::before {
+    color: #2563eb;
+  }
+  > small:nth-of-type(2)::before {
+    color: #fbbf24;
+  }
+  > small:nth-of-type(3)::before {
+    color: #ef4444;
+  }
+  > small:nth-of-type(4)::before {
+    color: #22c55e;
+  }
+`;
+
 type Comment = {
   author: string;
   text: string;
@@ -253,7 +289,6 @@ interface componentProps {
 }
 
 const Item: React.FC<componentProps> = ({ activeTab }) => {
-  // Each item can be image or video
   const carouselItems = [
     {
       type: "image",
@@ -266,7 +301,9 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
     },
   ];
 
-  const audioSrc = "https://www.w3schools.com/html/horse.mp3"; // example
+  const audioSrc = "https://www.w3schools.com/html/horse.mp3";
+  const documentUrl =
+    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
 
   const [index, setIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
@@ -293,6 +330,13 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
     <main css={styles.container}>
       <section css={styles.hero}>
         <div css={styles.kicker}>PAG Diani</div>
+        {activeTab === "AssemblyProgramsItem" && (
+          <div css={statsHighlight}>
+            <small>Youth Program</small>
+          </div>
+        )}
+
+        <br />
         <h1 css={styles.headline}>A Special Update for the PAG Family</h1>
         <small>
           {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by : Pst"}{" "}
@@ -301,16 +345,13 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
         <br />
         <small>Date: Sunday 14th, Jan 2025</small>
         <br />
-        <br />
-        <br />
         <p css={styles.lead}>
           We are blessed to share this comprehensive update with our beloved PAG
           family. As one body in Christ, we continue to walk together in prayer,
-          worship, and fellowship. This season brings growth, unity, and
-          opportunities to strengthen our impact in the community and beyond.
+          worship, and fellowship.
         </p>
 
-        {activeTab === "AssemblyProgramsItem" ? (
+        {activeTab === "AssemblyProgramsItem" && (
           <div css={styles.eventsBox}>
             <h5 css={styles.eventsTitle}>🕊️ Order of Events</h5>
             <ul css={styles.eventsList}>
@@ -323,11 +364,11 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
               <li>7️⃣ Closing Prayer & Fellowship</li>
             </ul>
           </div>
-        ) : (
-          ""
         )}
 
-        {activeTab === "SermonsItem" || activeTab === "AssemblyProgramsItem" ? (
+        {(activeTab === "SermonsItem" ||
+          activeTab === "AssemblyProgramsItem" ||
+          activeTab === "NewsItem") && (
           <>
             <div css={styles.features}>
               <div css={styles.chip}>🙏 John 3:13</div>
@@ -347,8 +388,6 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
               </button>
             </div>
           </>
-        ) : (
-          ""
         )}
       </section>
 
@@ -386,6 +425,62 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
           Your browser does not support the audio element.
         </audio>
 
+        {/* Document Section (available for all tabs) */}
+        <div
+          css={css({
+            marginTop: "20px",
+            padding: "16px",
+            border: "1px solid #e2e8f0",
+            borderRadius: "14px",
+            background: "linear-gradient(145deg, #f9fafb, #ffffff)",
+            boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
+            textAlign: "left",
+          })}
+        >
+          <h4
+            css={css({
+              color: "#2563eb",
+              fontSize: "15px",
+              fontWeight: 700,
+              marginBottom: "8px",
+            })}
+          >
+            📄 Document / Download
+          </h4>
+
+          <p
+            css={css({
+              color: "#475569",
+              fontSize: "14px",
+              marginBottom: "10px",
+            })}
+          >
+            Download attached materials, sermon notes, or event guides below.
+          </p>
+
+          <a
+            href={documentUrl}
+            download
+            css={css({
+              display: "inline-block",
+              padding: "10px 18px",
+              borderRadius: "999px",
+              background: "linear-gradient(90deg, #2563eb, #fbbf24)",
+              color: "white",
+              fontWeight: 600,
+              textDecoration: "none",
+              boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
+              transition: "all 0.25s ease",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
+              },
+            })}
+          >
+            ⬇️ Download Document
+          </a>
+        </div>
+
         {/* Comment Section */}
         <div css={styles.commentArea}>
           <h4>
@@ -407,7 +502,7 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
           <div css={styles.commentList}>
             {comments.map((c, i) => (
               <div key={i} css={styles.commentItem}>
-                <div css={styles.commentAuthor}>{c.author}:</div>
+                <div css={styles.commentAuthor}>{c.author}</div>
                 <div css={styles.commentText}>{c.text}</div>
               </div>
             ))}

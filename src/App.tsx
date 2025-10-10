@@ -1,6 +1,6 @@
 import { Home } from "./Components/Home";
 
-import {useState } from "react";
+import { useState } from "react";
 import Item from "./Components/Item";
 import { Navbar } from "./Components/Navbar";
 import { Footer } from "./Components/Footer";
@@ -18,7 +18,7 @@ function App() {
       ) : activeTab === "NewsList" ||
         activeTab === "SermonsList" ||
         activeTab === "AssemblyProgramsList" ? (
-        <List activeTab={activeTab} />
+        <List activeTab={activeTab} setActiveTab={setActiveTab} />
       ) : (
         <Home setActiveTab={setActiveTab} />
       )}

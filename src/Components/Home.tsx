@@ -682,7 +682,9 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <div>
-                      <div className="church">{d.church}</div>
+                      <div className="church">
+                        <b>{d.church}</b>
+                      </div>
                       <h3>
                         {d.icon} {d.name}
                       </h3>
