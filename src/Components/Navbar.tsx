@@ -534,12 +534,12 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                   <option value="women">Women Dept</option>
                   <option value="men">Men Dept</option>
                 </select>
-                <input type="password" placeholder="Create Password" required />
+                {/* <input type="password" placeholder="Create Password" required />
                 <input
                   type="password"
                   placeholder="Confirm Password"
                   required
-                />
+                /> */}
                 <button type="submit">Register</button>
               </form>
             )}
