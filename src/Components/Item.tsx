@@ -367,8 +367,7 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
         )}
 
         {(activeTab === "SermonsItem" ||
-          activeTab === "AssemblyProgramsItem" ||
-          activeTab === "NewsItem") && (
+          activeTab === "AssemblyProgramsItem") && (
           <>
             <div css={styles.features}>
               <div css={styles.chip}>🙏 John 3:13</div>
