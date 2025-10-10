@@ -13,12 +13,8 @@ const listStyles = css`
     color: #1e293b;
   }
 
-  .section {
-    margin-bottom: 50px;
-  }
-
   .searchBox {
-    margin: 15px 0 25px;
+    margin: 20px 0 30px;
     display: flex;
     justify-content: center;
 
@@ -37,6 +33,10 @@ const listStyles = css`
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
       }
     }
+  }
+
+  .section {
+    margin-bottom: 50px;
   }
 
   .grid {
@@ -131,10 +131,6 @@ const listStyles = css`
       background: #d1fae5;
     }
   }
-
-  .icon {
-    font-size: 17px;
-  }
 `;
 
 type componentProps = {
@@ -146,136 +142,59 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
   const [search, setSearch] = useState("");
 
   const announcements = [
-    {
-      title: "Christmas Food Drive",
-      message: "Help families in need.",
-      date: "Dec 10",
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Church Office Holiday Hours",
-      message: "Closed Dec 23-26 and Jan 1.",
-      date: "Dec 5",
-      church: "PAG Westlands",
-    },
-    {
-      title: "New Member Orientation",
-      message: "Jan 7th at 2 PM.",
-      date: "Nov 28",
-      church: "PAG Karen",
-    },
-    {
-      title: "Weekly Newsletter",
-      message: "Subscribe to stay updated.",
-      date: "Nov 25",
-      church: "PAG Nairobi",
-    },
+    { title: "Christmas Food Drive", message: "Help families in need.", date: "Dec 10", church: "PAG Nairobi" },
+    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5", church: "PAG Westlands" },
+    { title: "New Member Orientation", message: "Jan 7th at 2 PM.", date: "Nov 28", church: "PAG Karen" },
+    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25", church: "PAG Nairobi" },
   ];
 
   const sermons = [
-    {
-      title: "Walking in Faith (Audio)",
-      speaker: "Pastor Peter",
-      date: "Dec 15",
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Power of Prayer (Video)",
-      speaker: "Pastor Everlyne",
-      date: "Dec 8",
-      church: "PAG Westlands",
-    },
-    {
-      title: "God's Grace (Audio)",
-      speaker: "Pastor Mike",
-      date: "Dec 1",
-      church: "PAG Karen",
-    },
-    {
-      title: "Faith & Patience (Video)",
-      speaker: "Pastor John",
-      date: "Nov 24",
-      church: "PAG Nairobi",
-    },
+    { title: "Walking in Faith (Audio)", speaker: "Pastor Peter", date: "Dec 15", church: "PAG Nairobi" },
+    { title: "Power of Prayer (Video)", speaker: "Pastor Everlyne", date: "Dec 8", church: "PAG Westlands" },
+    { title: "God's Grace (Audio)", speaker: "Pastor Mike", date: "Dec 1", church: "PAG Karen" },
+    { title: "Faith & Patience (Video)", speaker: "Pastor John", date: "Nov 24", church: "PAG Nairobi" },
   ];
 
   const programs = [
-    {
-      name: "Worship",
-      desc: "Leading in worship",
-      leader: "Sarah Johnson",
-      church: "PAG Nairobi",
-    },
-    {
-      name: "Youth",
-      desc: "Youth programs",
-      leader: "Mike Chen",
-      church: "PAG Westlands",
-    },
-    {
-      name: "Children",
-      desc: "Children ministry",
-      leader: "Mary Rodriguez",
-      church: "PAG Karen",
-    },
-    {
-      name: "Outreach",
-      desc: "Community service",
-      leader: "James Wilson",
-      church: "PAG Nairobi",
-    },
+    { name: "Worship", desc: "Leading in worship", leader: "Sarah Johnson", church: "PAG Nairobi" },
+    { name: "Youth", desc: "Youth programs", leader: "Mike Chen", church: "PAG Westlands" },
+    { name: "Children", desc: "Children ministry", leader: "Mary Rodriguez", church: "PAG Karen" },
+    { name: "Outreach", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
   ];
 
-  const filteredAnnouncements = announcements.filter(
-    (a) =>
-      a.title.toLowerCase().includes(search.toLowerCase()) ||
-      a.message.toLowerCase().includes(search.toLowerCase()) ||
-      a.church.toLowerCase().includes(search.toLowerCase())
-  );
+  // Filter all data by church name only
+  const filterByChurch = (item: { church: string }) =>
+    item.church.toLowerCase().includes(search.toLowerCase());
 
-  const filteredSermons = sermons.filter(
-    (s) =>
-      s.title.toLowerCase().includes(search.toLowerCase()) ||
-      s.speaker.toLowerCase().includes(search.toLowerCase()) ||
-      s.church.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredAnnouncements = announcements.filter(filterByChurch);
+  const filteredSermons = sermons.filter(filterByChurch);
+  const filteredPrograms = programs.filter(filterByChurch);
 
-  const filteredPrograms = programs.filter(
-    (p) =>
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.desc.toLowerCase().includes(search.toLowerCase()) ||
-      p.leader.toLowerCase().includes(search.toLowerCase()) ||
-      p.church.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const getSermonIcon = (title: string, church: string) => {
-    const text = (title + church).toLowerCase();
-    if (text.includes("video")) return "🎥";
-    return "🎧";
-  };
+  const getSermonIcon = (title: string) =>
+    title.toLowerCase().includes("video") ? "🎥" : "🎧";
 
   return (
     <div css={listStyles}>
+      {/* Single search input */}
+      <div className="searchBox">
+        <input
+          type="text"
+          placeholder="Search by church name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       {activeTab === "NewsList" && (
         <div className="section">
           <h2>📢 All News & Events</h2>
-          <div className="searchBox">
-            <input
-              type="text"
-              placeholder="Search news..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
           <div className="grid" onClick={() => setActiveTab("NewsItem")}>
             {filteredAnnouncements.length > 0 ? (
               filteredAnnouncements.map((a, idx) => (
                 <div key={idx} className="card announcement">
                   <h3>📰 {a.title}</h3>
                   <p>{a.message}</p>
-                  <small>
-                    ⛪ {a.church} • {a.date}
-                  </small>
+                  <small>⛪ {a.church} • {a.date}</small>
                 </div>
               ))
             ) : (
@@ -288,25 +207,13 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       {activeTab === "SermonsList" && (
         <div className="section">
           <h2>🎙️ All Sermons</h2>
-          <div className="searchBox">
-            <input
-              type="text"
-              placeholder="Search sermons..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
           <div className="grid" onClick={() => setActiveTab("SermonsItem")}>
             {filteredSermons.length > 0 ? (
               filteredSermons.map((s, idx) => (
                 <div key={idx} className="card sermon">
-                  <h3>
-                    {getSermonIcon(s.title, s.church)} {s.title}
-                  </h3>
+                  <h3>{getSermonIcon(s.title)} {s.title}</h3>
                   <p>Speaker: {s.speaker}</p>
-                  <small>
-                    ⛪ {s.church} • {s.date}
-                  </small>
+                  <small>⛪ {s.church} • {s.date}</small>
                 </div>
               ))
             ) : (
@@ -319,26 +226,13 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       {activeTab === "AssemblyProgramsList" && (
         <div className="section">
           <h2>🤝 All Assembly Programs</h2>
-          <div className="searchBox">
-            <input
-              type="text"
-              placeholder="Search programs..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div
-            className="grid"
-            onClick={() => setActiveTab("AssemblyProgramsItem")}
-          >
+          <div className="grid" onClick={() => setActiveTab("AssemblyProgramsItem")}>
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((p, idx) => (
                 <div key={idx} className="card program">
                   <h3>🌿 {p.name}</h3>
                   <p>{p.desc}</p>
-                  <small>
-                    ⛪ {p.church} • Leader: {p.leader}
-                  </small>
+                  <small>⛪ {p.church} • Leader: {p.leader}</small>
                 </div>
               ))
             ) : (
