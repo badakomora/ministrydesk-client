@@ -18,8 +18,8 @@ const globalStyles = css`
     margin: 0;
     font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
       Roboto, "Helvetica Neue", Arial;
-    background: #f8fafc;
-    color: #1e293b;
+    background: #fffff;
+    color: #fbbf24
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.7;
@@ -29,7 +29,7 @@ const globalStyles = css`
   h3,
   h4 {
     font-family: "Merriweather", Georgia, serif;
-    color: #0f172a;
+    color: black;
     line-height: 1.3;
   }
   a {
@@ -78,7 +78,7 @@ const themeOfWeekStyles = css`
   padding: 15px;
   border-radius: 14px;
   text-align: center;
-  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  background: white;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 
   p {
@@ -367,7 +367,7 @@ const viewMoreButton = css`
   margin: 32px auto 0;
   padding: 12px 26px;
   border-radius: 999px;
-  background: #2563eb;
+  background: #2563eb
   color: #fff;
   font-size: 15px;
   font-weight: 600;
@@ -484,7 +484,6 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     {
       name: "Worship",
       description: "Leading in worship",
-      icon: "🎵",
       leader: "Sarah Johnson",
       contact: "worship@pag.org",
       church: "PAG Nairobi",
@@ -492,7 +491,6 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     {
       name: "Youth",
       description: "Youth programs",
-      icon: "👥",
       leader: "Mike Chen",
       contact: "youth@pag.org",
       church: "PAG Westlands",
@@ -500,7 +498,6 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     {
       name: "Children",
       description: "Children ministry",
-      icon: "❤️",
       leader: "Mary Rodriguez",
       contact: "children@pag.org",
       church: "PAG Karen",
@@ -508,7 +505,6 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
     {
       name: "Outreach",
       description: "Community service",
-      icon: "🏢",
       leader: "James Wilson",
       contact: "outreach@pag.org",
       church: "PAG Nairobi",
@@ -686,7 +682,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                         <b>{d.church}</b>
                       </div>
                       <h3>
-                        {d.icon} {d.name}
+                        {d.name}
                       </h3>
                     </div>
                     <div style={{ textAlign: "right" }}>

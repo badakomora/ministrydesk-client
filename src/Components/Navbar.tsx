@@ -7,10 +7,10 @@ const headerStyles = css`
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
+  width: 100%;
   backdrop-filter: blur(6px);
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
-  border-bottom: 2px solid #e2e8f0;
 `;
 
 const headerContentStyles = css`
@@ -38,7 +38,7 @@ const logoStyles = css`
     color: white;
     font-weight: 700;
     font-size: 20px;
-    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   }
 
   h1 {
@@ -50,7 +50,6 @@ const logoStyles = css`
   p {
     margin: 0;
     font-size: 12px;
-    color: #64748b;
   }
 `;
 
@@ -61,10 +60,10 @@ const navStyles = css`
 
   a {
     font-weight: 600;
-    color: #1e293b;
     text-decoration: none;
     transition: color 0.2s ease;
     cursor: pointer;
+    color: black;
   }
 
   a:hover {
@@ -82,7 +81,7 @@ const myPagTabStyles = css`
   padding: 8px 16px;
   border-radius: 999px;
   font-weight: 700;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
 `;
 
 const mobileMenuBtn = (isOpen: boolean) => css`
@@ -93,7 +92,6 @@ const mobileMenuBtn = (isOpen: boolean) => css`
     align-items: center;
     justify-content: center;
     background: ${isOpen ? "#2563eb" : "transparent"};
-    color: ${isOpen ? "white" : "#1e293b"};
     border: 2px solid #2563eb;
     border-radius: 999px;
     padding: 8px 14px;
@@ -117,24 +115,21 @@ const mobileNavStyles = (isOpen: boolean) => css`
   width: 90%;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   z-index: 50;
 
   a {
     width: 100%;
     font-weight: 600;
-    color: #1e293b;
     text-decoration: none;
     cursor: pointer;
     transition: color 0.2s ease;
   }
 
-
   a:hover {
     color: #2563eb;
   }
 `;
-
 
 // -------------------- Modal Styles --------------------
 const fadeIn = keyframes`
@@ -148,7 +143,7 @@ const modalOverlay = css`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(30, 41, 59, 0.6);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,12 +152,12 @@ const modalOverlay = css`
 `;
 
 const modalContent = css`
-  background: linear-gradient(to bottom right, #ffffff, #f8fafc);
+  background: white;
   border-radius: 18px;
   padding: 28px 26px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   position: relative;
   animation: ${fadeIn} 0.3s ease-out;
 `;
@@ -185,12 +180,11 @@ const tabs = css`
   .active {
     background: #2563eb;
     color: white;
-    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   }
 
   .inactive {
-    background: #f1f5f9;
-    color: #1e293b;
+    background: white;
   }
 `;
 
@@ -202,7 +196,6 @@ const formStyles = css`
   input,
   select {
     padding: 12px 14px;
-    border: 1px solid #cbd5e1;
     border-radius: 8px;
     font-size: 14px;
     transition: all 0.2s ease;
@@ -213,7 +206,7 @@ const formStyles = css`
     outline: none;
     padding: 12px 14px;
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   }
 
   button {
@@ -229,8 +222,8 @@ const formStyles = css`
   }
 
   button:hover {
-    background: #1d4ed8;
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    background: #fbbf24;
+    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   }
 `;
 
@@ -250,7 +243,7 @@ const churchList = css`
   width: 100%; /* match parent width */
   left: 0;
   background: white;
-  border: 1px solid #cbd5e1;
+  border: 1px solid white;
   border-radius: 8px;
   margin-top: 4px;
   max-height: 160px;
@@ -265,7 +258,7 @@ const churchList = css`
   }
 
   div:hover {
-    background: #f1f5f9;
+    background: white;
   }
 `;
 
