@@ -9,8 +9,15 @@ const listStyles = css`
 
   h2 {
     font-size: 26px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     color: #1e293b;
+  }
+
+  p.section-desc {
+    color: #475569;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.6;
   }
 
   .searchBox {
@@ -50,7 +57,8 @@ const listStyles = css`
     padding: 18px 20px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+    transition: transform 200ms ease, box-shadow 200ms ease,
+      background 200ms ease;
     cursor: pointer;
 
     h3 {
@@ -82,8 +90,7 @@ const listStyles = css`
   }
 
   .announcement {
-    background: #fefce8;
-    border-left: 5px solid #facc15;
+    border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
       color: #854d0e;
@@ -92,15 +99,10 @@ const listStyles = css`
     p {
       color: #92400e;
     }
-
-    &:hover {
-      background: #fef08a;
-    }
   }
 
   .sermon {
-    background: #eff6ff;
-    border-left: 5px solid #3b82f6;
+    border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
       color: #1e3a8a;
@@ -116,8 +118,7 @@ const listStyles = css`
   }
 
   .program {
-    background: #ecfdf5;
-    border-left: 5px solid #10b981;
+    border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
       color: #064e3b;
@@ -125,10 +126,6 @@ const listStyles = css`
 
     p {
       color: #047857;
-    }
-
-    &:hover {
-      background: #d1fae5;
     }
   }
 `;
@@ -142,27 +139,86 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
   const [search, setSearch] = useState("");
 
   const announcements = [
-    { title: "Christmas Food Drive", message: "Help families in need.", date: "Dec 10", church: "PAG Nairobi" },
-    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5", church: "PAG Westlands" },
-    { title: "New Member Orientation", message: "Jan 7th at 2 PM.", date: "Nov 28", church: "PAG Karen" },
-    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25", church: "PAG Nairobi" },
+    {
+      title: "Christmas Food Drive",
+      message: "Help families in need.",
+      date: "Dec 10",
+      church: "PAG Nairobi",
+    },
+    {
+      title: "Church Office Holiday Hours",
+      message: "Closed Dec 23-26 and Jan 1.",
+      date: "Dec 5",
+      church: "PAG Westlands",
+    },
+    {
+      title: "New Member Orientation",
+      message: "Jan 7th at 2 PM.",
+      date: "Nov 28",
+      church: "PAG Karen",
+    },
+    {
+      title: "Weekly Newsletter",
+      message: "Subscribe to stay updated.",
+      date: "Nov 25",
+      church: "PAG Nairobi",
+    },
   ];
 
   const sermons = [
-    { title: "Walking in Faith (Audio)", speaker: "Pastor Peter", date: "Dec 15", church: "PAG Nairobi" },
-    { title: "Power of Prayer (Video)", speaker: "Pastor Everlyne", date: "Dec 8", church: "PAG Westlands" },
-    { title: "God's Grace (Audio)", speaker: "Pastor Mike", date: "Dec 1", church: "PAG Karen" },
-    { title: "Faith & Patience (Video)", speaker: "Pastor John", date: "Nov 24", church: "PAG Nairobi" },
+    {
+      title: "Walking in Faith",
+      speaker: "Pastor Peter",
+      date: "Dec 15",
+      church: "PAG Nairobi",
+    },
+    {
+      title: "Power of Prayer",
+      speaker: "Pastor Everlyne",
+      date: "Dec 8",
+      church: "PAG Westlands",
+    },
+    {
+      title: "God's Grace",
+      speaker: "Pastor Mike",
+      date: "Dec 1",
+      church: "PAG Karen",
+    },
+    {
+      title: "Faith & Patience",
+      speaker: "Pastor John",
+      date: "Nov 24",
+      church: "PAG Nairobi",
+    },
   ];
 
   const programs = [
-    { name: "Worship", desc: "Leading in worship", leader: "Sarah Johnson", church: "PAG Nairobi" },
-    { name: "Youth", desc: "Youth programs", leader: "Mike Chen", church: "PAG Westlands" },
-    { name: "Children", desc: "Children ministry", leader: "Mary Rodriguez", church: "PAG Karen" },
-    { name: "Outreach", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
+    {
+      name: "Worship",
+      desc: "Leading in worship",
+      leader: "Sarah Johnson",
+      church: "PAG Nairobi",
+    },
+    {
+      name: "Youth",
+      desc: "Youth programs",
+      leader: "Mike Chen",
+      church: "PAG Westlands",
+    },
+    {
+      name: "Children",
+      desc: "Children ministry",
+      leader: "Mary Rodriguez",
+      church: "PAG Karen",
+    },
+    {
+      name: "Outreach",
+      desc: "Community service",
+      leader: "James Wilson",
+      church: "PAG Nairobi",
+    },
   ];
 
-  // Filter all data by church name only
   const filterByChurch = (item: { church: string }) =>
     item.church.toLowerCase().includes(search.toLowerCase());
 
@@ -175,7 +231,6 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
   return (
     <div css={listStyles}>
-      {/* Single search input */}
       <div className="searchBox">
         <input
           type="text"
@@ -188,13 +243,19 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       {activeTab === "NewsList" && (
         <div className="section">
           <h2>📢 All News & Events</h2>
+          <p className="section-desc">
+            Stay informed with the latest church news, special events, and
+            community updates happening across all PAG assemblies.
+          </p>
           <div className="grid" onClick={() => setActiveTab("NewsItem")}>
             {filteredAnnouncements.length > 0 ? (
               filteredAnnouncements.map((a, idx) => (
                 <div key={idx} className="card announcement">
                   <h3>📰 {a.title}</h3>
                   <p>{a.message}</p>
-                  <small>⛪ {a.church} • {a.date}</small>
+                  <small>
+                    ⛪ {a.church} • {a.date}
+                  </small>
                 </div>
               ))
             ) : (
@@ -207,13 +268,21 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       {activeTab === "SermonsList" && (
         <div className="section">
           <h2>🎙️ All Sermons</h2>
+          <p className="section-desc">
+            Access powerful teachings and messages from our pastors through
+            recorded sermons — available in both video and audio.
+          </p>
           <div className="grid" onClick={() => setActiveTab("SermonsItem")}>
             {filteredSermons.length > 0 ? (
               filteredSermons.map((s, idx) => (
                 <div key={idx} className="card sermon">
-                  <h3>{getSermonIcon(s.title)} {s.title}</h3>
+                  <h3>
+                    {getSermonIcon(s.title)} {s.title}
+                  </h3>
                   <p>Speaker: {s.speaker}</p>
-                  <small>⛪ {s.church} • {s.date}</small>
+                  <small>
+                    ⛪ {s.church} • {s.date}
+                  </small>
                 </div>
               ))
             ) : (
@@ -226,13 +295,22 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       {activeTab === "AssemblyProgramsList" && (
         <div className="section">
           <h2>🤝 All Assembly Programs</h2>
-          <div className="grid" onClick={() => setActiveTab("AssemblyProgramsItem")}>
+          <p className="section-desc">
+            Explore our assembly programs that nurture faith, empower youth, and
+            strengthen community bonds through service and worship.
+          </p>
+          <div
+            className="grid"
+            onClick={() => setActiveTab("AssemblyProgramsItem")}
+          >
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((p, idx) => (
                 <div key={idx} className="card program">
                   <h3>🌿 {p.name}</h3>
                   <p>{p.desc}</p>
-                  <small>⛪ {p.church} • Leader: {p.leader}</small>
+                  <small>
+                    ⛪ {p.church} • Leader: {p.leader}
+                  </small>
                 </div>
               ))
             ) : (
