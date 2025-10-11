@@ -106,29 +106,35 @@ const mobileMenuBtn = (isOpen: boolean) => css`
 const mobileNavStyles = (isOpen: boolean) => css`
   display: ${isOpen ? "flex" : "none"};
   flex-direction: column;
-  gap: 14px;
-  padding: 18px;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 24px 20px;
   position: absolute;
   top: 72px;
-  right: 18px;
-  width: calc(100% - 36px);
-  max-width: 360px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
   background: white;
-  border-radius: 14px;
+  border-radius: 16px;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.15);
   z-index: 50;
 
   a {
+    width: 100%;
     font-weight: 600;
     color: #1e293b;
     text-decoration: none;
     cursor: pointer;
+    transition: color 0.2s ease;
   }
+
 
   a:hover {
     color: #2563eb;
   }
 `;
+
 
 // -------------------- Modal Styles --------------------
 const fadeIn = keyframes`
