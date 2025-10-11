@@ -77,7 +77,7 @@ const navStyles = css`
 
 const myPagTabStyles = css`
   background: #2563eb;
-  color: white !important;
+  color: white;
   padding: 8px 16px;
   border-radius: 999px;
   font-weight: 700;
