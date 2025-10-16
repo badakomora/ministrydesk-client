@@ -600,7 +600,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               onClick={(e) => setActiveTab("NewsList")}
               aria-label="View more announcements"
             >
-              View More
+              View More &raquo;
             </button>
           )}
         </section>
@@ -647,7 +647,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               onClick={(e) => setActiveTab("SermonsList")}
               aria-label="View more sermons"
             >
-              View More
+              View More &raquo;
             </button>
           )}
         </section>
@@ -695,7 +695,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               onClick={(e) => setActiveTab("AssemblyProgramsList")}
               aria-label="View more programs"
             >
-              View More
+              View More &raquo;
             </button>
           )}
         </section>
