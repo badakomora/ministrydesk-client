@@ -67,7 +67,9 @@ const navStyles = css`
   }
 
   a:hover {
-    color: #2563eb;
+    color: white;
+    background: #2563eb;
+    padding: 8px 12px;
   }
 
   @media (max-width: 768px) {
@@ -78,8 +80,7 @@ const navStyles = css`
 const myPagTabStyles = css`
   background: #2563eb;
   color: white;
-  padding: 8px 16px;
-  border-radius: 999px;
+  padding: 8px 12px;
   font-weight: 700;
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
 `;
@@ -300,7 +301,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
               ⛪
             </div>
             <div>
-              <h1>PAG Family</h1>
+              <h1>Ministry Desk</h1>
               <p>Connecting churches & people</p>
             </div>
           </div>
@@ -350,7 +351,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                 setActiveTab("PAGProgramsList");
               }}
             >
-              PAG Programs
+              Community
             </a>
             <a
               href="."
@@ -360,7 +361,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                 setIsModalOpen(true);
               }}
             >
-              My PAG
+              Membership
             </a>
           </nav>
 
@@ -450,7 +451,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                   ⛪
                 </div>
                 <div>
-                  <h1>PAG Family</h1>
+                  <h1>Ministry Desk</h1>
                   <p>Connecting churches & people</p>
                 </div>
               </div>

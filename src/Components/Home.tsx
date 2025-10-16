@@ -75,8 +75,7 @@ const slideRightLeft = keyframes`
 // -------------------- Theme of the Week --------------------
 const themeOfWeekStyles = css`
   margin: 40px auto 0;
-  padding: 15px;
-  border-radius: 14px;
+  padding: 8px 12px;
   text-align: center;
   background: white;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
@@ -108,9 +107,8 @@ const ctaPrimary = css`
   background: linear-gradient(90deg, #2563eb, #fbbf24);
   color: #fff;
   border: none;
-  padding: 14px 26px;
+  padding: 8px 12px;
   margin-top: 10px;
-  border-radius: 999px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
@@ -126,8 +124,7 @@ const ctaPrimary = css`
 // -------------------- Cards --------------------
 const cardStyles = css`
   background: #fff;
-  border-radius: 14px;
-  padding: 22px;
+  padding: 8px 12px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
   transition: transform 200ms ease, box-shadow 200ms ease;
@@ -141,9 +138,8 @@ const cardStyles = css`
 // -------------------- Hero --------------------
 const heroStyles = css`
   position: relative;
-  border-radius: 24px;
   overflow: hidden;
-  padding: 70px 32px;
+  padding: 8px 12px;
   display: grid;
   gap: 50px;
   grid-template-columns: 1fr;
@@ -219,7 +215,6 @@ const heroStyles = css`
   .visual {
     position: relative;
     z-index: 2;
-    border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
     animation: ${float} 8s ease-in-out infinite;
@@ -353,8 +348,7 @@ const announcementStyles = css`
 const badgeStyles = css`
   display: inline-block;
   font-size: 12px;
-  padding: 4px;
-  border-radius: 999px;
+  padding: 8px 12px;
   font-weight: 700;
   background: #ef4444;
   color: #fff;
@@ -365,10 +359,9 @@ const badgeStyles = css`
 const viewMoreButton = css`
   display: block;
   margin: 32px auto 0;
-  padding: 12px 26px;
-  border-radius: 999px;
-  background: #2563eb
-  color: #fff;
+  padding: 8px 12px;
+  color: black;
+  background: white;
   font-size: 15px;
   font-weight: 600;
   border: none;
@@ -548,7 +541,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             <img
               src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3"
               alt="church gathering"
-              style={{ width: "100%", borderRadius: 10, display: "block" }}
+              style={{ width: "100%", display: "block" }}
             />
             <section css={themeOfWeekStyles}>
               <p>Theme of the Week</p>
@@ -681,9 +674,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                       <div className="church">
                         <b>{d.church}</b>
                       </div>
-                      <h3>
-                        {d.name}
-                      </h3>
+                      <h3>{d.name}</h3>
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 12, color: "#94a3b8" }}>
