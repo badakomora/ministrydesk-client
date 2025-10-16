@@ -153,7 +153,6 @@ const heroStyles = css`
 
   @media (min-width: 900px) {
     grid-template-columns: 1fr 450px;
-    padding: 100px 80px;
   }
 
   /* Decorative glowing circles */
@@ -511,17 +510,18 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
         <div id="home" css={heroStyles}>
           <div className="content">
             <h1>
-              Welcome to <span style={{ color: "#7c3aed" }}>PAG Family</span>
+              Welcome to <span style={{ color: "#7c3aed" }}>ministry Desk</span>
             </h1>
             <small>
-              Access sermons, events, and ministry updates from the entire PAG
-              family. Connect with local churches, participate in programs, and
-              stay informed. Remember, every Sunday is a day for giving tithes.
+              Access sermons, events, and ministry updates from the entire
+              churrch ministry. Connect with local churches, participate in
+              programs, and stay informed. Remember, every Sunday is a day for
+              giving tithes.
             </small>
 
             {/* Highlight Stats */}
             <div css={statsHighlight}>
-              <small>2000+ members across all PAG</small>
+              <small>2000+ church members</small>
               <small>Men Fellowship Week </small>
             </div>
             {/* Hero CTA */}
