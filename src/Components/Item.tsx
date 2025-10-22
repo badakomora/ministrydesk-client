@@ -12,8 +12,8 @@ const float = keyframes`
 const styles = {
   container: css({
     maxWidth: "1200px",
-    margin: "0 auto",
-    padding: "40px 20px",
+    margin: "50px auto",
+    padding: "8px 14px",
     display: "grid",
     gridTemplateColumns: "1fr 420px",
     gap: "40px",
@@ -23,8 +23,7 @@ const styles = {
     },
   }),
   hero: css({
-    padding: "40px",
-    borderRadius: "20px",
+    padding: "8px 14px",
     background:
       "linear-gradient(145deg, rgba(250,250,255,0.9), rgba(226,232,240,0.9))",
     boxShadow: "0 20px 50px rgba(0,0,0,0.06)",
@@ -33,8 +32,7 @@ const styles = {
     display: "inline-block",
     background: "linear-gradient(90deg, #2563eb15, #fbbf2420)",
     color: "#2563eb",
-    padding: "6px 12px",
-    borderRadius: "999px",
+    padding: "8px 14px",
     fontWeight: 700,
     fontSize: "13px",
     marginBottom: "16px",
@@ -60,8 +58,7 @@ const styles = {
   }),
   chip: css({
     background: "#ffffff",
-    padding: "10px 14px",
-    borderRadius: "10px",
+    padding: "8px 14px",
     fontSize: "14px",
     fontWeight: 600,
     color: "#1e293b",
@@ -75,8 +72,7 @@ const styles = {
     flexWrap: "wrap",
   }),
   btn: css({
-    padding: "12px 20px",
-    borderRadius: "999px",
+    padding: "8px 14px",
     fontWeight: 700,
     cursor: "pointer",
     border: "none",
@@ -100,8 +96,7 @@ const styles = {
     },
   }),
   aside: css({
-    padding: "30px",
-    borderRadius: "20px",
+    padding: "8px 14px",
     background: "#ffffff",
     border: "1px solid #e2e8f0",
     boxShadow: "0 12px 36px rgba(0,0,0,0.04)",
@@ -109,7 +104,7 @@ const styles = {
   }),
   mediaWrapper: css({
     position: "relative",
-    borderRadius: "14px",
+    padding: "8px 14px",
     overflow: "hidden",
     marginBottom: "20px",
     boxShadow: "0 10px 28px rgba(0,0,0,0.1)",
@@ -122,7 +117,7 @@ const styles = {
   }),
   video: css({
     width: "100%",
-    borderRadius: "14px",
+    padding: "8px 14px",
     display: "block",
   }),
   navBtn: css({
@@ -132,8 +127,7 @@ const styles = {
     background: "rgba(255,255,255,0.9)",
     border: "none",
     cursor: "pointer",
-    padding: "6px 10px",
-    borderRadius: "50%",
+    padding: "8px 14px",
     boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
     fontWeight: 700,
   }),
@@ -147,14 +141,13 @@ const styles = {
     css({
       width: "10px",
       height: "10px",
-      borderRadius: "50%",
       background: active ? "#2563eb" : "#cbd5e1",
       cursor: "pointer",
     }),
   audioPlayer: css({
     width: "100%",
     marginTop: "15px",
-    borderRadius: "12px",
+    padding: "8px 14px",
   }),
   commentArea: css({
     marginTop: "24px",
@@ -162,9 +155,7 @@ const styles = {
   }),
   eventsBox: css({
     background: "linear-gradient(145deg, #f9fafb, #ffffff)",
-    borderRadius: "14px",
     border: "1px solid #e2e8f0",
-    padding: "16px",
     marginBottom: "18px",
     boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   }),
@@ -184,8 +175,7 @@ const styles = {
   }),
   commentInput: css({
     width: "90%",
-    padding: "12px 14px",
-    borderRadius: "14px",
+    padding: "8px 14px",
     border: "1px solid #cbd5e1",
     marginBottom: "12px",
     fontSize: "15px",
@@ -198,8 +188,7 @@ const styles = {
     },
   }),
   commentBtn: css({
-    padding: "10px 20px",
-    borderRadius: "999px",
+    padding: "8px 14px",
     fontWeight: 600,
     cursor: "pointer",
     border: "none",
@@ -217,9 +206,8 @@ const styles = {
     maxHeight: "220px",
     overflowY: "auto",
     background: "linear-gradient(145deg, #f9fafb, #ffffff)",
-    borderRadius: "14px",
     border: "1px solid #e2e8f0",
-    padding: "12px",
+    padding: "8px 14px",
     boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   }),
   commentItem: css({
@@ -345,12 +333,36 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
         <br />
         <small>Date: Sunday 14th, Jan 2025</small>
         <br />
+        <br />
         <p css={styles.lead}>
           We are blessed to share this comprehensive update with our beloved PAG
           family. As one body in Christ, we continue to walk together in prayer,
           worship, and fellowship.
         </p>
+        {/* Document Section (available for all tabs) */}
 
+        <a
+          href={documentUrl}
+          download
+          css={css({
+            display: "inline-block",
+            padding: "8px 14px",
+            background: "linear-gradient(90deg, #2563eb, #fbbf24)",
+            color: "white",
+            fontWeight: 600,
+            textDecoration: "none",
+            boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
+            transition: "all 0.25s ease",
+            "&:hover": {
+              transform: "translateY(-2px)",
+              boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
+            },
+          })}
+        >
+          ⬇️ Download Document
+        </a>
+        <br />
+        <br />
         {activeTab === "AssemblyProgramsItem" && (
           <div css={styles.eventsBox}>
             <h5 css={styles.eventsTitle}>🕊️ Order of Events</h5>
@@ -417,67 +429,21 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
             />
           ))}
         </div>
-
-        {/* Audio player below carousel */}
-        <audio css={styles.audioPlayer} controls>
-          <source src={audioSrc} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-
-        {/* Document Section (available for all tabs) */}
         <div
           css={css({
-            marginTop: "20px",
-            padding: "16px",
+            margin: "20px auto",
+            padding: "8px 14px",
             border: "1px solid #e2e8f0",
-            borderRadius: "14px",
             background: "linear-gradient(145deg, #f9fafb, #ffffff)",
             boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
             textAlign: "left",
           })}
         >
-          <h4
-            css={css({
-              color: "#2563eb",
-              fontSize: "15px",
-              fontWeight: 700,
-              marginBottom: "8px",
-            })}
-          >
-            📄 Document / Download
-          </h4>
-
-          <p
-            css={css({
-              color: "#475569",
-              fontSize: "14px",
-              marginBottom: "10px",
-            })}
-          >
-            Download attached materials, sermon notes, or event guides below.
-          </p>
-
-          <a
-            href={documentUrl}
-            download
-            css={css({
-              display: "inline-block",
-              padding: "10px 18px",
-              borderRadius: "999px",
-              background: "linear-gradient(90deg, #2563eb, #fbbf24)",
-              color: "white",
-              fontWeight: 600,
-              textDecoration: "none",
-              boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
-              transition: "all 0.25s ease",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
-              },
-            })}
-          >
-            ⬇️ Download Document
-          </a>
+          {/* Audio player below carousel */}
+          <audio css={styles.audioPlayer} controls>
+            <source src={audioSrc} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
         </div>
 
         {/* Comment Section */}

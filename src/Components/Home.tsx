@@ -139,7 +139,7 @@ const cardStyles = css`
 const heroStyles = css`
   position: relative;
   overflow: hidden;
-  padding: 8px 12px;
+  padding: 50px;
   display: grid;
   gap: 50px;
   grid-template-columns: 1fr;
@@ -369,6 +369,7 @@ const viewMoreButton = css`
 
   &:hover {
     background: #1d4ed8;
+    color: white;
     transform: translateY(-2px);
   }
 `;

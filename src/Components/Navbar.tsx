@@ -94,7 +94,6 @@ const mobileMenuBtn = (isOpen: boolean) => css`
     justify-content: center;
     background: ${isOpen ? "#2563eb" : "transparent"};
     border: 2px solid #2563eb;
-    border-radius: 999px;
     padding: 8px 14px;
     cursor: pointer;
     font-weight: 600;
@@ -123,6 +122,7 @@ const mobileNavStyles = (isOpen: boolean) => css`
     width: 100%;
     font-weight: 600;
     text-decoration: none;
+    color: black;
     cursor: pointer;
     transition: color 0.2s ease;
   }
@@ -170,8 +170,7 @@ const tabs = css`
   margin-bottom: 24px;
 
   button {
-    padding: 10px 20px;
-    border-radius: 999px;
+    padding: 8px 14px;
     border: none;
     font-weight: 600;
     cursor: pointer;
@@ -196,28 +195,26 @@ const formStyles = css`
 
   input,
   select {
-    padding: 12px 14px;
-    border-radius: 8px;
+    padding: 8px 14px;
     font-size: 14px;
     transition: all 0.2s ease;
   }
 
-  input:focus,
-  select:focus {
+  input,
+  select {
     outline: none;
     padding: 12px 14px;
-    border-color: #2563eb;
+    border: #2563eb 1px solid;
     box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   }
 
   button {
     margin-top: 10px;
-    padding: 12px 16px;
+    padding: 8px 14px;
     background: #2563eb;
     color: white;
     font-weight: 700;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
   }
@@ -360,6 +357,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                 e.preventDefault();
                 setIsModalOpen(true);
               }}
+              style={{ color: "white" }}
             >
               Membership
             </a>
@@ -372,6 +370,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
               aria-expanded={isMobileMenuOpen}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               onClick={() => setIsMobileMenuOpen((s) => !s)}
+              style={{ color: "white", background: "#2563eb" }}
             >
               {isMobileMenuOpen ? "✕" : "☰"}
             </button>
@@ -424,7 +423,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
             Assembly Programs
           </a>
           <a href="." onClick={() => setIsMobileMenuOpen(false)}>
-            PAG Programs
+            Community
           </a>
           <a
             href="."
@@ -434,8 +433,9 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
               setIsMobileMenuOpen(false);
               setIsModalOpen(true);
             }}
+            style={{ color: "white" }}
           >
-            My PAG
+            Membership
           </a>
         </nav>
       </header>

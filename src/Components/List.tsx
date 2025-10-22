@@ -28,9 +28,9 @@ const listStyles = css`
     input {
       width: 100%;
       max-width: 400px;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border: 1px solid #cbd5e1;
-      border-radius: 8px;
+
       font-size: 15px;
       outline: none;
       transition: border-color 0.2s ease;
@@ -53,8 +53,7 @@ const listStyles = css`
   }
 
   .card {
-    border-radius: 14px;
-    padding: 18px 20px;
+    padding: 8px 14px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
     transition: transform 200ms ease, box-shadow 200ms ease,

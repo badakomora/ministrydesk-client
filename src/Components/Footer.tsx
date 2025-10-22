@@ -66,7 +66,7 @@ export const Footer = () => {
   return (
     <footer css={footerStyles} role="contentinfo">
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-        <div className="brand">PAG Family</div>
+        <div className="brand">Ministry Desk</div>
         <div className="tagline">
           Bringing churches together to serve the community.
         </div>
@@ -77,7 +77,7 @@ export const Footer = () => {
           <a href=".">Contact</a>
         </nav>
 
-        <p>© {new Date().getFullYear()} PAG Family. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Ministry Desk. All rights reserved.</p>
       </div>
     </footer>
   );
