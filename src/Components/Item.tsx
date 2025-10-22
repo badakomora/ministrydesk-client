@@ -146,8 +146,7 @@ const styles = {
     }),
   audioPlayer: css({
     width: "100%",
-    marginTop: "15px",
-    padding: "8px 14px",
+    margin: "15px auto",
   }),
   commentArea: css({
     marginTop: "24px",
@@ -157,6 +156,7 @@ const styles = {
     background: "linear-gradient(145deg, #f9fafb, #ffffff)",
     border: "1px solid #e2e8f0",
     marginBottom: "18px",
+    padding: "5px",
     boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   }),
   eventsTitle: css({
