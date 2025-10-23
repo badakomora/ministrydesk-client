@@ -22,9 +22,9 @@ export default function PermissionsModal() {
             />
             <select style={select}>
               <option>All Types</option>
-              <option>User</option>
-              <option>Application</option>
-              <option>Group</option>
+              <option>News & Events</option>
+              <option>Sermons</option>
+              <option>Assembly Programs</option>
             </select>
             <div style={dropdownContainer}>
               <button
@@ -39,19 +39,19 @@ export default function PermissionsModal() {
                     style={dropdownItem}
                     onClick={() => handleAddOption("User")}
                   >
-                    Add User
+                    News & Events
                   </button>
                   <button
                     style={dropdownItem}
                     onClick={() => handleAddOption("Application")}
                   >
-                    Add Application
+                    Sermons
                   </button>
                   <button
                     style={dropdownItem}
                     onClick={() => handleAddOption("Group")}
                   >
-                    Add Group
+                    Assembly Program
                   </button>
                 </div>
               )}
