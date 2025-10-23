@@ -209,8 +209,7 @@ const formStyles = css`
   }
 
   button {
-    margin-top: 10px;
-    padding: 8px 14px;
+    padding: 12px 14px;
     background: #2563eb;
     color: white;
     font-weight: 700;
@@ -352,6 +351,15 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
             </a>
             <a
               href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("Dashboard");
+              }}
+            >
+              Dashboard
+            </a>
+            <a
+              href="."
               css={myPagTabStyles}
               onClick={(e) => {
                 e.preventDefault();
@@ -424,6 +432,16 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
           </a>
           <a href="." onClick={() => setIsMobileMenuOpen(false)}>
             Community
+          </a>
+          <a
+            href="."
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab("Dashboard");
+              setIsMobileMenuOpen(false);
+            }}
+          >
+            Dashboard
           </a>
           <a
             href="."
@@ -519,7 +537,15 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                   )}
                 </div>
 
-                <select required>
+                <select
+                  required
+                  style={{
+                    outline: "none",
+                    padding: "12px 14px",
+                    border: "1px solid #2563eb",
+                    boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
+                  }}
+                >
                   <option value="">Select Role</option>
                   <option value="member">Member</option>
                   <option value="pastor">Pastor</option>

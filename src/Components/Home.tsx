@@ -475,7 +475,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
 
   const departments = [
     {
-      name: "Worship",
+      name: "Men",
       description: "Leading in worship",
       leader: "Sarah Johnson",
       contact: "worship@pag.org",
@@ -489,14 +489,14 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
       church: "PAG Westlands",
     },
     {
-      name: "Children",
+      name: "Sunday School",
       description: "Children ministry",
       leader: "Mary Rodriguez",
       contact: "children@pag.org",
       church: "PAG Karen",
     },
     {
-      name: "Outreach",
+      name: "Development Committee",
       description: "Community service",
       leader: "James Wilson",
       contact: "outreach@pag.org",
@@ -631,7 +631,9 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                         marginTop: 8,
                       }}
                     >
-                      <div>{s.speaker}</div>
+                      <div style={{ fontSize: 12, color: "#94a3b8" }}>
+                        {s.speaker}
+                      </div>
                       <div>
                         {s.duration} • {s.date}
                       </div>
@@ -672,7 +674,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <div>
-                      <div className="church">
+                      <div className="church" style={{ color: "#2563eb" }}>
                         <b>{d.church}</b>
                       </div>
                       <h3>{d.name}</h3>
