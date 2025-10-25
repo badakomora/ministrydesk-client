@@ -714,9 +714,14 @@ const pricingCardStyles = css`
 interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
-
+interface ModalProps {
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 // -------------------- Home Component --------------------
-export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
+export const Home: React.FC<componentProps & ModalProps> = ({
+  setActiveTab,
+  setIsModalOpen,
+}) => {
   return (
     <div css={globalStyles}>
       <main css={mainStyles}>
@@ -770,7 +775,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
         {/* ---------- WHY THESE MATTER ---------- */}
         <section id="why-important" css={sectionStyles}>
           <div css={sectionHeader}>
-            <h2>Why These Matter</h2>
+            <h2>Why Join Us?</h2>
             <div className="sub">
               Understanding the importance of staying connected with your church
               community
@@ -799,7 +804,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             </div>
 
             <div css={infoCardStyles}>
-              <div className="icon">🤝</div>
+              <div className="icon">🌿</div>
               <h3>Assembly Programs</h3>
               <p>
                 Discover ways to get involved and serve. Join diverse assembly
@@ -878,7 +883,14 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                 </div>
               </div>
 
-              <button className="cta-button">Subscribe Now</button>
+              <button
+                className="cta-button"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                Subscribe Now
+              </button>
             </div>
           </div>
         </section>

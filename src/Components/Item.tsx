@@ -117,7 +117,7 @@ const styles = {
   }),
   video: css({
     width: "100%",
-    padding: "8px 14px",
+    height: "auto",
     display: "block",
   }),
   navBtn: css({
@@ -276,7 +276,7 @@ interface componentProps {
   activeTab: string;
 }
 
-const Item: React.FC<componentProps> = ({ activeTab }) => {
+export const Item: React.FC<componentProps> = ({ activeTab }) => {
   const carouselItems = [
     {
       type: "image",
@@ -477,5 +477,3 @@ const Item: React.FC<componentProps> = ({ activeTab }) => {
     </main>
   );
 };
-
-export default Item;

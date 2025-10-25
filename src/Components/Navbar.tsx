@@ -261,10 +261,19 @@ interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
+interface ModalProps {
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isModalOpen: boolean;
+}
+
 // -------------------- Component --------------------
-export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
+export const Navbar: React.FC<componentProps & ModalProps> = ({
+  setActiveTab,
+  setIsModalOpen,
+  isModalOpen,
+}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [tab, setTab] = useState<"login" | "register">("login");
 
   const [churches, setChurches] = useState([

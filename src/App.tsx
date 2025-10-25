@@ -1,17 +1,22 @@
-import { Home } from "./Components/Home";
-
 import { useState } from "react";
-import Item from "./Components/Item";
+
 import { Navbar } from "./Components/Navbar";
-import { Footer } from "./Components/Footer";
+import { Home } from "./Components/Home";
+import { Item } from "./Components/Item";
 import { List } from "./Components/List";
-import Dashboard from "./Components/Dashboard";
+import { Dashboard } from "./Components/Dashboard";
+import { Footer } from "./Components/Footer";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Home");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="App">
-      <Navbar setActiveTab={setActiveTab} />
+      <Navbar
+        setActiveTab={setActiveTab}
+        setIsModalOpen={setIsModalOpen}
+        isModalOpen={isModalOpen}
+      />
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
       activeTab === "AssemblyProgramsItem" ? (
@@ -19,9 +24,11 @@ function App() {
       ) : activeTab === "NewsList" ||
         activeTab === "SermonsList" ||
         activeTab === "AssemblyProgramsList" ? (
-        (<List activeTab={activeTab} setActiveTab={setActiveTab} />) 
-      ) :activeTab === "Dashboard" ? (<Dashboard />) : (
-        <Home setActiveTab={setActiveTab} />
+        <List activeTab={activeTab} setActiveTab={setActiveTab} />
+      ) : activeTab === "Dashboard" ? (
+        <Dashboard />
+      ) : (
+        <Home setActiveTab={setActiveTab} setIsModalOpen={setIsModalOpen} />
       )}
       <Footer />
     </div>

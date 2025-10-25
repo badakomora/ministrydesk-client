@@ -38,7 +38,7 @@ export const Footer = () => {
     }
 
     .tagline {
-      color: #cfe3ff;
+      color: white;
       margin-top: 10px;
       font-size: 14px;
     }
