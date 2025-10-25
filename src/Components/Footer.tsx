@@ -4,8 +4,8 @@ import { css } from "@emotion/react";
 export const Footer = () => {
   const footerStyles = css`
     margin-top: 60px;
-    background: linear-gradient(180deg, #1e293b, #0f172a);
-    color: #f8fafc;
+    background: #2563eb;
+    color: white;
     padding: 50px 20px 30px;
     border-radius: 20px 20px 0 0;
     text-align: center;
@@ -18,8 +18,8 @@ export const Footer = () => {
       transition: color 0.3s ease, transform 0.2s ease;
     }
     a:hover {
-      color: #fde68a;
-      text-decoration: underline;
+      color: white;
+      text-decoration: none;
       transform: translateY(-2px);
     }
 
@@ -45,7 +45,7 @@ export const Footer = () => {
 
     p {
       margin-top: 20px;
-      color: #94a3b8;
+      color: white;
       font-size: 13px;
     }
 

@@ -445,7 +445,7 @@ export default function PermissionsModal() {
           <div style={searchRow}>
             <input
               style={input}
-              placeholder="Search for users, apps, or groups..."
+              placeholder="Search by name or title"
             />
             <select
               style={select}

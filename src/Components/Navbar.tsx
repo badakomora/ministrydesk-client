@@ -107,14 +107,13 @@ const mobileNavStyles = (isOpen: boolean) => css`
   align-items: center;
   text-align: center;
   gap: 16px;
-  padding: 24px 20px;
+  padding: 8px 14px;
   position: absolute;
   top: 72px;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
   background: white;
-  border-radius: 16px;
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   z-index: 50;
 
@@ -144,7 +143,7 @@ const modalOverlay = css`
   left: 0;
   width: 100%;
   height: 100%;
-  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,8 +153,7 @@ const modalOverlay = css`
 
 const modalContent = css`
   background: white;
-  border-radius: 18px;
-  padding: 28px 26px;
+  padding: 8px 14px;
   width: 100%;
   max-width: 420px;
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
@@ -226,10 +224,10 @@ const formStyles = css`
 
 const churchDropdownWrapper = css`
   position: relative;
-  width: 100%; /* make wrapper match other inputs */
+  width: 100%;
 
   input {
-    width: 100%; /* force input to be same width */
+    width: 100%;
     box-sizing: border-box;
   }
 `;
@@ -237,25 +235,25 @@ const churchDropdownWrapper = css`
 const churchList = css`
   position: absolute;
   top: 100%;
-  width: 100%; /* match parent width */
+  width: 100%;
   left: 0;
   background: white;
-  border: 1px solid white;
-  border-radius: 8px;
+  border: 1px solid #2563eb;
   margin-top: 4px;
   max-height: 160px;
   overflow-y: auto;
   z-index: 200;
+  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
 
   div {
-    padding: 10px 14px;
+    padding: 8px 14px;
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
   }
 
   div:hover {
-    background: white;
+    background: #f0f0f0;
   }
 `;
 
@@ -269,8 +267,7 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tab, setTab] = useState<"login" | "register">("login");
 
-  // search engine state for churches
-  const churches = [
+  const [churches, setChurches] = useState([
     "Central PAG",
     "East PAG",
     "West PAG",
@@ -279,13 +276,26 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
     "Kampala PAG",
     "Nairobi PAG",
     "Mombasa PAG",
-  ];
+  ]);
   const [search, setSearch] = useState("");
   const [selectedChurch, setSelectedChurch] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [isCreatingChurch, setIsCreatingChurch] = useState(false);
+  const [newChurchName, setNewChurchName] = useState("");
 
   const filteredChurches = churches.filter((c) =>
     c.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleCreateChurch = () => {
+    if (newChurchName.trim()) {
+      setChurches([...churches, newChurchName]);
+      setSelectedChurch(newChurchName);
+      setSearch("");
+      setIsCreatingChurch(false);
+      setNewChurchName("");
+    }
+  };
 
   return (
     <>
@@ -430,7 +440,14 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
           >
             Assembly Programs
           </a>
-          <a href="." onClick={() => setIsMobileMenuOpen(false)}>
+          <a
+            href="."
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveTab("PAGProgramsList");
+              setIsMobileMenuOpen(false);
+            }}
+          >
             Community
           </a>
           <a
@@ -462,8 +479,8 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
       {isModalOpen && (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {/* Tabs */}
-            <div css={tabs}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {/* Logo */}
               <div css={logoStyles}>
                 <div className="mark" aria-hidden>
                   ⛪
@@ -473,25 +490,27 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                   <p>Connecting churches & people</p>
                 </div>
               </div>
-              <button
-                className={tab === "login" ? "active" : "inactive"}
-                onClick={() => setTab("login")}
-              >
-                Login
-              </button>
-              <button
-                className={tab === "register" ? "active" : "inactive"}
-                onClick={() => setTab("register")}
-              >
-                Register
-              </button>
+              {/* Tabs */}
+              <div css={tabs}>
+                <button
+                  className={tab === "login" ? "active" : "inactive"}
+                  onClick={() => setTab("login")}
+                >
+                  Login
+                </button>
+                <button
+                  className={tab === "register" ? "active" : "inactive"}
+                  onClick={() => setTab("register")}
+                >
+                  Register
+                </button>
+              </div>
             </div>
 
             {/* Forms */}
             {tab === "login" ? (
               <form css={formStyles}>
                 <input type="tel" placeholder="Phone Number" required />
-                {/* <input type="password" placehold  er="Password" required /> */}
                 <a href="." style={{ textDecoration: "none", color: "black" }}>
                   Forgot Password?
                 </a>
@@ -503,8 +522,31 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                 <input type="tel" placeholder="Phone Number" required />
                 <input type="number" placeholder="ID Number" required />
                 <input type="email" placeholder="Email (optional)" />
-
-                {/* Searchable Church Dropdown */}
+                <select
+                  required
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                  style={{
+                    outline: "none",
+                    padding: "12px 14px",
+                    border: "1px solid #2563eb",
+                    boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
+                  }}
+                >
+                  <option value="">Select Role</option>
+                  <option value="member">Member</option>
+                  <option value="pastor">Pastor</option>
+                  <option value="bishop">Bishop</option>
+                  <option value="overseer">Overseer</option>
+                  <option value="secretary">Secretary</option>
+                  <option value="treasurer">Treasurer</option>
+                  <option value="ced">CED</option>
+                  <option value="choir">Choir</option>
+                  <option value="usher">Usher</option>
+                  <option value="youth">Youth</option>
+                  <option value="women">Women Dept</option>
+                  <option value="men">Men Dept</option>
+                </select>
                 <div css={churchDropdownWrapper}>
                   <input
                     type="text"
@@ -531,44 +573,110 @@ export const Navbar: React.FC<componentProps> = ({ setActiveTab }) => {
                           </div>
                         ))
                       ) : (
-                        <div>No church found</div>
+                        <>
+                          {selectedRole === "pastor" ? (
+                            <div
+                              onClick={() => setIsCreatingChurch(true)}
+                              style={{
+                                color: "#2563eb",
+                                fontWeight: "600",
+                              }}
+                            >
+                              + Create "{search}"
+                            </div>
+                          ) : (
+                            <div style={{ color: "#999" }}>No church found</div>
+                          )}
+                        </>
                       )}
                     </div>
                   )}
                 </div>
 
-                <select
-                  required
-                  style={{
-                    outline: "none",
-                    padding: "12px 14px",
-                    border: "1px solid #2563eb",
-                    boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
-                  }}
-                >
-                  <option value="">Select Role</option>
-                  <option value="member">Member</option>
-                  <option value="pastor">Pastor</option>
-                  <option value="bishop">Bishop</option>
-                  <option value="overseer">Overseer</option>
-                  <option value="secretary">Secretary</option>
-                  <option value="treasurer">Treasurer</option>
-                  <option value="ced">CED</option>
-                  <option value="choir">Choir</option>
-                  <option value="usher">Usher</option>
-                  <option value="youth">Youth</option>
-                  <option value="women">Women Dept</option>
-                  <option value="men">Men Dept</option>
-                </select>
-                {/* <input type="password" placeholder="Create Password" required />
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  required
-                /> */}
                 <button type="submit">Register</button>
               </form>
             )}
+
+            {isCreatingChurch && (
+              <div
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(0,0,0,0.5)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 200,
+                }}
+                onClick={() => setIsCreatingChurch(false)}
+              >
+                <div
+                  style={{
+                    background: "white",
+                    padding: "24px",
+                    borderRadius: "8px",
+                    maxWidth: "400px",
+                    width: "90%",
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h2 style={{ marginTop: 0, marginBottom: "16px" }}>
+                    Create New Church
+                  </h2>
+                  <input
+                    type="text"
+                    placeholder="Church Name"
+                    value={newChurchName}
+                    onChange={(e) => setNewChurchName(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "12px 14px",
+                      border: "1px solid #2563eb",
+                      boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
+                      boxSizing: "border-box",
+                      marginBottom: "16px",
+                    }}
+                  />
+                  <div style={{ display: "flex", gap: "12px" }}>
+                    <button
+                      onClick={handleCreateChurch}
+                      style={{
+                        flex: 1,
+                        padding: "12px 14px",
+                        background: "#2563eb",
+                        color: "white",
+                        fontWeight: "700",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Create
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsCreatingChurch(false);
+                        setNewChurchName("");
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: "12px 14px",
+                        background: "#f0f0f0",
+                        color: "black",
+                        fontWeight: "700",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <a
               href="."
               style={{

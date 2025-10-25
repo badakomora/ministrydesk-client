@@ -562,13 +562,13 @@ const testimonialCardStyles = css`
   }
 `;
 
-const socialMediaSectionStyles = css`
+const pricingSectionStyles = css`
   margin-top: 100px;
   padding: 8px 14px;
   text-align: center;
 `;
 
-const socialMediaHeaderStyles = css`
+const pricingHeaderStyles = css`
   margin-bottom: 50px;
 
   h2 {
@@ -585,85 +585,129 @@ const socialMediaHeaderStyles = css`
   }
 `;
 
-const socialMediaGridStyles = css`
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  max-width: 700px;
-  margin: 0 auto 48px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(5, 1fr);
-  }
+const pricingCardContainerStyles = css`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 48px;
 `;
 
-const socialMediaLinkStyles = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 14px;
+const pricingCardStyles = css`
   background: white;
+  padding: 48px 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
   border: 2px solid #e5e7eb;
-  cursor: pointer;
   transition: all 300ms ease;
-  text-decoration: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+  }
 
   &:hover {
     transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(37, 99, 235, 0.2);
     border-color: #2563eb;
-    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.15);
   }
 
-  .icon {
-    font-size: 40px;
-    margin-bottom: 12px;
+  .badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+    color: white;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 24px;
+    border-radius: 4px;
   }
 
-  .label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #0f172a;
-  }
-`;
-
-const socialStatsStyles = css`
-  display: grid;
-  gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  max-width: 700px;
-  margin: 0 auto;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const socialStatItemStyles = css`
-  background: white;
-  padding: 8px 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: all 200ms ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
-
-  .number {
+  .plan-name {
     font-size: 28px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 16px 0;
+  }
+
+  .price {
+    font-size: 48px;
     font-weight: 800;
     background: linear-gradient(90deg, #2563eb, #fbbf24);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin: 0;
+    margin: 0 0 8px 0;
   }
 
-  .label {
-    font-size: 13px;
+  .billing-period {
+    font-size: 16px;
     color: #64748b;
-    margin-top: 8px;
-    font-weight: 600;
+    margin-bottom: 32px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 32px 0;
+  }
+
+  .features {
+    text-align: left;
+    margin-bottom: 32px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    font-size: 15px;
+    color: #475569;
+
+    &::before {
+      content: "✓";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(90deg, #2563eb, #fbbf24);
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      border-radius: 50%;
+    }
+  }
+
+  .cta-button {
+    width: 100%;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 200ms ease;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 `;
 
@@ -766,6 +810,80 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           </div>
         </section>
 
+        <section id="membership" css={pricingSectionStyles}>
+          <div css={pricingHeaderStyles}>
+            <h2>Premium Membership</h2>
+            <p>
+              Unlock full access to all ministry resources and community
+              programs
+            </p>
+          </div>
+
+          <div css={pricingCardContainerStyles}>
+            <div css={pricingCardStyles}>
+              <div className="badge">Most Popular</div>
+              <h3 className="plan-name">Full Access Membership</h3>
+              <div className="price">
+                <small>
+                  <b>KES</b>
+                </small>
+                149
+              </div>
+              <p className="billing-period">per month</p>
+
+              <div className="divider" />
+
+              <div className="features">
+                <div className="feature-item">
+                  <div className="feature-content">
+                    <p className="feature-title">News & Events</p>
+                    <p className="feature-description">
+                      Access church news and be aware of upcoming events, join
+                      discussion groups and build meaningful relationships.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="feature-item">
+                  <div className="feature-content">
+                    <p className="feature-title">Sermons & Teachings</p>
+                    <p className="feature-description">
+                      Access complete sermon library, download transcripts,
+                      watch teachings from all pastors, participate in forums,
+                      offer tithes, share testimonies, request special prayers
+                      and stay updated on all ministry announcements
+                    </p>
+                  </div>
+                </div>
+
+                <div className="feature-item">
+                  <div className="feature-content">
+                    <p className="feature-title">Assembly Programs</p>
+                    <p className="feature-description">
+                      Participate in all assembly programs, connect with other
+                      church members, join volunteer opportunities, attend
+                      workshops and etc.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="feature-item">
+                  <div className="feature-content">
+                    <p className="feature-title">Priority Support</p>
+                    <p className="feature-description">
+                      Get dedicated support from our team, priority response to
+                      inquiries, and exclusive member benefits
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button className="cta-button">Subscribe Now</button>
+            </div>
+          </div>
+        </section>
+
+        {/* ---------- TESTIMONIALS ---------- */}
         <section id="testimonials" css={sectionStyles}>
           <div css={sectionHeader}>
             <h2>Member Stories</h2>
@@ -846,86 +964,6 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
                 <textarea placeholder="Your Message" required />
                 <button type="submit">Send Message</button>
               </form>
-            </div>
-          </div>
-        </section>
-
-        {/* ---------- SOCIAL MEDIA ---------- */}
-        <section id="social-media" css={socialMediaSectionStyles}>
-          <div css={socialMediaHeaderStyles}>
-            <h2>Connect With Us</h2>
-            <p>
-              Follow our ministry on social media for daily inspiration and
-              updates
-            </p>
-          </div>
-
-          <div css={socialMediaGridStyles}>
-            <a
-              href="https://facebook.com/ministrydesk"
-              target="_blank"
-              rel="noopener noreferrer"
-              css={socialMediaLinkStyles}
-            >
-              <div className="icon">f</div>
-              <div className="label">Facebook</div>
-            </a>
-
-            <a
-              href="https://twitter.com/ministrydesk"
-              target="_blank"
-              rel="noopener noreferrer"
-              css={socialMediaLinkStyles}
-            >
-              <div className="icon">𝕏</div>
-              <div className="label">Twitter</div>
-            </a>
-
-            <a
-              href="https://instagram.com/ministrydesk"
-              target="_blank"
-              rel="noopener noreferrer"
-              css={socialMediaLinkStyles}
-            >
-              <div className="icon">📷</div>
-              <div className="label">Instagram</div>
-            </a>
-
-            <a
-              href="https://linkedin.com/company/ministrydesk"
-              target="_blank"
-              rel="noopener noreferrer"
-              css={socialMediaLinkStyles}
-            >
-              <div className="icon">in</div>
-              <div className="label">LinkedIn</div>
-            </a>
-
-            <a
-              href="https://youtube.com/@ministrydesk"
-              target="_blank"
-              rel="noopener noreferrer"
-              css={socialMediaLinkStyles}
-            >
-              <div className="icon">▶</div>
-              <div className="label">YouTube</div>
-            </a>
-          </div>
-
-          <div css={socialStatsStyles}>
-            <div css={socialStatItemStyles}>
-              <p className="number">15K+</p>
-              <p className="label">Followers</p>
-            </div>
-
-            <div css={socialStatItemStyles}>
-              <p className="number">2.5K+</p>
-              <p className="label">Engagements</p>
-            </div>
-
-            <div css={socialStatItemStyles}>
-              <p className="number">500+</p>
-              <p className="label">Posts</p>
             </div>
           </div>
         </section>
