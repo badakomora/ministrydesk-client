@@ -92,11 +92,11 @@ const listStyles = css`
     border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
-      color: #854d0e;
+      color: #2563eb;
     }
 
     p {
-      color: #92400e;
+      color: #2563eb;
     }
   }
 
@@ -104,11 +104,11 @@ const listStyles = css`
     border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
-      color: #1e3a8a;
+      color: #2563eb;
     }
 
     p {
-      color: #1d4ed8;
+      color: #2563eb;
     }
 
     &:hover {
@@ -120,11 +120,11 @@ const listStyles = css`
     border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
-      color: #064e3b;
+      color: #2563eb;
     }
 
     p {
-      color: #047857;
+      color: #2563eb;
     }
   }
 `;

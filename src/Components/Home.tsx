@@ -1,45 +1,6 @@
 /** @jsxImportSource @emotion/react */
-"use client";
-
-/** @jsxImportSource @emotion/react */
 import type React from "react";
 import { css, keyframes } from "@emotion/react";
-
-// -------------------- Animations --------------------
-
-// -------------------- Global Styles --------------------
-const globalStyles = css`
-  * {
-    box-sizing: border-box;
-  }
-  html,
-  body,
-  #root {
-    height: 100%;
-  }
-  body {
-    margin: 0;
-    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-      Roboto, "Helvetica Neue", Arial;
-    background: #ffffff;
-    color: #fbbf24
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    line-height: 1.7;
-  }
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: "Merriweather", Georgia, serif;
-    color: black;
-    line-height: 1.3;
-  }
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
 
 // -------------------- Animations --------------------
 const float = keyframes`
@@ -48,12 +9,17 @@ const float = keyframes`
   100% { transform: translateY(0px); }
 `;
 
-const blink = keyframes`
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0; }
+const fadeInUp = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
-// NEW: slide right to left animation
 const slideRightLeft = keyframes`
   0% {
     transform: translateX(50%);
@@ -75,56 +41,46 @@ const slideRightLeft = keyframes`
   }
 `;
 
-// -------------------- Theme of the Week --------------------
-const themeOfWeekStyles = css`
-  margin: 40px auto 0;
-  padding: 8px 12px;
-  text-align: center;
-  background: white;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+const blink = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+`;
 
-  p {
-    font-size: 18px;
+// -------------------- Global Styles --------------------
+const globalStyles = css`
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
     margin: 0;
-    color: #2563eb;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+      Roboto, "Helvetica Neue", Arial;
+    background: #ffffff;
+    color: #1f2937;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.7;
   }
-
-  .divider {
-    margin: 16px auto 20px;
-    width: 20%;
-    height: 3px;
-    border-radius: 2px;
-    background: #fbbf24;
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Merriweather", Georgia, serif;
+    color: #0f172a;
+    line-height: 1.3;
   }
-
-  .text {
-    color: #111827;
-    display: block;
-    white-space: nowrap;
-    animation: ${slideRightLeft} 7s linear infinite;
-  }
-`;
-
-// -------------------- CTA --------------------
-const ctaPrimary = css`
-  background: linear-gradient(90deg, #2563eb, #fbbf24);
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
-  transition: all 200ms ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 28px rgba(37, 99, 235, 0.3);
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 `;
 
-// -------------------- Hero --------------------
 const heroStyles = css`
   position: relative;
   overflow: hidden;
@@ -220,7 +176,6 @@ const heroStyles = css`
   }
 `;
 
-// -------------------- Stats Highlight --------------------
 const statsHighlight = css`
   margin-top: 28px;
   font-size: 17px;
@@ -256,24 +211,81 @@ const statsHighlight = css`
   }
 `;
 
+const themeOfWeekStyles = css`
+  margin: 40px auto 0;
+  padding: 16px 20px;
+  text-align: center;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  p {
+    font-size: 16px;
+    margin: 0;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  .divider {
+    margin: 12px auto 16px;
+    width: 20%;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+  }
+
+  .text {
+    color: #111827;
+    display: block;
+    white-space: nowrap;
+    animation: ${slideRightLeft} 7s linear infinite;
+    font-size: 14px;
+    font-weight: 500;
+  }
+`;
+
+const ctaPrimary = css`
+  background: linear-gradient(90deg, #2563eb, #fbbf24);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  transition: all 200ms ease;
+  display: inline-block;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.4);
+  }
+
+  &:active {
+    transform: translateY(-2px);
+  }
+`;
+
 // -------------------- Layout --------------------
 const mainStyles = css`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 22px;
+  padding: 8px 14px;
 `;
 
 const sectionStyles = css`
-  margin-top: 90px;
+  margin-top: 100px;
+  animation: ${fadeInUp} 0.8s ease-out;
 `;
 
 const sectionHeader = css`
-  margin-bottom: 36px;
+  margin-bottom: 48px;
   text-align: center;
 
   h2 {
-    font-size: 28px;
-    margin: 0;
+    font-size: 36px;
+    margin: 0 0 12px 0;
     font-weight: 800;
     color: #0f172a;
   }
@@ -282,12 +294,15 @@ const sectionHeader = css`
     margin-top: 8px;
     font-size: 16px;
     color: #64748b;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 `;
 
 const infoCardGrid = css`
   display: grid;
-  gap: 24px;
+  gap: 28px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
@@ -295,53 +310,89 @@ const infoCardGrid = css`
 `;
 
 const infoCardStyles = css`
-  background: #fff;
-  padding: 32px 24px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  background: white;
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: all 300ms ease;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms ease;
+  }
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(2, 6, 23, 0.08);
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    border-color: #2563eb;
+
+    &::before {
+      transform: scaleX(1);
+    }
   }
 
   .icon {
     font-size: 48px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    display: inline-block;
   }
 
   h3 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    color: #111827;
+    color: #0f172a;
     margin: 0 0 12px 0;
   }
 
   p {
     font-size: 15px;
-    color: #475569;
+    color: #64748b;
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.7;
   }
 `;
 
 const contactSectionStyles = css`
-  background: linear-gradient(135deg, #f0f9ff, #fef3c7);
-  padding: 60px 40px;
-  width: 100%;
-  border-radius: 12px;
-  margin-top: 90px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+  padding: 8px 14px;
+  margin-top: 100px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.3);
+    filter: blur(80px);
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+  }
 `;
 
 const contactHeaderStyles = css`
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 56px;
 
   h2 {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 12px 0;
@@ -357,6 +408,7 @@ const contactHeaderStyles = css`
 const contactGridStyles = css`
   display: grid;
   gap: 32px;
+  margin-bottom: 48px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
@@ -365,20 +417,29 @@ const contactGridStyles = css`
 
 const contactItemStyles = css`
   text-align: center;
+  background: white;
+  padding: 8px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 200ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
 
   .label {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     color: #2563eb;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
     margin-bottom: 8px;
   }
 
   .value {
     font-size: 18px;
     font-weight: 700;
-    color: #111827;
+    color: #0f172a;
     margin: 0;
   }
 
@@ -390,17 +451,15 @@ const contactItemStyles = css`
 `;
 
 const contactFormStyles = css`
-  margin-top: 48px;
   background: white;
-  padding: 32px;
-  border-radius: 8px;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+  padding: 8px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 
   h3 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
-    color: #111827;
-    margin: 0 0 24px 0;
+    color: #0f172a;
+    margin: 0 0 28px 0;
     text-align: center;
   }
 
@@ -415,16 +474,17 @@ const contactFormStyles = css`
 
   input,
   textarea {
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border: 1.5px solid #e5e7eb;
     font-size: 14px;
     font-family: inherit;
-    transition: border-color 200ms ease;
+    transition: all 200ms ease;
+    background: #f9fafb;
 
     &:focus {
       outline: none;
       border-color: #2563eb;
+      background: white;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
   }
@@ -437,35 +497,82 @@ const contactFormStyles = css`
 
   button {
     grid-column: 1 / -1;
-    padding: 12px 24px;
-    background: linear-gradient(90deg, #2563eb, #fbbf24);
+    padding: 8px 14px;
+    background: #2563eb;
     color: white;
     border: none;
-    border-radius: 6px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     transition: all 200ms ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
     }
   }
 `;
 
+const testimonialGridStyles = css`
+  display: grid;
+  gap: 28px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+const testimonialCardStyles = css`
+  background: white;
+  padding: 8px 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: all 300ms ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .stars {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #fbbf24;
+  }
+
+  .quote {
+    font-size: 15px;
+    color: #475569;
+    margin: 0 0 16px 0;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .author {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .role {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+`;
+
 const socialMediaSectionStyles = css`
-  margin-top: 90px;
-  padding: 60px 40px;
-  border-radius: 12px;
+  margin-top: 100px;
+  padding: 8px 14px;
   text-align: center;
 `;
 
 const socialMediaHeaderStyles = css`
-  margin-bottom: 48px;
+  margin-bottom: 50px;
 
   h2 {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 12px 0;
@@ -482,8 +589,8 @@ const socialMediaGridStyles = css`
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 700px;
+  margin: 0 auto 48px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(5, 1fr);
@@ -495,18 +602,17 @@ const socialMediaLinkStyles = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 8px 14px;
   background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  border: 2px solid #e5e7eb;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: all 300ms ease;
   text-decoration: none;
 
   &:hover {
     transform: translateY(-8px);
     border-color: #2563eb;
-    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.15);
   }
 
   .icon {
@@ -517,18 +623,16 @@ const socialMediaLinkStyles = css`
   .label {
     font-size: 14px;
     font-weight: 600;
-    color: #111827;
+    color: #0f172a;
   }
 `;
 
 const socialStatsStyles = css`
-  margin-top: 48px;
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 700px;
+  margin: 0 auto;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(3, 1fr);
@@ -537,12 +641,17 @@ const socialStatsStyles = css`
 
 const socialStatItemStyles = css`
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  padding: 8px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 200ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
 
   .number {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 800;
     background: linear-gradient(90deg, #2563eb, #fbbf24);
     -webkit-background-clip: text;
@@ -575,7 +684,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
             </h1>
             <small>
               Access sermons, events, and ministry updates from the entire
-              churrch ministry. Connect with local churches, participate in
+              church ministry. Connect with local churches, participate in
               programs, and stay informed. Remember, every Sunday is a day for
               giving tithes.
             </small>
@@ -619,7 +728,8 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           <div css={sectionHeader}>
             <h2>Why These Matter</h2>
             <div className="sub">
-              Understanding the importance of staying connected
+              Understanding the importance of staying connected with your church
+              community
             </div>
           </div>
 
@@ -630,8 +740,7 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               <p>
                 Stay informed about important announcements, community events,
                 and ministry updates. Being connected keeps you engaged with
-                your church family and ensures you never miss critical
-                information across all assemblies
+                your church family.
               </p>
             </div>
 
@@ -640,9 +749,8 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               <h3>Churches & Sermons</h3>
               <p>
                 Access powerful sermons and spiritual teachings from pastors
-                accross all ministry. Whether you missed a service or want to
-                revisit a message, our sermon library helps deepen your faith
-                and understanding of God's word.
+                across all ministry. Deepen your faith and understanding of
+                God's word.
               </p>
             </div>
 
@@ -651,53 +759,98 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               <h3>Assembly Programs</h3>
               <p>
                 Discover ways to get involved and serve. Join diverse assembly
-                programs which offer opportunities for spiritual growth,
-                fellowship, and making a meaningful impact in our community.
+                programs which offer opportunities for spiritual growth and
+                fellowship.
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="testimonials" css={sectionStyles}>
+          <div css={sectionHeader}>
+            <h2>Member Stories</h2>
+            <div className="sub">
+              Hear from members who have been transformed through ministry Desk
+            </div>
+          </div>
+
+          <div css={testimonialGridStyles}>
+            <div css={testimonialCardStyles}>
+              <div className="stars">★★★★★</div>
+              <p className="quote">
+                "This platform has completely changed how I stay connected with
+                my church. I never miss an important update or sermon anymore."
+              </p>
+              <p className="author">Sarah Johnson</p>
+              <p className="role">Church Member</p>
+            </div>
+
+            <div css={testimonialCardStyles}>
+              <div className="stars">★★★★★</div>
+              <p className="quote">
+                "The sermon library is incredible. I can revisit messages and
+                share them with my family. It's strengthened our faith journey."
+              </p>
+              <p className="author">Michael Chen</p>
+              <p className="role">Small Group Leader</p>
+            </div>
+
+            <div css={testimonialCardStyles}>
+              <div className="stars">★★★★★</div>
+              <p className="quote">
+                "Finding volunteer opportunities and assembly programs has never
+                been easier. I feel more connected to my church community."
+              </p>
+              <p className="author">Grace Okonkwo</p>
+              <p className="role">Ministry Volunteer</p>
             </div>
           </div>
         </section>
 
         {/* ---------- CONTACT US ---------- */}
         <section id="contact" css={contactSectionStyles}>
-          <div css={contactHeaderStyles}>
-            <h2>Get In Touch</h2>
-            <p>
-              Have questions? We'd love to hear from you. Reach out to us today.
-            </p>
-          </div>
-
-          <div css={contactGridStyles}>
-            <div css={contactItemStyles}>
-              <div className="label">📍 Location</div>
-              <p className="value">Head Office</p>
-              <p className="detail">Nairobi, Kenya</p>
+          <div className="content">
+            <div css={contactHeaderStyles}>
+              <h2>Get In Touch</h2>
+              <p>
+                Have questions? We'd love to hear from you. Reach out to us
+                today.
+              </p>
             </div>
 
-            <div css={contactItemStyles}>
-              <div className="label">📞 Phone</div>
-              <p className="value">+254 (0) 123 456 789</p>
-              <p className="detail">Mon - Fri, 9am - 5pm</p>
+            <div css={contactGridStyles}>
+              <div css={contactItemStyles}>
+                <div className="label">📍 Location</div>
+                <p className="value">Head Office</p>
+                <p className="detail">Nairobi, Kenya</p>
+              </div>
+
+              <div css={contactItemStyles}>
+                <div className="label">📞 Phone</div>
+                <p className="value">+254 (0) 123 456 789</p>
+                <p className="detail">Mon - Fri, 9am - 5pm</p>
+              </div>
+
+              <div css={contactItemStyles}>
+                <div className="label">✉️ Email</div>
+                <p className="value">info@ministrydesk.org</p>
+                <p className="detail">We'll respond within 24 hours</p>
+              </div>
             </div>
 
-            <div css={contactItemStyles}>
-              <div className="label">✉️ Email</div>
-              <p className="value">info@ministrydesk.org</p>
-              <p className="detail">We'll respond within 24 hours</p>
+            <div css={contactFormStyles}>
+              <h3>Send us a Message</h3>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <input type="text" placeholder="Your Name" required />
+                <input type="email" placeholder="Your Email" required />
+                <textarea placeholder="Your Message" required />
+                <button type="submit">Send Message</button>
+              </form>
             </div>
-          </div>
-
-          <div css={contactFormStyles}>
-            <h3>Send us a Message</h3>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <input type="text" placeholder="Your Name" required />
-              <input type="email" placeholder="Your Email" required />
-              <textarea placeholder="Your Message" required />
-              <button type="submit">Send Message</button>
-            </form>
           </div>
         </section>
 
+        {/* ---------- SOCIAL MEDIA ---------- */}
         <section id="social-media" css={socialMediaSectionStyles}>
           <div css={socialMediaHeaderStyles}>
             <h2>Connect With Us</h2>
