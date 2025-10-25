@@ -1,234 +1,100 @@
 import { useState } from "react";
 
-// Mock data with 25 items for pagination demo
-const mockData = [
-  { id: 1, name: "Alice", type: "User" },
-  { id: 2, name: "Beta App", type: "Application" },
-  { id: 3, name: "Developers Group", type: "Group" },
-  { id: 4, name: "Bob Smith", type: "User" },
-  { id: 5, name: "Charlie Brown", type: "User" },
-  { id: 6, name: "Delta System", type: "Application" },
-  { id: 7, name: "Engineering Team", type: "Group" },
-  { id: 8, name: "Diana Prince", type: "User" },
-  { id: 9, name: "Echo Platform", type: "Application" },
-  { id: 10, name: "Finance Group", type: "Group" },
-  { id: 11, name: "Frank Miller", type: "User" },
-  { id: 12, name: "Gamma Tool", type: "Application" },
-  { id: 13, name: "HR Department", type: "Group" },
-  { id: 14, name: "Grace Lee", type: "User" },
-  { id: 15, name: "Horizon App", type: "Application" },
-  { id: 16, name: "IT Support", type: "Group" },
-  { id: 17, name: "Ivan Petrov", type: "User" },
-  { id: 18, name: "Iris System", type: "Application" },
-  { id: 19, name: "Marketing Team", type: "Group" },
-  { id: 20, name: "Jack Wilson", type: "User" },
-  { id: 21, name: "Jupiter App", type: "Application" },
-  { id: 22, name: "Legal Team", type: "Group" },
-  { id: 23, name: "Karen Davis", type: "User" },
-  { id: 24, name: "Kestrel Tool", type: "Application" },
-  { id: 25, name: "Operations Group", type: "Group" },
-];
-
-export default function PermissionsModal() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const handleAddOption = (option: string) => {
-    console.log("Selected:", option);
-    setIsDropdownOpen(false);
-  };
-
-  const totalItems = mockData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-  const paginatedData = mockData.slice(startIndex, endIndex);
-
-  const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
-  const handleItemsPerPageChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when changing items per page
-  };
-
-  return (
-    <div style={overlay}>
-      <div style={dialog}>
-        <div style={header}>
-          <h5 style={title}>Dashboard</h5>
-        </div>
-        <div style={body}>
-          <div style={searchRow}>
-            <input
-              style={input}
-              placeholder="Search for users, apps, or groups..."
-            />
-            <select style={select}>
-              <option>All Types</option>
-              <option>Church Members</option>
-              <option>News & Events</option>
-              <option>Sermons</option>
-              <option>Assembly Programs</option>
-            </select>
-            <div style={dropdownContainer}>
-              <button
-                style={primaryBtn}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                + Add
-              </button>
-              {isDropdownOpen && (
-                <div style={dropdownMenu}>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("User")}
-                  >
-                    News & Events
-                  </button>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("Application")}
-                  >
-                    Sermons
-                  </button>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("Group")}
-                  >
-                    Assembly Program
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div style={cols}>
-            <div style={left}>
-              <div style={resultsHead}>
-                Results{" "}
-                <span style={muted}>
-                  {startIndex + 1}‑{endIndex} of {totalItems}
-                </span>
-              </div>
-              <div style={tableBox}>
-                <table style={table}>
-                  <thead style={tableHeader}>
-                    <tr>
-                      <th style={tableHeaderCell}>Name</th>
-                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedData.map((item) => (
-                      <tr
-                        key={item.id}
-                        style={tableBodyRow}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f0f4ff")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
-                        }
-                      >
-                        <td style={tableCell}>{item.name}</td>
-                        <td style={{ ...tableCell, ...tableCellAction }}>
-                          <button style={approveBtn}>Approve</button>
-                          <button style={cancelBtn}>Cancel</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div style={right}>
-              <div style={rightHead}>Selected Principals & Permissions</div>
-              <div style={permissionsList}>
-                <div style={permissionItem}>
-                  <div style={permissionName}>Alice</div>
-                  <div style={permissionBadge}>read / write</div>
-                </div>
-                <div style={permissionItem}>
-                  <div style={permissionName}>Developers Group</div>
-                  <div style={permissionBadge}>read</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style={footer}>
-          <div style={paginationContainer}>
-            <select
-              style={paginationSelect}
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-            >
-              <option value={10}>10 per page</option>
-              <option value={20}>20 per page</option>
-            </select>
-            <div style={paginationControls}>
-              <button
-                style={{
-                  ...paginationBtn,
-                  opacity: currentPage === 1 ? 0.5 : 1,
-                  cursor: currentPage === 1 ? "not-allowed" : "pointer",
-                }}
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                ← Previous
-              </button>
-              <span style={pageInfo}>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                style={{
-                  ...paginationBtn,
-                  opacity: currentPage === totalPages ? 0.5 : 1,
-                  cursor:
-                    currentPage === totalPages ? "not-allowed" : "pointer",
-                }}
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next →
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <style>{`
-        button:hover {
-          transform: translateY(-2px);
-        }
-        button:active {
-          transform: translateY(0);
-        }
-        tbody tr:hover {
-          background-color: #f9fafb;
-        }
-        input:focus, select:focus {
-          outline: none;
-          border-color: #2563eb;
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-      `}</style>
-    </div>
-  );
-}
+// Mock data organized by category
+const mockDataByCategory = {
+  all: [
+    { id: 1, name: "Alice", type: "User", category: "Church Members" },
+    { id: 2, name: "Beta App", type: "Application", category: "News & Events" },
+    {
+      id: 3,
+      name: "Developers Group",
+      type: "Group",
+      category: "Church Members",
+    },
+    { id: 4, name: "Bob Smith", type: "User", category: "Church Members" },
+    { id: 5, name: "Charlie Brown", type: "User", category: "Sermons" },
+    {
+      id: 6,
+      name: "Delta System",
+      type: "Application",
+      category: "News & Events",
+    },
+    {
+      id: 7,
+      name: "Engineering Team",
+      type: "Group",
+      category: "Assembly Programs",
+    },
+    { id: 8, name: "Diana Prince", type: "User", category: "Church Members" },
+    { id: 9, name: "Echo Platform", type: "Application", category: "Sermons" },
+    {
+      id: 10,
+      name: "Finance Group",
+      type: "Group",
+      category: "Church Members",
+    },
+    { id: 11, name: "Frank Miller", type: "User", category: "News & Events" },
+    {
+      id: 12,
+      name: "Gamma Tool",
+      type: "Application",
+      category: "Assembly Programs",
+    },
+    {
+      id: 13,
+      name: "HR Department",
+      type: "Group",
+      category: "Church Members",
+    },
+    { id: 14, name: "Grace Lee", type: "User", category: "Sermons" },
+    {
+      id: 15,
+      name: "Horizon App",
+      type: "Application",
+      category: "Church Members",
+    },
+    {
+      id: 16,
+      name: "IT Support",
+      type: "Group",
+      category: "Assembly Programs",
+    },
+    { id: 17, name: "Ivan Petrov", type: "User", category: "Church Members" },
+    { id: 18, name: "Iris System", type: "Application", category: "Sermons" },
+    {
+      id: 19,
+      name: "Marketing Team",
+      type: "Group",
+      category: "News & Events",
+    },
+    {
+      id: 20,
+      name: "Jack Wilson",
+      type: "User",
+      category: "Assembly Programs",
+    },
+    {
+      id: 21,
+      name: "Jupiter App",
+      type: "Application",
+      category: "Church Members",
+    },
+    { id: 22, name: "Legal Team", type: "Group", category: "Sermons" },
+    { id: 23, name: "Karen Davis", type: "User", category: "News & Events" },
+    {
+      id: 24,
+      name: "Kestrel Tool",
+      type: "Application",
+      category: "Assembly Programs",
+    },
+    {
+      id: 25,
+      name: "Operations Group",
+      type: "Group",
+      category: "Church Members",
+    },
+  ],
+};
 
 const overlay = {
   display: "flex",
@@ -247,22 +113,6 @@ const dialog = {
   flexDirection: "column",
   maxHeight: "90vh",
   boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
-} as const;
-
-const header = {
-  padding: "24px",
-  borderBottom: "1px solid #e5e7eb",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-} as const;
-
-const title = {
-  margin: 0,
-  fontWeight: 700,
-  fontSize: "20px",
-  color: "#1e293b",
-  letterSpacing: "-0.5px",
 } as const;
 
 const body = {
@@ -543,3 +393,218 @@ const pageInfo = {
   minWidth: "120px",
   textAlign: "center",
 } as const;
+
+export default function PermissionsModal() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedCategory, setSelectedCategory] = useState("All Types");
+
+  const handleAddOption = (option: string) => {
+    console.log("Selected:", option);
+    setIsDropdownOpen(false);
+  };
+
+  const filteredData =
+    selectedCategory === "All Types"
+      ? mockDataByCategory.all
+      : mockDataByCategory.all.filter(
+          (item) => item.category === selectedCategory
+        );
+
+  const totalItems = filteredData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handleItemsPerPageChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+    setCurrentPage(1);
+  };
+
+  return (
+    <div style={overlay}>
+      <div style={dialog}>
+        <div style={body}>
+          <div style={searchRow}>
+            <input
+              style={input}
+              placeholder="Search for users, apps, or groups..."
+            />
+            <select
+              style={select}
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+            >
+              <option>All Types</option>
+              <option>Church Members</option>
+              <option>News & Events</option>
+              <option>Sermons</option>
+              <option>Assembly Programs</option>
+            </select>
+            <div style={dropdownContainer}>
+              <button
+                style={primaryBtn}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                + Add
+              </button>
+              {isDropdownOpen && (
+                <div style={dropdownMenu}>
+                  <button
+                    style={dropdownItem}
+                    onClick={() => handleAddOption("User")}
+                  >
+                    News & Events
+                  </button>
+                  <button
+                    style={dropdownItem}
+                    onClick={() => handleAddOption("Application")}
+                  >
+                    Sermons
+                  </button>
+                  <button
+                    style={dropdownItem}
+                    onClick={() => handleAddOption("Group")}
+                  >
+                    Assembly Program
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div style={cols}>
+            <div style={left}>
+              <div style={resultsHead}>
+                {selectedCategory}
+                <span style={muted}>
+                  {startIndex + 1}‑{endIndex} of {totalItems}
+                </span>
+              </div>
+              <div style={tableBox}>
+                <table style={table}>
+                  <thead style={tableHeader}>
+                    <tr>
+                      <th style={tableHeaderCell}>Name</th>
+                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedData.map((item) => (
+                      <tr
+                        key={item.id}
+                        style={tableBodyRow}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#f0f4ff")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            "transparent")
+                        }
+                      >
+                        <td style={tableCell}>{item.name}</td>
+                        <td style={{ ...tableCell, ...tableCellAction }}>
+                          <button style={approveBtn}>Approve</button>
+                          <button style={cancelBtn}>Cancel</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div style={right}>
+              <div style={rightHead}>Selected Principals & Permissions</div>
+              <div style={permissionsList}>
+                <div style={permissionItem}>
+                  <div style={permissionName}>Alice</div>
+                  <div style={permissionBadge}>read / write</div>
+                </div>
+                <div style={permissionItem}>
+                  <div style={permissionName}>Developers Group</div>
+                  <div style={permissionBadge}>read</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style={footer}>
+          <div style={paginationContainer}>
+            <select
+              style={paginationSelect}
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+            >
+              <option value={10}>10 per page</option>
+              <option value={20}>20 per page</option>
+            </select>
+            <div style={paginationControls}>
+              <button
+                style={{
+                  ...paginationBtn,
+                  opacity: currentPage === 1 ? 0.5 : 1,
+                  cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                }}
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+              >
+                ← Previous
+              </button>
+              <span style={pageInfo}>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                style={{
+                  ...paginationBtn,
+                  opacity: currentPage === totalPages ? 0.5 : 1,
+                  cursor:
+                    currentPage === totalPages ? "not-allowed" : "pointer",
+                }}
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>{`
+        button:hover {
+          transform: translateY(-2px);
+        }
+        button:active {
+          transform: translateY(0);
+        }
+        tbody tr:hover {
+          background-color: #f9fafb;
+        }
+        input:focus, select:focus {
+          outline: none;
+          border-color: #2563eb;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+      `}</style>
+    </div>
+  );
+}

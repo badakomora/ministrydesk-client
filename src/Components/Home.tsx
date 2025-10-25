@@ -1,4 +1,7 @@
 /** @jsxImportSource @emotion/react */
+"use client";
+
+/** @jsxImportSource @emotion/react */
 import type React from "react";
 import { css, keyframes } from "@emotion/react";
 
@@ -18,7 +21,7 @@ const globalStyles = css`
     margin: 0;
     font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
       Roboto, "Helvetica Neue", Arial;
-    background: #fffff;
+    background: #ffffff;
     color: #fbbf24
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -118,20 +121,6 @@ const ctaPrimary = css`
   &:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 28px rgba(37, 99, 235, 0.3);
-  }
-`;
-
-// -------------------- Cards --------------------
-const cardStyles = css`
-  background: #fff;
-  padding: 8px 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
-  transition: transform 200ms ease, box-shadow 200ms ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(2, 6, 23, 0.08);
   }
 `;
 
@@ -265,12 +254,6 @@ const statsHighlight = css`
   > small:nth-of-type(2)::before {
     color: #fbbf24; /* yellow */
   }
-  > small:nth-of-type(3)::before {
-    color: #ef4444; /* red */
-  }
-  > small:nth-of-type(4)::before {
-    color: #22c55e; /* green */
-  }
 `;
 
 // -------------------- Layout --------------------
@@ -302,7 +285,7 @@ const sectionHeader = css`
   }
 `;
 
-const cardGrid = css`
+const infoCardGrid = css`
   display: grid;
   gap: 24px;
 
@@ -311,97 +294,267 @@ const cardGrid = css`
   }
 `;
 
-// -------------------- Announcements --------------------
-const urgentCardStyles = css`
-  border-left: 6px solid #ef4444;
-`;
+const infoCardStyles = css`
+  background: #fff;
+  padding: 32px 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  text-align: center;
 
-const announcementStyles = css`
-  display: flex;
-  flex-direction: column;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(2, 6, 23, 0.08);
+  }
 
-  .church {
-    font-size: 14px;
-    font-weight: 600;
-    color: #2563eb;
+  .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
   }
 
   h3 {
-    margin: 4px 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 12px 0;
+  }
+
+  p {
+    font-size: 15px;
+    color: #475569;
+    margin: 0;
+    line-height: 1.6;
+  }
+`;
+
+const contactSectionStyles = css`
+  background: linear-gradient(135deg, #f0f9ff, #fef3c7);
+  padding: 60px 40px;
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 90px;
+`;
+
+const contactHeaderStyles = css`
+  text-align: center;
+  margin-bottom: 48px;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 12px 0;
+  }
+
+  p {
+    font-size: 16px;
+    color: #475569;
+    margin: 0;
+  }
+`;
+
+const contactGridStyles = css`
+  display: grid;
+  gap: 32px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+const contactItemStyles = css`
+  text-align: center;
+
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .value {
     font-size: 18px;
     font-weight: 700;
     color: #111827;
+    margin: 0;
   }
 
-  .message {
-    font-size: 15px;
-    color: #475569;
-  }
-
-  .date {
-    font-size: 13px;
-    color: #94a3b8;
+  .detail {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
   }
 `;
 
-const badgeStyles = css`
-  display: inline-block;
-  font-size: 12px;
-  padding: 8px 12px;
-  font-weight: 700;
-  background: #ef4444;
-  color: #fff;
-  height: 100%;
-`;
-
-// -------------------- View More --------------------
-const viewMoreButton = css`
-  display: block;
-  margin: 32px auto 0;
-  padding: 8px 12px;
-  color: black;
+const contactFormStyles = css`
+  margin-top: 48px;
   background: white;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 24px 0;
+    text-align: center;
+  }
+
+  form {
+    display: grid;
+    gap: 16px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  input,
+  textarea {
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 200ms ease;
+
+    &:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+  }
+
+  textarea {
+    grid-column: 1 / -1;
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  button {
+    grid-column: 1 / -1;
+    padding: 12px 24px;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 200ms ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+    }
+  }
+`;
+
+const socialMediaSectionStyles = css`
+  margin-top: 90px;
+  padding: 60px 40px;
+  border-radius: 12px;
+  text-align: center;
+`;
+
+const socialMediaHeaderStyles = css`
+  margin-bottom: 48px;
+
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 12px 0;
+  }
+
+  p {
+    font-size: 16px;
+    color: #475569;
+    margin: 0;
+  }
+`;
+
+const socialMediaGridStyles = css`
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  max-width: 600px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+`;
+
+const socialMediaLinkStyles = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 200ms ease;
+  text-decoration: none;
 
   &:hover {
-    background: #1d4ed8;
-    color: white;
-    transform: translateY(-2px);
+    transform: translateY(-8px);
+    border-color: #2563eb;
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.15);
   }
-`;
 
-// -------------------- Sermons --------------------
-const sermonCardStyles = css`
-  .church {
-    font-weight: 600;
-    font-size: 14px;
-    color: #2563eb;
+  .icon {
+    font-size: 40px;
+    margin-bottom: 12px;
   }
-  .title {
-    font-size: 17px;
-    font-weight: 700;
+
+  .label {
+    font-size: 14px;
+    font-weight: 600;
     color: #111827;
   }
 `;
 
-// -------------------- Ministries --------------------
-const ministryCardStyles = css`
-  display: flex;
-  flex-direction: column;
+const socialStatsStyles = css`
+  margin-top: 48px;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 
-  .name {
-    font-weight: 700;
-    font-size: 16px;
-    color: #1e293b;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+const socialStatItemStyles = css`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+
+  .number {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #2563eb, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
   }
 
-  .desc {
-    font-size: 14px;
-    color: #475569;
+  .label {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 8px;
+    font-weight: 600;
   }
 `;
 
@@ -411,99 +564,6 @@ interface componentProps {
 
 // -------------------- Home Component --------------------
 export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
-  const announcements = [
-    {
-      title: "Christmas Food Drive",
-      message: "Help us bless families in need this Christmas.",
-      date: "Dec 10, 2024",
-      urgent: false,
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Church Office Holiday Hours",
-      message: "Closed Dec 23-26 and Jan 1.",
-      date: "Dec 5, 2024",
-      urgent: true,
-      church: "PAG Westlands",
-    },
-    {
-      title: "New Member Orientation",
-      message: "Join Jan 7th at 2 PM for new member orientation.",
-      date: "Nov 28, 2024",
-      urgent: false,
-      church: "PAG Karen",
-    },
-    {
-      title: "Weekly Newsletter",
-      message: "Subscribe to stay updated.",
-      date: "Nov 25, 2024",
-      urgent: false,
-      church: "PAG Nairobi",
-    },
-  ];
-
-  const recentSermons = [
-    {
-      title: "Walking in Faith",
-      speaker: "Pastor Peter",
-      date: "Dec 15, 2024",
-      duration: "45 min",
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Power of Prayer",
-      speaker: "Pastor Everlyne",
-      date: "Dec 8, 2024",
-      duration: "38 min",
-      church: "PAG Westlands",
-    },
-    {
-      title: "God's Grace",
-      speaker: "Pastor Mike",
-      date: "Dec 1, 2024",
-      duration: "42 min",
-      church: "PAG Karen",
-    },
-    {
-      title: "Faith & Patience",
-      speaker: "Pastor John",
-      date: "Nov 24, 2024",
-      duration: "50 min",
-      church: "PAG Nairobi",
-    },
-  ];
-
-  const departments = [
-    {
-      name: "Men",
-      description: "Leading in worship",
-      leader: "Sarah Johnson",
-      contact: "worship@pag.org",
-      church: "PAG Nairobi",
-    },
-    {
-      name: "Youth",
-      description: "Youth programs",
-      leader: "Mike Chen",
-      contact: "youth@pag.org",
-      church: "PAG Westlands",
-    },
-    {
-      name: "Sunday School",
-      description: "Children ministry",
-      leader: "Mary Rodriguez",
-      contact: "children@pag.org",
-      church: "PAG Karen",
-    },
-    {
-      name: "Development Committee",
-      description: "Community service",
-      leader: "James Wilson",
-      contact: "outreach@pag.org",
-      church: "PAG Nairobi",
-    },
-  ];
-
   return (
     <div css={globalStyles}>
       <main css={mainStyles}>
@@ -530,11 +590,11 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
               css={ctaPrimary}
               onClick={() =>
                 document
-                  .querySelector("#news-events")
+                  .querySelector("#why-important")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Explore News
+              Learn More
             </button>
           </div>
 
@@ -554,153 +614,167 @@ export const Home: React.FC<componentProps> = ({ setActiveTab }) => {
           </div>
         </div>
 
-        {/* ---------- NEWS ---------- */}
-        <section id="news-events" css={sectionStyles}>
+        {/* ---------- WHY THESE MATTER ---------- */}
+        <section id="why-important" css={sectionStyles}>
           <div css={sectionHeader}>
-            <h2>News & Events</h2>
-            <div className="sub">Latest announcements across the churches</div>
+            <h2>Why These Matter</h2>
+            <div className="sub">
+              Understanding the importance of staying connected
+            </div>
           </div>
 
-          <div css={cardGrid}>
-            {announcements.slice(0, 3).map((a, idx) => (
-              <article
-                key={idx}
-                css={[cardStyles, a.urgent && urgentCardStyles]}
-                role="button"
-                tabIndex={0}
-                onClick={(e) => setActiveTab("NewsItem")}
-                style={{ cursor: "pointer" }}
-              >
-                <div css={announcementStyles}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>
-                      <div className="church">{a.church}</div>
-                      <h3>{a.title}</h3>
-                    </div>
-                    {a.urgent && (
-                      <span
-                        css={badgeStyles}
-                        style={{ background: "#ef4444", color: "#fff" }}
-                      >
-                        Urgent
-                      </span>
-                    )}
-                  </div>
-                  <p className="message">{a.message}</p>
-                  <div className="date">{a.date}</div>
-                </div>
-              </article>
-            ))}
-          </div>
+          <div css={infoCardGrid}>
+            <div css={infoCardStyles}>
+              <div className="icon">📰</div>
+              <h3>News & Events</h3>
+              <p>
+                Stay informed about important announcements, community events,
+                and ministry updates. Being connected keeps you engaged with
+                your church family and ensures you never miss critical
+                information across all assemblies
+              </p>
+            </div>
 
-          {announcements.length > 3 && (
-            <button
-              css={viewMoreButton}
-              onClick={(e) => setActiveTab("NewsList")}
-              aria-label="View more announcements"
-            >
-              View More &raquo;
-            </button>
-          )}
+            <div css={infoCardStyles}>
+              <div className="icon">🎙️</div>
+              <h3>Churches & Sermons</h3>
+              <p>
+                Access powerful sermons and spiritual teachings from pastors
+                accross all ministry. Whether you missed a service or want to
+                revisit a message, our sermon library helps deepen your faith
+                and understanding of God's word.
+              </p>
+            </div>
+
+            <div css={infoCardStyles}>
+              <div className="icon">🤝</div>
+              <h3>Assembly Programs</h3>
+              <p>
+                Discover ways to get involved and serve. Join diverse assembly
+                programs which offer opportunities for spiritual growth,
+                fellowship, and making a meaningful impact in our community.
+              </p>
+            </div>
+          </div>
         </section>
 
-        {/* ---------- SERMONS ---------- */}
-        <section id="churches-sermons" css={sectionStyles}>
-          <div css={sectionHeader}>
-            <h2>Churches & Sermons</h2>
-            <div className="sub">Recent sermons you can stream or download</div>
+        {/* ---------- CONTACT US ---------- */}
+        <section id="contact" css={contactSectionStyles}>
+          <div css={contactHeaderStyles}>
+            <h2>Get In Touch</h2>
+            <p>
+              Have questions? We'd love to hear from you. Reach out to us today.
+            </p>
           </div>
 
-          <div css={cardGrid}>
-            {recentSermons.slice(0, 3).map((s, idx) => (
-              <article
-                key={idx}
-                onClick={(e) => setActiveTab("SermonsItem")}
-                css={cardStyles}
-              >
-                <div css={sermonCardStyles}>
-                  <div className="church">{s.church}</div>
-                  <div style={{ marginTop: 8 }}>
-                    <div className="title">{s.title}</div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginTop: 8,
-                      }}
-                    >
-                      <div style={{ fontSize: 12, color: "#94a3b8" }}>
-                        {s.speaker}
-                      </div>
-                      <div>
-                        {s.duration} • {s.date}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))}
+          <div css={contactGridStyles}>
+            <div css={contactItemStyles}>
+              <div className="label">📍 Location</div>
+              <p className="value">Head Office</p>
+              <p className="detail">Nairobi, Kenya</p>
+            </div>
+
+            <div css={contactItemStyles}>
+              <div className="label">📞 Phone</div>
+              <p className="value">+254 (0) 123 456 789</p>
+              <p className="detail">Mon - Fri, 9am - 5pm</p>
+            </div>
+
+            <div css={contactItemStyles}>
+              <div className="label">✉️ Email</div>
+              <p className="value">info@ministrydesk.org</p>
+              <p className="detail">We'll respond within 24 hours</p>
+            </div>
           </div>
 
-          {recentSermons.length > 3 && (
-            <button
-              css={viewMoreButton}
-              onClick={(e) => setActiveTab("SermonsList")}
-              aria-label="View more sermons"
-            >
-              View More &raquo;
-            </button>
-          )}
+          <div css={contactFormStyles}>
+            <h3>Send us a Message</h3>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <input type="text" placeholder="Your Name" required />
+              <input type="email" placeholder="Your Email" required />
+              <textarea placeholder="Your Message" required />
+              <button type="submit">Send Message</button>
+            </form>
+          </div>
         </section>
 
-        {/* ---------- MINISTRIES ---------- */}
-        <section id="ministry-programs" css={sectionStyles}>
-          <div css={sectionHeader}>
-            <h2>Assembly Programs</h2>
-            <div className="sub">Get involved with a ministry near you</div>
+        <section id="social-media" css={socialMediaSectionStyles}>
+          <div css={socialMediaHeaderStyles}>
+            <h2>Connect With Us</h2>
+            <p>
+              Follow our ministry on social media for daily inspiration and
+              updates
+            </p>
           </div>
 
-          <div css={cardGrid}>
-            {departments.slice(0, 3).map((d, idx) => (
-              <div
-                key={idx}
-                onClick={(e) => setActiveTab("AssemblyProgramsItem")}
-                css={cardStyles}
-              >
-                <div css={ministryCardStyles}>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <div>
-                      <div className="church" style={{ color: "#2563eb" }}>
-                        <b>{d.church}</b>
-                      </div>
-                      <h3>{d.name}</h3>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 12, color: "#94a3b8" }}>
-                        {d.leader}
-                      </div>
-                      <div style={{ fontSize: 13 }}>{d.contact}</div>
-                      <p>{d.description}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {departments.length > 3 && (
-            <button
-              css={viewMoreButton}
-              onClick={(e) => setActiveTab("AssemblyProgramsList")}
-              aria-label="View more programs"
+          <div css={socialMediaGridStyles}>
+            <a
+              href="https://facebook.com/ministrydesk"
+              target="_blank"
+              rel="noopener noreferrer"
+              css={socialMediaLinkStyles}
             >
-              View More &raquo;
-            </button>
-          )}
+              <div className="icon">f</div>
+              <div className="label">Facebook</div>
+            </a>
+
+            <a
+              href="https://twitter.com/ministrydesk"
+              target="_blank"
+              rel="noopener noreferrer"
+              css={socialMediaLinkStyles}
+            >
+              <div className="icon">𝕏</div>
+              <div className="label">Twitter</div>
+            </a>
+
+            <a
+              href="https://instagram.com/ministrydesk"
+              target="_blank"
+              rel="noopener noreferrer"
+              css={socialMediaLinkStyles}
+            >
+              <div className="icon">📷</div>
+              <div className="label">Instagram</div>
+            </a>
+
+            <a
+              href="https://linkedin.com/company/ministrydesk"
+              target="_blank"
+              rel="noopener noreferrer"
+              css={socialMediaLinkStyles}
+            >
+              <div className="icon">in</div>
+              <div className="label">LinkedIn</div>
+            </a>
+
+            <a
+              href="https://youtube.com/@ministrydesk"
+              target="_blank"
+              rel="noopener noreferrer"
+              css={socialMediaLinkStyles}
+            >
+              <div className="icon">▶</div>
+              <div className="label">YouTube</div>
+            </a>
+          </div>
+
+          <div css={socialStatsStyles}>
+            <div css={socialStatItemStyles}>
+              <p className="number">15K+</p>
+              <p className="label">Followers</p>
+            </div>
+
+            <div css={socialStatItemStyles}>
+              <p className="number">2.5K+</p>
+              <p className="label">Engagements</p>
+            </div>
+
+            <div css={socialStatItemStyles}>
+              <p className="number">500+</p>
+              <p className="label">Posts</p>
+            </div>
+          </div>
         </section>
       </main>
     </div>

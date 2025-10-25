@@ -193,7 +193,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
   const programs = [
     {
-      name: "Worship",
+      name: "Women",
       desc: "Leading in worship",
       leader: "Sarah Johnson",
       church: "PAG Nairobi",
@@ -205,13 +205,13 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       church: "PAG Westlands",
     },
     {
-      name: "Children",
+      name: "Sunday School",
       desc: "Children ministry",
       leader: "Mary Rodriguez",
       church: "PAG Karen",
     },
     {
-      name: "Outreach",
+      name: "CED",
       desc: "Community service",
       leader: "James Wilson",
       church: "PAG Nairobi",
