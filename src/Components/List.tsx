@@ -92,11 +92,7 @@ const listStyles = css`
     border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
-      color: #2563eb;
-    }
-
-    p {
-      color: #2563eb;
+      color: #fbbf24;
     }
   }
 
@@ -104,11 +100,7 @@ const listStyles = css`
     border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
-      color: #2563eb;
-    }
-
-    p {
-      color: #2563eb;
+      color: #fbbf24;
     }
 
     &:hover {
@@ -120,11 +112,7 @@ const listStyles = css`
     border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
 
     h3 {
-      color: #2563eb;
-    }
-
-    p {
-      color: #2563eb;
+      color: #fbbf24;
     }
   }
 `;
@@ -216,6 +204,12 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
       leader: "James Wilson",
       church: "PAG Nairobi",
     },
+    {
+      name: "Development Committee",
+      desc: "Community service",
+      leader: "James Wilson",
+      church: "PAG Nairobi",
+    },
   ];
 
   const filterByChurch = (item: { church: string }) =>
@@ -224,9 +218,6 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
   const filteredAnnouncements = announcements.filter(filterByChurch);
   const filteredSermons = sermons.filter(filterByChurch);
   const filteredPrograms = programs.filter(filterByChurch);
-
-  const getSermonIcon = (title: string) =>
-    title.toLowerCase().includes("video") ? "🎥" : "🎧";
 
   return (
     <div css={listStyles}>
@@ -241,7 +232,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
       {activeTab === "NewsList" && (
         <div className="section">
-          <h2>📢 All News & Events</h2>
+          <h2> 📰 All News & Events</h2>
           <p className="section-desc">
             Stay informed with the latest church news, special events, and
             community updates happening across all PAG assemblies.
@@ -250,7 +241,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
             {filteredAnnouncements.length > 0 ? (
               filteredAnnouncements.map((a, idx) => (
                 <div key={idx} className="card announcement">
-                  <h3>📰 {a.title}</h3>
+                  <h3>{a.title}</h3>
                   <p>{a.message}</p>
                   <small>
                     ⛪ {a.church} • {a.date}
@@ -266,7 +257,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
       {activeTab === "SermonsList" && (
         <div className="section">
-          <h2>🎙️ All Sermons</h2>
+          <h2>🎙️All Sermons</h2>
           <p className="section-desc">
             Access powerful teachings and messages from our pastors through
             recorded sermons — available in both video and audio.
@@ -275,9 +266,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
             {filteredSermons.length > 0 ? (
               filteredSermons.map((s, idx) => (
                 <div key={idx} className="card sermon">
-                  <h3>
-                    {getSermonIcon(s.title)} {s.title}
-                  </h3>
+                  <h3>{s.title}</h3>
                   <p>Speaker: {s.speaker}</p>
                   <small>
                     ⛪ {s.church} • {s.date}
@@ -293,7 +282,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
       {activeTab === "AssemblyProgramsList" && (
         <div className="section">
-          <h2>🤝 All Assembly Programs</h2>
+          <h2>🌿All Assembly Programs</h2>
           <p className="section-desc">
             Explore our assembly programs that nurture faith, empower youth, and
             strengthen community bonds through service and worship.
@@ -305,7 +294,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((p, idx) => (
                 <div key={idx} className="card program">
-                  <h3>🌿 {p.name}</h3>
+                  <h3> {p.name}</h3>
                   <p>{p.desc}</p>
                   <small>
                     ⛪ {p.church} • Leader: {p.leader}

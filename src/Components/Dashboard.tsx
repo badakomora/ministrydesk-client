@@ -153,7 +153,7 @@ const select = {
 
 const primaryBtn = {
   padding: "12px 14px",
-  background: "#2563eb",
+  background: "linear-gradient(135deg, #2563eb, #fbbf24)",
   color: "#fff",
   border: "none",
   cursor: "pointer",
@@ -248,7 +248,7 @@ const tableCellAction = {
 } as const;
 
 const approveBtn = {
-  background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
+  background: "#2563eb",
   color: "#fff",
   border: "none",
   padding: "5px 14px",
@@ -261,7 +261,7 @@ const approveBtn = {
 } as const;
 
 const cancelBtn = {
-  background: "linear-gradient(135deg,#fbbf24 100%)",
+  background: "#fbbf24",
   color: "#fff",
   border: "none",
   padding: "5px 14px",

@@ -364,7 +364,7 @@ const infoCardStyles = css`
 `;
 
 const contactSectionStyles = css`
-  background: linear-gradient(135deg, #f0f9ff 0%, #fef3c7 100%);
+  background: white;
   padding: 8px 14px;
   margin-top: 100px;
   position: relative;
