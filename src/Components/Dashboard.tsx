@@ -1,3 +1,4 @@
+import { Check, Eye, PauseCircle, Pencil } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
@@ -89,25 +90,6 @@ const left = {
   overflow: "hidden",
 } as const;
 
-// <CHANGE> Updated right panel to be a flex container for two sections
-// const right = {
-//   flex: 5,
-//   display: "flex",
-//   flexDirection: "column",
-//   gap: "16px",
-// } as const;
-
-// // <CHANGE> New style for individual right panel sections
-// const rightPanel = {
-//   background: "linear-gradient(135deg, #f0f4ff 0%, #fef8f0 100%)",
-//   borderRadius: "12px",
-//   padding: "20px",
-//   border: "1px solid #e5e7eb",
-//   display: "flex",
-//   flexDirection: "column",
-//   gap: "16px",
-// } as const;
-
 const resultsHead = {
   display: "flex",
   justifyContent: "space-between",
@@ -197,21 +179,6 @@ const approveBtn = {
   minWidth: "fit-content",
 } as const;
 
-const holdBtn = {
-  background: "#fff",
-  color: "#2563eb",
-  border: "none",
-  padding: "5px 14px",
-  margin: "1px",
-  fontSize: "13px",
-  fontWeight: 600,
-  cursor: "pointer",
-  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-  transition: "all 200ms ease",
-  whiteSpace: "nowrap",
-  minWidth: "fit-content",
-} as const;
-
 const cancelBtn = {
   background: "#fbbf24",
   color: "#fff",
@@ -226,71 +193,6 @@ const cancelBtn = {
   whiteSpace: "nowrap",
   minWidth: "fit-content",
 } as const;
-
-// const rightHead = {
-//   fontWeight: 700,
-//   fontSize: "15px",
-//   color: "#1e293b",
-//   padding: "12px",
-//   letterSpacing: "0.5px",
-// } as const;
-
-// const dashboardStatsContainer = {
-//   display: "grid",
-//   gridTemplateColumns: "1fr 1fr",
-//   gap: "12px",
-//   marginTop: "8px",
-// } as const;
-
-// <CHANGE> New style for single column stats (Last Sermon section)
-// const dashboardStatsContainerSingle = {
-//   display: "grid",
-//   gridTemplateColumns: "1fr",
-//   gap: "12px",
-//   marginTop: "8px",
-// } as const;
-
-// const statCard = {
-//   display: "flex",
-//   flexDirection: "column",
-//   justifyContent: "space-between",
-//   alignItems: "flex-start",
-//   padding: "16px",
-//   background: "#fff",
-//   borderRadius: "10px",
-//   border: "1px solid #e5e7eb",
-//   transition: "all 200ms ease",
-//   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
-//   minHeight: "110px",
-// } as const;
-
-// const statLabel = {
-//   fontWeight: 600,
-//   color: "#1e293b",
-//   fontSize: "13px",
-//   display: "flex",
-//   alignItems: "center",
-//   gap: "8px",
-//   marginBottom: "8px",
-// } as const;
-
-// const statValue = {
-//   background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
-//   color: "#fff",
-//   padding: "8px 14px",
-//   borderRadius: "8px",
-//   fontSize: "14px",
-//   fontWeight: 700,
-//   textAlign: "center",
-//   minWidth: "70px",
-//   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-//   alignSelf: "flex-end",
-// } as const;
-
-// const statIcon = {
-//   fontSize: "18px",
-//   display: "inline-block",
-// } as const;
 
 const dropdownContainer = {
   position: "relative",
@@ -371,23 +273,6 @@ const pageInfo = {
   minWidth: "120px",
   textAlign: "center",
 } as const;
-
-// const viewReportsBtn = {
-//   width: "100%",
-//   textAlign: "center",
-//   justifyContent: "center",
-//   color: "#fff",
-//   background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-//   padding: "12px 14px",
-//   border: "none",
-//   cursor: "pointer",
-//   fontWeight: 600,
-//   fontSize: "14px",
-//   transition: "all 200ms ease",
-//   boxShadow: "0 6px 20px rgba(99, 102, 241, 0.2)",
-//   borderRadius: "8px",
-//   marginTop: "4px",
-// } as const;
 
 // Mock data organized by category
 const mockDataByCategory = {
@@ -927,31 +812,13 @@ export const Dashboard = () => {
                                 Schedule Meeting
                               </button>
                             </>
-                          ) : selectedCategory === "Sermons" ||
-                            selectedCategory === "News & Events" ? (
-                            <>
-                              <button style={primaryBtn}>Review Content</button>
-                              <button style={approveBtn}>
-                                Approve Content
-                              </button>
-                              <button style={holdBtn}>Hold Content</button>
-                              <button style={cancelBtn}>
-                                Request Modification
-                              </button>
-                            </>
-                          ) : selectedCategory === "Assembly Programs" ? (
-                            <>
-                              <button style={primaryBtn}>Review Program</button>
-                              <button style={approveBtn}>
-                                Approve Program
-                              </button>
-                              <button style={holdBtn}>Hold Program</button>
-                              <button style={cancelBtn}>
-                                Request Modification
-                              </button>
-                            </>
                           ) : (
-                            ""
+                            <div style={{ display: "flex" }}>
+                              <Eye size={18} />
+                              <Check size={18} />
+                              <PauseCircle size={18} />
+                              <Pencil size={18} />
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -960,93 +827,6 @@ export const Dashboard = () => {
                 </table>
               </div>
             </div>
-
-            {/* <CHANGE> Split right panel into two sections: Last Sermon and General */}
-            {/* <div style={right} className="right-panel-mobile">
-              <div style={rightPanel}>
-                <div style={rightHead}>📖 Last Sermon</div>
-                <button style={viewReportsBtn}>👁️ View Sermon Details</button>
-                <div style={dashboardStatsContainerSingle}>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>📝</span>
-                      Sermon Title
-                    </div>
-                    <small>Faith and Trust</small>
-                    <div style={statValue}>Oct 20</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>👤</span>
-                      Preacher
-                    </div>
-                    <small>Charlie Brown</small>
-                    <div style={statValue}>Main Church</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>🙏</span>
-                      Special Prayer Request
-                    </div>
-                    <small>Last Sermon</small>
-                    <div style={statValue}>10</div>
-                  </div>
-                </div>
-              </div>
-
-              <div style={rightPanel}>
-                <div style={rightHead}>💰 General</div>
-                <button style={viewReportsBtn}>
-                  📊 View Financial Reports
-                </button>
-                <div style={dashboardStatsContainer}>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>🙏</span>
-                      Tithes
-                    </div>
-                    <small>This Month</small>
-                    <div style={statValue}>$5,200</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>💝</span>
-                      Offerings
-                    </div>
-                    <small>This Month</small>
-                    <div style={statValue}>$2,850</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>👥</span>
-                      Church Members
-                    </div>
-                    <div style={statValue}>1000</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>📖</span>
-                      Sermons
-                    </div>
-                    <div style={statValue}>1000</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>📰</span>
-                      News & Events
-                    </div>
-                    <div style={statValue}>3000</div>
-                  </div>
-                  <div style={statCard}>
-                    <div style={statLabel}>
-                      <span style={statIcon}>🎯</span>
-                      Programs
-                    </div>
-                    <div style={statValue}>150</div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
         <div style={footer} className="footer-mobile">
