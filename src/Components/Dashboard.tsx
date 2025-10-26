@@ -1,6 +1,6 @@
-import type React from "react";
+import type React from "react"
 
-import { useState } from "react";
+import { useState } from "react"
 
 const overlay = {
   display: "flex",
@@ -9,7 +9,7 @@ const overlay = {
   marginTop: "50px",
   backdropFilter: "blur(4px)",
   padding: "12px",
-} as const;
+} as const
 
 const dialog = {
   background: "#fff",
@@ -20,7 +20,7 @@ const dialog = {
   flexDirection: "column",
   maxHeight: "90vh",
   boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
-} as const;
+} as const
 
 const body = {
   padding: "24px",
@@ -29,7 +29,7 @@ const body = {
   flexDirection: "column",
   gap: "24px",
   flex: 1,
-} as const;
+} as const
 
 const footer = {
   padding: "20px 24px",
@@ -38,7 +38,7 @@ const footer = {
   justifyContent: "flex-end",
   gap: "12px",
   background: "#f8fafc",
-} as const;
+} as const
 
 const input = {
   padding: "12px 14px",
@@ -47,7 +47,7 @@ const input = {
   fontSize: "14px",
   transition: "all 200ms ease",
   background: "#fff",
-} as const;
+} as const
 
 const select = {
   padding: "12px 14px",
@@ -56,7 +56,7 @@ const select = {
   background: "#fff",
   cursor: "pointer",
   transition: "all 200ms ease",
-} as const;
+} as const
 
 const primaryBtn = {
   padding: "12px 14px",
@@ -68,18 +68,18 @@ const primaryBtn = {
   fontSize: "14px",
   transition: "all 200ms ease",
   boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
-} as const;
+} as const
 
 const searchRow = {
   display: "flex",
   gap: "12px",
   alignItems: "center",
-} as const;
+} as const
 
 const cols = {
   display: "flex",
   gap: "24px",
-} as const;
+} as const
 
 const left = {
   flex: 7,
@@ -88,7 +88,7 @@ const left = {
   gap: "12px",
   minWidth: 0,
   overflow: "hidden",
-} as const;
+} as const
 
 const right = {
   flex: 5,
@@ -96,7 +96,10 @@ const right = {
   borderRadius: "12px",
   padding: "20px",
   border: "1px solid #e5e7eb",
-} as const;
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+} as const
 
 const resultsHead = {
   display: "flex",
@@ -106,13 +109,13 @@ const resultsHead = {
   color: "#1e293b",
   padding: "0 4px",
   marginBottom: "8px",
-} as const;
+} as const
 
 const muted = {
   fontWeight: 400,
   color: "#6b7280",
   fontSize: "13px",
-} as const;
+} as const
 
 const tableBox = {
   border: "1px solid #e5e7eb",
@@ -122,18 +125,20 @@ const tableBox = {
   background: "#fff",
   position: "relative",
   WebkitOverflowScrolling: "touch",
-} as const;
+  direction: "rtl" as const,
+} as const
 
 const table = {
   width: "100%",
   borderCollapse: "collapse",
   minWidth: "900px",
-} as const;
+  direction: "ltr" as const,
+} as const
 
 const tableHeader = {
   background: "linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%)",
   borderBottom: "2px solid #2563eb",
-} as const;
+} as const
 
 const tableHeaderCell = {
   padding: "12px 8px",
@@ -143,12 +148,12 @@ const tableHeaderCell = {
   textAlign: "left",
   textTransform: "uppercase",
   letterSpacing: "0.5px",
-} as const;
+} as const
 
 const tableBodyRow = {
   borderBottom: "1px solid #e5e7eb",
   transition: "background-color 150ms ease",
-} as const;
+} as const
 
 const tableCell = {
   padding: "12px 8px",
@@ -158,7 +163,7 @@ const tableCell = {
   wordBreak: "break-word",
   position: "relative",
   overflow: "visible",
-} as const;
+} as const
 
 const tableCellAction = {
   textAlign: "right",
@@ -168,7 +173,7 @@ const tableCellAction = {
   display: "flex",
   flexDirection: "column",
   gap: "4px",
-} as const;
+} as const
 
 const approveBtn = {
   background: "#2563eb",
@@ -183,7 +188,7 @@ const approveBtn = {
   transition: "all 200ms ease",
   whiteSpace: "nowrap",
   minWidth: "fit-content",
-} as const;
+} as const
 
 const holdBtn = {
   background: "#fff",
@@ -198,7 +203,7 @@ const holdBtn = {
   transition: "all 200ms ease",
   whiteSpace: "nowrap",
   minWidth: "fit-content",
-} as const;
+} as const
 
 const cancelBtn = {
   background: "#fbbf24",
@@ -213,7 +218,7 @@ const cancelBtn = {
   transition: "all 200ms ease",
   whiteSpace: "nowrap",
   minWidth: "fit-content",
-} as const;
+} as const
 
 const rightHead = {
   fontWeight: 700,
@@ -221,57 +226,61 @@ const rightHead = {
   color: "#1e293b",
   padding: "12px",
   letterSpacing: "0.5px",
-} as const;
+} as const
 
 const dashboardStatsContainer = {
-  display: "flex",
-  flexDirection: "column",
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
   gap: "12px",
-  marginTop: "16px",
-} as const;
+  marginTop: "8px",
+} as const
 
 const statCard = {
   display: "flex",
+  flexDirection: "column",
   justifyContent: "space-between",
-  alignItems: "center",
-  padding: "14px 16px",
+  alignItems: "flex-start",
+  padding: "16px",
   background: "#fff",
   borderRadius: "10px",
   border: "1px solid #e5e7eb",
   transition: "all 200ms ease",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
-} as const;
+  minHeight: "110px",
+} as const
 
 const statLabel = {
   fontWeight: 600,
   color: "#1e293b",
-  fontSize: "14px",
+  fontSize: "13px",
   display: "flex",
   alignItems: "center",
   gap: "8px",
-} as const;
+  marginBottom: "8px",
+} as const
 
 const statValue = {
   background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
   color: "#fff",
-  padding: "6px 12px",
+  padding: "8px 14px",
   borderRadius: "8px",
-  fontSize: "13px",
+  fontSize: "14px",
   fontWeight: 700,
   textAlign: "center",
-  minWidth: "60px",
+  minWidth: "70px",
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-} as const;
+  alignSelf: "flex-end",
+} as const
 
 const statIcon = {
-  fontSize: "16px",
+  fontSize: "18px",
   display: "inline-block",
-} as const;
+} as const
 
 const dropdownContainer = {
   position: "relative",
   display: "inline-block",
-} as const;
+} as const
 
 const dropdownMenu = {
   position: "absolute",
@@ -287,7 +296,7 @@ const dropdownMenu = {
   overflow: "hidden",
   maxHeight: "200px",
   overflowY: "auto",
-} as const;
+} as const
 
 const dropdownItem = {
   display: "block",
@@ -301,7 +310,7 @@ const dropdownItem = {
   cursor: "pointer",
   transition: "all 150ms ease",
   borderBottom: "1px solid #f3f4f6",
-} as const;
+} as const
 
 const paginationContainer = {
   display: "flex",
@@ -309,7 +318,7 @@ const paginationContainer = {
   alignItems: "center",
   gap: "16px",
   width: "100%",
-} as const;
+} as const
 
 const paginationSelect = {
   padding: "10px 12px",
@@ -319,13 +328,13 @@ const paginationSelect = {
   cursor: "pointer",
   transition: "all 200ms ease",
   borderRadius: "6px",
-} as const;
+} as const
 
 const paginationControls = {
   display: "flex",
   alignItems: "center",
   gap: "12px",
-} as const;
+} as const
 
 const paginationBtn = {
   padding: "10px 14px",
@@ -338,7 +347,7 @@ const paginationBtn = {
   transition: "all 200ms ease",
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
   borderRadius: "6px",
-} as const;
+} as const
 
 const pageInfo = {
   fontSize: "14px",
@@ -346,51 +355,24 @@ const pageInfo = {
   color: "#1e293b",
   minWidth: "120px",
   textAlign: "center",
-} as const;
+} as const
 
-const tooltipContainer = {
-  position: "relative",
-  display: "inline-flex",
-  zIndex: 9999,
-} as const;
-
-const tooltip = {
-  position: "fixed",
-  bottom: "auto",
-  left: "auto",
-  transform: "none",
-  background: "#ffffff",
-  color: "#2563eb",
-  padding: "12px",
-  borderRadius: "8px",
-  fontSize: "12px",
-  zIndex: 50000,
-  boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
-  maxWidth: "250px",
-  width: "max-content",
-  pointerEvents: "none",
-  border: "1px solid #e5e7eb",
-  opacity: 1,
-} as const;
-
-const tooltipContent = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "6px",
-} as const;
-
-const tooltipRow = {
-  display: "flex",
-  gap: "8px",
-  wordBreak: "break-word",
-} as const;
-
-const tooltipLabel = {
+const viewReportsBtn = {
+  width: "100%",
+  textAlign: "center",
+  justifyContent: "center",
+  color: "#fff",
+  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+  padding: "12px 14px",
+  border: "none",
+  cursor: "pointer",
   fontWeight: 600,
-  color: "#fbbf24",
-  minWidth: "50px",
-  flexShrink: 0,
-} as const;
+  fontSize: "14px",
+  transition: "all 200ms ease",
+  boxShadow: "0 6px 20px rgba(99, 102, 241, 0.2)",
+  borderRadius: "8px",
+  marginTop: "4px",
+} as const
 
 // Mock data organized by category
 const mockDataByCategory = {
@@ -622,161 +604,176 @@ const mockDataByCategory = {
       church: "Conference Room",
     },
   ],
-};
+}
 
 const columnConfigs = {
   "Church Members": {
     columns: ["name", "email", "phone", "role"],
     headers: ["Name", "Email", "Phone", "Role"],
-    tooltipFields: ["id", "phone", "email"],
     mobileColumns: ["name", "email"],
     mobileHeaders: ["Name", "Email"],
   },
   "News & Events": {
     columns: ["title", "date", "postedby", "church"],
     headers: ["Title", "Date", "Posted By", "Church"],
-    tooltipFields: ["description", "church"],
     mobileColumns: ["title", "date"],
     mobileHeaders: ["Title", "Date"],
   },
   Sermons: {
     columns: ["title", "date", "preacher", "church"],
     headers: ["Title", "Date", "Preacher", "Church"],
-    tooltipFields: ["description", "church"],
     mobileColumns: ["title", "date"],
     mobileHeaders: ["Title", "Date"],
   },
   "Assembly Programs": {
     columns: ["title", "date", "leader", "church"],
     headers: ["Title", "Date", "Leader", "Church"],
-    tooltipFields: ["description", "church"],
     mobileColumns: ["title", "date"],
     mobileHeaders: ["Title", "Date"],
   },
-};
+}
 
 export const Dashboard = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [selectedCategory, setSelectedCategory] = useState("Church Members");
-  const [hoveredRowId, setHoveredRowId] = useState<number | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
-  const [isMobile] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [selectedCategory, setSelectedCategory] = useState("Church Members")
+  const [isMobile] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-    setCurrentPage(1);
-  };
+    setSelectedCategory(e.target.value)
+    setCurrentPage(1)
+    setSearchQuery("")
+  }
 
   const handleAddOption = (type: string) => {
     // Implement your logic here
-  };
+  }
 
-  const handleItemsPerPageChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setItemsPerPage(Number.parseInt(e.target.value));
-  };
+  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setItemsPerPage(Number.parseInt(e.target.value))
+  }
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage(currentPage - 1)
     }
-  };
+  }
 
   const handleNextPage = () => {
     if (currentPage < Math.ceil(mockDataByCategory.all.length / itemsPerPage)) {
-      setCurrentPage(currentPage + 1);
+      setCurrentPage(currentPage + 1)
     }
-  };
+  }
 
-  const filteredData =
-    selectedCategory === "Church Members"
-      ? mockDataByCategory.all.filter(
-          (item) => item.category === "Church Members"
+  const filterBySearch = (items: any[]) => {
+    if (!searchQuery.trim()) return items
+
+    const query = searchQuery.toLowerCase()
+
+    return items.filter((item) => {
+      if (selectedCategory === "Church Members") {
+        // Search by name
+        return item.name?.toLowerCase().includes(query)
+      } else if (selectedCategory === "News & Events") {
+        // Search by title, date, or church
+        return (
+          item.title?.toLowerCase().includes(query) ||
+          item.date?.toLowerCase().includes(query) ||
+          item.church?.toLowerCase().includes(query)
         )
-      : mockDataByCategory.all.filter(
-          (item) => item.category === selectedCategory
-        );
+      } else if (selectedCategory === "Sermons") {
+        // Search by title, date, or church
+        return (
+          item.title?.toLowerCase().includes(query) ||
+          item.date?.toLowerCase().includes(query) ||
+          item.church?.toLowerCase().includes(query)
+        )
+      } else if (selectedCategory === "Assembly Programs") {
+        // Search by title, date, or church
+        return (
+          item.title?.toLowerCase().includes(query) ||
+          item.date?.toLowerCase().includes(query) ||
+          item.church?.toLowerCase().includes(query)
+        )
+      }
+      return true
+    })
+  }
 
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-  const paginatedData = filteredData.slice(startIndex, endIndex);
+  const filteredData = filterBySearch(
+    selectedCategory === "Church Members"
+      ? mockDataByCategory.all.filter((item) => item.category === "Church Members")
+      : mockDataByCategory.all.filter((item) => item.category === selectedCategory),
+  )
+
+  const totalItems = filteredData.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems)
+  const paginatedData = filteredData.slice(startIndex, endIndex)
 
   const currentConfig =
     selectedCategory === "Church Members"
       ? columnConfigs["Church Members"]
-      : columnConfigs[selectedCategory as keyof typeof columnConfigs];
+      : columnConfigs[selectedCategory as keyof typeof columnConfigs]
 
-  const displayColumns = isMobile
-    ? (currentConfig as any).mobileColumns
-    : currentConfig.columns;
-  const displayHeaders = isMobile
-    ? (currentConfig as any).mobileHeaders
-    : currentConfig.headers;
+  const displayColumns = isMobile ? (currentConfig as any).mobileColumns : currentConfig.columns
+  const displayHeaders = isMobile ? (currentConfig as any).mobileHeaders : currentConfig.headers
 
   const getCellValue = (item: any, column: string) => {
-    const value = item[column as keyof typeof item];
-    return value || "N/A";
-  };
-
-  const handleTooltipHover = (e: React.MouseEvent, rowId: number) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setTooltipPos({
-      top: rect.top - 12,
-      left: rect.left + rect.width / 2,
-    });
-    setHoveredRowId(rowId);
-  };
+    const value = item[column as keyof typeof item]
+    return value || "N/A"
+  }
 
   return (
     <div style={overlay}>
       <div style={dialog}>
         <div style={body}>
           <div style={searchRow} className="search-row-mobile">
-            <input style={input} placeholder="Search by name or title" />
-            <select
-              style={select}
-              value={selectedCategory}
-              onChange={handleCategoryChange}
+            <input
+              style={input}
+              placeholder={
+                selectedCategory === "Church Members" ? "Search by name..." : "Search by title, date, or church..."
+              }
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setCurrentPage(1)
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "12px",
+              }}
             >
-              <option>Church Members</option>
-              <option>News & Events</option>
-              <option>Sermons</option>
-              <option>Assembly Programs</option>
-            </select>
-            <div style={dropdownContainer}>
-              <button
-                style={primaryBtn}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                + Add
-              </button>
-              {isDropdownOpen && (
-                <div style={dropdownMenu}>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("User")}
-                  >
-                    News & Events
-                  </button>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("Application")}
-                  >
-                    Sermons
-                  </button>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("Group")}
-                  >
-                    Assembly Program
-                  </button>
-                </div>
-              )}
+              <select style={select} value={selectedCategory} onChange={handleCategoryChange}>
+                <option>Church Members</option>
+                <option>News & Events</option>
+                <option>Sermons</option>
+                <option>Assembly Programs</option>
+              </select>
+              <div style={dropdownContainer}>
+                <button style={primaryBtn} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                  📝 Create New
+                </button>
+                {isDropdownOpen && (
+                  <div style={dropdownMenu}>
+                    <button style={dropdownItem} onClick={() => handleAddOption("User")}>
+                      News & Events
+                    </button>
+                    <button style={dropdownItem} onClick={() => handleAddOption("Application")}>
+                      Sermons
+                    </button>
+                    <button style={dropdownItem} onClick={() => handleAddOption("Group")}>
+                      Assembly Program
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -799,10 +796,7 @@ export const Dashboard = () => {
                             | number
                             | bigint
                             | boolean
-                            | React.ReactElement<
-                                unknown,
-                                string | React.JSXElementConstructor<any>
-                              >
+                            | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
                             | Iterable<React.ReactNode>
                             | React.ReactPortal
                             | Promise<
@@ -811,34 +805,27 @@ export const Dashboard = () => {
                                 | bigint
                                 | boolean
                                 | React.ReactPortal
-                                | React.ReactElement<
-                                    unknown,
-                                    string | React.JSXElementConstructor<any>
-                                  >
+                                | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>
                                 | Iterable<React.ReactNode>
                                 | null
                                 | undefined
                               >
                             | null
                             | undefined,
-                          idx: React.Key | null | undefined
+                          idx: React.Key | null | undefined,
                         ) => (
                           <th
                             key={idx}
                             style={{
                               ...tableHeaderCell,
-                              ...(idx === displayHeaders.length - 1
-                                ? tableCellAction
-                                : {}),
+                              ...(idx === displayHeaders.length - 1 ? tableCellAction : {}),
                             }}
                           >
                             {header}
                           </th>
-                        )
+                        ),
                       )}
-                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>
-                        Action
-                      </th>
+                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -846,104 +833,37 @@ export const Dashboard = () => {
                       <tr
                         key={item.id}
                         style={tableBodyRow}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f0f4ff")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
-                        }
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0f4ff")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                       >
-                        {displayColumns.map(
-                          (
-                            column: string,
-                            idx: React.Key | null | undefined
-                          ) => (
-                            <td
-                              key={idx}
-                              style={{
-                                ...tableCell,
-                                ...(idx === displayColumns.length - 1
-                                  ? tableCellAction
-                                  : {}),
-                              }}
-                            >
-                              {idx === 0 ? (
-                                <div style={tooltipContainer}>
-                                  {getCellValue(item, column)}
-                                  <span
-                                    onMouseEnter={(e) =>
-                                      handleTooltipHover(e, item.id)
-                                    }
-                                    onMouseLeave={() => setHoveredRowId(null)}
-                                    style={{
-                                      cursor: "pointer",
-                                      marginLeft: "4px",
-                                      fontSize: "12px",
-                                    }}
-                                  >
-                                    ℹ️
-                                  </span>
-                                  {hoveredRowId === item.id && (
-                                    <div
-                                      style={{
-                                        ...tooltip,
-                                        top: `${tooltipPos.top}px`,
-                                        left: `${tooltipPos.left}px`,
-                                        transform: "translate(-50%, -100%)",
-                                      }}
-                                    >
-                                      <div style={tooltipContent}>
-                                        {currentConfig.tooltipFields.map(
-                                          (field) => (
-                                            <div key={field} style={tooltipRow}>
-                                              <span style={tooltipLabel}>
-                                                {field}:
-                                              </span>
-                                              <span>
-                                                {getCellValue(item, field)}
-                                              </span>
-                                            </div>
-                                          )
-                                        )}
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              ) : (
-                                getCellValue(item, column)
-                              )}
-                            </td>
-                          )
-                        )}
+                        {displayColumns.map((column: string, idx: React.Key | null | undefined) => (
+                          <td
+                            key={idx}
+                            style={{
+                              ...tableCell,
+                              ...(idx === displayColumns.length - 1 ? tableCellAction : {}),
+                            }}
+                          >
+                            {getCellValue(item, column)}
+                          </td>
+                        ))}
                         <td style={{ ...tableCell, ...tableCellAction }}>
                           {selectedCategory === "Church Members" ? (
                             <>
                               <button style={approveBtn}>Approve Member</button>
-                              <button style={cancelBtn}>
-                                Schedule Meeting
-                              </button>
+                              <button style={cancelBtn}>Schedule Meeting</button>
                             </>
-                          ) : selectedCategory === "Sermons" ||
-                            selectedCategory === "News & Events" ? (
+                          ) : selectedCategory === "Sermons" || selectedCategory === "News & Events" ? (
                             <>
-                              <button style={approveBtn}>
-                                Approve Content
-                              </button>
+                              <button style={approveBtn}>Approve Content</button>
                               <button style={holdBtn}>Hold Content</button>
-                              <button style={cancelBtn}>
-                                Request Modification
-                              </button>
+                              <button style={cancelBtn}>Request Modification</button>
                             </>
                           ) : selectedCategory === "Assembly Programs" ? (
                             <>
-                              <button style={approveBtn}>
-                                Approve Program
-                              </button>
+                              <button style={approveBtn}>Approve Program</button>
                               <button style={holdBtn}>Hold Program</button>
-                              <button style={cancelBtn}>
-                                Request Modification
-                              </button>
+                              <button style={cancelBtn}>Request Modification</button>
                             </>
                           ) : (
                             ""
@@ -969,7 +889,7 @@ export const Dashboard = () => {
                 <div style={statCard}>
                   <div style={statLabel}>
                     <span style={statIcon}>📖</span>
-                    Sermons & Teachings
+                    Sermons
                   </div>
                   <div style={statValue}>1000</div>
                 </div>
@@ -983,63 +903,22 @@ export const Dashboard = () => {
                 <div style={statCard}>
                   <div style={statLabel}>
                     <span style={statIcon}>🎯</span>
-                    Assembly Programs
+                    Programs
                   </div>
                   <div style={statValue}>150</div>
                 </div>
-                <div
-                  style={{
-                    ...statCard,
-                    background:
-                      "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)",
-                    marginTop: "12px",
-                  }}
-                >
-                  <div style={{ ...statLabel, color: "#fff" }}>
-                    <span style={statIcon}>⚡</span>
-                    Quick Actions
-                  </div>
-                </div>
-                <button
-                  style={{
-                    ...approveBtn,
-                    width: "100%",
-                    textAlign: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  📝 Create New
-                </button>
-                <button
-                  style={{
-                    ...holdBtn,
-                    width: "100%",
-                    textAlign: "center",
-                    justifyContent: "center",
-                    color: "#fff",
-                    background: "#6b7280",
-                  }}
-                >
-                  👁️ View Reports
-                </button>
               </div>
+              <button style={viewReportsBtn}>👁️ View Reports</button>
             </div>
           </div>
         </div>
         <div style={footer} className="footer-mobile">
           <div style={paginationContainer} className="pagination-mobile">
-            <select
-              style={paginationSelect}
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-            >
+            <select style={paginationSelect} value={itemsPerPage} onChange={handleItemsPerPageChange}>
               <option value={10}>10 per page</option>
               <option value={20}>20 per page</option>
             </select>
-            <div
-              style={paginationControls}
-              className="pagination-controls-mobile"
-            >
+            <div style={paginationControls} className="pagination-controls-mobile">
               <button
                 style={{
                   ...paginationBtn,
@@ -1058,8 +937,7 @@ export const Dashboard = () => {
                 style={{
                   ...paginationBtn,
                   opacity: currentPage === totalPages ? 0.5 : 1,
-                  cursor:
-                    currentPage === totalPages ? "not-allowed" : "pointer",
+                  cursor: currentPage === totalPages ? "not-allowed" : "pointer",
                 }}
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
@@ -1084,6 +962,17 @@ export const Dashboard = () => {
           outline: none;
           border-color: #2563eb;
           box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Stat card hover effect */
+        div[style*="display: flex"][style*="flexDirection: column"][style*="justifyContent: space-between"][style*="alignItems: flex-start"][style*="padding: 16px"] {
+          cursor: pointer;
+        }
+
+        div[style*="display: flex"][style*="flexDirection: column"][style*="justifyContent: space-between"][style*="alignItems: flex-start"][style*="padding: 16px"]:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+          border-color: #2563eb;
         }
 
         /* Mobile responsive styles */
@@ -1193,5 +1082,5 @@ export const Dashboard = () => {
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
