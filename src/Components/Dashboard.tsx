@@ -155,6 +155,8 @@ const tableCell = {
   color: "#374151",
   whiteSpace: "normal",
   wordBreak: "break-word",
+  position: "relative",
+  overflow: "visible",
 } as const;
 
 const tableCellAction = {
@@ -167,6 +169,20 @@ const tableCellAction = {
 const approveBtn = {
   background: "#2563eb",
   color: "#fff",
+  border: "none",
+  padding: "5px 14px",
+  margin: "1px",
+  fontSize: "13px",
+  fontWeight: 600,
+  cursor: "pointer",
+  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
+  transition: "all 200ms ease",
+  whiteSpace: "nowrap",
+} as const;
+
+const holdBtn = {
+  background: "#fff",
+  color: "#2563eb",
   border: "none",
   padding: "5px 14px",
   margin: "1px",
@@ -195,44 +211,54 @@ const cancelBtn = {
 const rightHead = {
   fontWeight: 700,
   fontSize: "15px",
-  marginBottom: "16px",
   color: "#1e293b",
-  textTransform: "uppercase",
+  padding: "12px",
   letterSpacing: "0.5px",
 } as const;
 
-const permissionsList = {
+const dashboardStatsContainer = {
   display: "flex",
   flexDirection: "column",
   gap: "12px",
+  marginTop: "16px",
 } as const;
 
-const permissionItem = {
+const statCard = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: "12px",
+  padding: "14px 16px",
   background: "#fff",
-  borderRadius: "8px",
+  borderRadius: "10px",
   border: "1px solid #e5e7eb",
-  transition: "all 150ms ease",
+  transition: "all 200ms ease",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
 } as const;
 
-const permissionName = {
+const statLabel = {
   fontWeight: 600,
   color: "#1e293b",
   fontSize: "14px",
+  display: "flex",
+  alignItems: "center",
+  gap: "8px",
 } as const;
 
-const permissionBadge = {
-  background: "linear-gradient(135deg, #dbeafe 0%, #fef3c7 100%)",
-  color: "#1e40af",
-  padding: "4px 10px",
-  borderRadius: "6px",
-  fontSize: "12px",
-  fontWeight: 600,
-  textTransform: "uppercase",
-  letterSpacing: "0.3px",
+const statValue = {
+  background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
+  color: "#fff",
+  padding: "6px 12px",
+  borderRadius: "8px",
+  fontSize: "13px",
+  fontWeight: 700,
+  textAlign: "center",
+  minWidth: "60px",
+  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
+} as const;
+
+const statIcon = {
+  fontSize: "16px",
+  display: "inline-block",
 } as const;
 
 const dropdownContainer = {
@@ -317,20 +343,21 @@ const pageInfo = {
 
 const tooltipContainer = {
   position: "relative",
-  display: "flex",
+  display: "inline-flex",
+  zIndex: 100,
 } as const;
 
 const tooltip = {
-  position: "absolute",
-  bottom: "calc(100% + 8px)",
-  left: "50%",
-  transform: "translateX(-50%)",
-  background: "#1e293b",
+  position: "fixed",
+  bottom: "auto",
+  left: "auto",
+  transform: "none",
+  background: "#2563eb",
   color: "#fff",
   padding: "12px",
   borderRadius: "8px",
   fontSize: "12px",
-  zIndex: 2001,
+  zIndex: 9999,
   boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
   maxWidth: "250px",
   width: "max-content",
@@ -615,8 +642,9 @@ export const Dashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [selectedCategory, setSelectedCategory] = useState("All Types");
+  const [selectedCategory, setSelectedCategory] = useState("Church Members");
   const [hoveredRowId, setHoveredRowId] = useState<number | null>(null);
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
@@ -646,8 +674,10 @@ export const Dashboard = () => {
   };
 
   const filteredData =
-    selectedCategory === "All Types"
-      ? mockDataByCategory.all
+    selectedCategory === "Church Members"
+      ? mockDataByCategory.all.filter(
+          (item) => item.category === "Church Members"
+        )
       : mockDataByCategory.all.filter(
           (item) => item.category === selectedCategory
         );
@@ -659,13 +689,22 @@ export const Dashboard = () => {
   const paginatedData = filteredData.slice(startIndex, endIndex);
 
   const currentConfig =
-    selectedCategory === "All Types"
+    selectedCategory === "Church Members"
       ? columnConfigs["Church Members"]
       : columnConfigs[selectedCategory as keyof typeof columnConfigs];
 
   const getCellValue = (item: any, column: string) => {
     const value = item[column as keyof typeof item];
     return value || "N/A";
+  };
+
+  const handleTooltipHover = (e: React.MouseEvent, rowId: number) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setTooltipPos({
+      top: rect.top - 12,
+      left: rect.left + rect.width / 2,
+    });
+    setHoveredRowId(rowId);
   };
 
   return (
@@ -679,7 +718,6 @@ export const Dashboard = () => {
               value={selectedCategory}
               onChange={handleCategoryChange}
             >
-              <option>All Types</option>
               <option>Church Members</option>
               <option>News & Events</option>
               <option>Sermons</option>
@@ -774,7 +812,9 @@ export const Dashboard = () => {
                               <div style={tooltipContainer}>
                                 {getCellValue(item, column)}
                                 <span
-                                  onMouseEnter={() => setHoveredRowId(item.id)}
+                                  onMouseEnter={(e) =>
+                                    handleTooltipHover(e, item.id)
+                                  }
                                   onMouseLeave={() => setHoveredRowId(null)}
                                   style={{
                                     cursor: "pointer",
@@ -785,7 +825,14 @@ export const Dashboard = () => {
                                   ℹ️
                                 </span>
                                 {hoveredRowId === item.id && (
-                                  <div style={tooltip}>
+                                  <div
+                                    style={{
+                                      ...tooltip,
+                                      top: `${tooltipPos.top}px`,
+                                      left: `${tooltipPos.left}px`,
+                                      transform: "translate(-50%, -100%)",
+                                    }}
+                                  >
                                     <div style={tooltipContent}>
                                       {currentConfig.tooltipFields.map(
                                         (field) => (
@@ -809,8 +856,37 @@ export const Dashboard = () => {
                           </td>
                         ))}
                         <td style={{ ...tableCell, ...tableCellAction }}>
-                          <button style={approveBtn}>Approve</button>
-                          <button style={cancelBtn}>Cancel</button>
+                          {selectedCategory === "Church Members" ? (
+                            <>
+                              <button style={approveBtn}>Approve Member</button>
+                              <button style={cancelBtn}>
+                                Schedule Meeting
+                              </button>
+                            </>
+                          ) : selectedCategory === "Sermons" ||
+                            selectedCategory === "News & Events" ? (
+                            <>
+                              <button style={approveBtn}>
+                                Approve Content
+                              </button>
+                              <button style={holdBtn}>Hold Content</button>
+                              <button style={cancelBtn}>
+                                Request Modification
+                              </button>
+                            </>
+                          ) : selectedCategory === "Assembly Programs" ? (
+                            <>
+                              <button style={approveBtn}>
+                                Approve Program
+                              </button>
+                              <button style={holdBtn}>Hold Program</button>
+                              <button style={cancelBtn}>
+                                Request Modification
+                              </button>
+                            </>
+                          ) : (
+                            ""
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -820,15 +896,35 @@ export const Dashboard = () => {
             </div>
 
             <div style={right} className="right-panel-mobile">
-              <div style={rightHead}>Selected Principals & Permissions</div>
-              <div style={permissionsList}>
-                <div style={permissionItem}>
-                  <div style={permissionName}>Alice</div>
-                  <div style={permissionBadge}>read / write</div>
+              <div style={rightHead}>📊 Dashboard Overview</div>
+              <div style={dashboardStatsContainer}>
+                <div style={statCard}>
+                  <div style={statLabel}>
+                    <span style={statIcon}>👥</span>
+                    Church Members
+                  </div>
+                  <div style={statValue}>100+</div>
                 </div>
-                <div style={permissionItem}>
-                  <div style={permissionName}>Developers Group</div>
-                  <div style={permissionBadge}>read</div>
+                <div style={statCard}>
+                  <div style={statLabel}>
+                    <span style={statIcon}>📖</span>
+                    Sermons & Teachings
+                  </div>
+                  <div style={statValue}>1000</div>
+                </div>
+                <div style={statCard}>
+                  <div style={statLabel}>
+                    <span style={statIcon}>📰</span>
+                    News & Events
+                  </div>
+                  <div style={statValue}>3000</div>
+                </div>
+                <div style={statCard}>
+                  <div style={statLabel}>
+                    <span style={statIcon}>🎯</span>
+                    Assembly Programs
+                  </div>
+                  <div style={statValue}>150</div>
                 </div>
               </div>
             </div>
