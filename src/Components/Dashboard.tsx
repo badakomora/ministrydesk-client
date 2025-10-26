@@ -1,6 +1,6 @@
-import type React from "react";
+import type React from "react"
 
-import { useState } from "react";
+import { useState } from "react"
 
 const overlay = {
   display: "flex",
@@ -9,7 +9,7 @@ const overlay = {
   marginTop: "50px",
   backdropFilter: "blur(4px)",
   padding: "12px",
-} as const;
+} as const
 
 const dialog = {
   background: "#fff",
@@ -20,7 +20,7 @@ const dialog = {
   flexDirection: "column",
   maxHeight: "90vh",
   boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
-} as const;
+} as const
 
 const body = {
   padding: "24px",
@@ -29,7 +29,7 @@ const body = {
   flexDirection: "column",
   gap: "24px",
   flex: 1,
-} as const;
+} as const
 
 const footer = {
   padding: "20px 24px",
@@ -38,7 +38,7 @@ const footer = {
   justifyContent: "flex-end",
   gap: "12px",
   background: "#f8fafc",
-} as const;
+} as const
 
 const input = {
   padding: "12px 14px",
@@ -47,7 +47,7 @@ const input = {
   fontSize: "14px",
   transition: "all 200ms ease",
   background: "#fff",
-} as const;
+} as const
 
 const select = {
   padding: "12px 14px",
@@ -56,7 +56,7 @@ const select = {
   background: "#fff",
   cursor: "pointer",
   transition: "all 200ms ease",
-} as const;
+} as const
 
 const primaryBtn = {
   padding: "12px 14px",
@@ -68,18 +68,18 @@ const primaryBtn = {
   fontSize: "14px",
   transition: "all 200ms ease",
   boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
-} as const;
+} as const
 
 const searchRow = {
   display: "flex",
   gap: "12px",
   alignItems: "center",
-} as const;
+} as const
 
 const cols = {
   display: "flex",
   gap: "24px",
-} as const;
+} as const
 
 const left = {
   flex: 7,
@@ -87,7 +87,8 @@ const left = {
   flexDirection: "column",
   gap: "12px",
   minWidth: 0,
-} as const;
+  overflow: "hidden",
+} as const
 
 const right = {
   flex: 5,
@@ -95,7 +96,7 @@ const right = {
   borderRadius: "12px",
   padding: "20px",
   border: "1px solid #e5e7eb",
-} as const;
+} as const
 
 const resultsHead = {
   display: "flex",
@@ -105,13 +106,13 @@ const resultsHead = {
   color: "#1e293b",
   padding: "0 4px",
   marginBottom: "8px",
-} as const;
+} as const
 
 const muted = {
   fontWeight: 400,
   color: "#6b7280",
   fontSize: "13px",
-} as const;
+} as const
 
 const tableBox = {
   border: "1px solid #e5e7eb",
@@ -121,18 +122,18 @@ const tableBox = {
   background: "#fff",
   position: "relative",
   WebkitOverflowScrolling: "touch",
-} as const;
+} as const
 
 const table = {
   width: "100%",
   borderCollapse: "collapse",
   minWidth: "900px",
-} as const;
+} as const
 
 const tableHeader = {
   background: "linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%)",
   borderBottom: "2px solid #2563eb",
-} as const;
+} as const
 
 const tableHeaderCell = {
   padding: "12px 8px",
@@ -142,12 +143,12 @@ const tableHeaderCell = {
   textAlign: "left",
   textTransform: "uppercase",
   letterSpacing: "0.5px",
-} as const;
+} as const
 
 const tableBodyRow = {
   borderBottom: "1px solid #e5e7eb",
   transition: "background-color 150ms ease",
-} as const;
+} as const
 
 const tableCell = {
   padding: "12px 8px",
@@ -157,14 +158,17 @@ const tableCell = {
   wordBreak: "break-word",
   position: "relative",
   overflow: "visible",
-} as const;
+} as const
 
 const tableCellAction = {
   textAlign: "right",
   maxWidth: "none",
   overflow: "visible",
   whiteSpace: "normal",
-} as const;
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+} as const
 
 const approveBtn = {
   background: "#2563eb",
@@ -178,7 +182,8 @@ const approveBtn = {
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
   transition: "all 200ms ease",
   whiteSpace: "nowrap",
-} as const;
+  minWidth: "fit-content",
+} as const
 
 const holdBtn = {
   background: "#fff",
@@ -192,7 +197,8 @@ const holdBtn = {
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
   transition: "all 200ms ease",
   whiteSpace: "nowrap",
-} as const;
+  minWidth: "fit-content",
+} as const
 
 const cancelBtn = {
   background: "#fbbf24",
@@ -206,7 +212,8 @@ const cancelBtn = {
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
   transition: "all 200ms ease",
   whiteSpace: "nowrap",
-} as const;
+  minWidth: "fit-content",
+} as const
 
 const rightHead = {
   fontWeight: 700,
@@ -214,14 +221,14 @@ const rightHead = {
   color: "#1e293b",
   padding: "12px",
   letterSpacing: "0.5px",
-} as const;
+} as const
 
 const dashboardStatsContainer = {
   display: "flex",
   flexDirection: "column",
   gap: "12px",
   marginTop: "16px",
-} as const;
+} as const
 
 const statCard = {
   display: "flex",
@@ -233,7 +240,7 @@ const statCard = {
   border: "1px solid #e5e7eb",
   transition: "all 200ms ease",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
-} as const;
+} as const
 
 const statLabel = {
   fontWeight: 600,
@@ -242,7 +249,7 @@ const statLabel = {
   display: "flex",
   alignItems: "center",
   gap: "8px",
-} as const;
+} as const
 
 const statValue = {
   background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
@@ -254,17 +261,17 @@ const statValue = {
   textAlign: "center",
   minWidth: "60px",
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-} as const;
+} as const
 
 const statIcon = {
   fontSize: "16px",
   display: "inline-block",
-} as const;
+} as const
 
 const dropdownContainer = {
   position: "relative",
   display: "inline-block",
-} as const;
+} as const
 
 const dropdownMenu = {
   position: "absolute",
@@ -280,7 +287,7 @@ const dropdownMenu = {
   overflow: "hidden",
   maxHeight: "200px",
   overflowY: "auto",
-} as const;
+} as const
 
 const dropdownItem = {
   display: "block",
@@ -294,7 +301,7 @@ const dropdownItem = {
   cursor: "pointer",
   transition: "all 150ms ease",
   borderBottom: "1px solid #f3f4f6",
-} as const;
+} as const
 
 const paginationContainer = {
   display: "flex",
@@ -302,7 +309,7 @@ const paginationContainer = {
   alignItems: "center",
   gap: "16px",
   width: "100%",
-} as const;
+} as const
 
 const paginationSelect = {
   padding: "10px 12px",
@@ -312,13 +319,13 @@ const paginationSelect = {
   cursor: "pointer",
   transition: "all 200ms ease",
   borderRadius: "6px",
-} as const;
+} as const
 
 const paginationControls = {
   display: "flex",
   alignItems: "center",
   gap: "12px",
-} as const;
+} as const
 
 const paginationBtn = {
   padding: "10px 14px",
@@ -331,7 +338,7 @@ const paginationBtn = {
   transition: "all 200ms ease",
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
   borderRadius: "6px",
-} as const;
+} as const
 
 const pageInfo = {
   fontSize: "14px",
@@ -339,49 +346,51 @@ const pageInfo = {
   color: "#1e293b",
   minWidth: "120px",
   textAlign: "center",
-} as const;
+} as const
 
 const tooltipContainer = {
   position: "relative",
   display: "inline-flex",
-  zIndex: 100,
-} as const;
+  zIndex: 9999,
+} as const
 
 const tooltip = {
   position: "fixed",
   bottom: "auto",
   left: "auto",
   transform: "none",
-  background: "#2563eb",
-  color: "#fff",
+  background: "#ffffff",
+  color: "#2563eb",
   padding: "12px",
   borderRadius: "8px",
   fontSize: "12px",
-  zIndex: 9999,
+  zIndex: 50000,
   boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
   maxWidth: "250px",
   width: "max-content",
   pointerEvents: "none",
-} as const;
+  border: "1px solid #e5e7eb",
+  opacity: 1,
+} as const
 
 const tooltipContent = {
   display: "flex",
   flexDirection: "column",
   gap: "6px",
-} as const;
+} as const
 
 const tooltipRow = {
   display: "flex",
   gap: "8px",
   wordBreak: "break-word",
-} as const;
+} as const
 
 const tooltipLabel = {
   fontWeight: 600,
   color: "#fbbf24",
   minWidth: "50px",
   flexShrink: 0,
-} as const;
+} as const
 
 // Mock data organized by category
 const mockDataByCategory = {
@@ -613,99 +622,105 @@ const mockDataByCategory = {
       church: "Conference Room",
     },
   ],
-};
+}
 
 const columnConfigs = {
   "Church Members": {
     columns: ["name", "email", "phone", "role"],
     headers: ["Name", "Email", "Phone", "Role"],
     tooltipFields: ["id", "phone", "email"],
+    mobileColumns: ["name", "email"],
+    mobileHeaders: ["Name", "Email"],
   },
   "News & Events": {
     columns: ["title", "date", "postedby", "church"],
     headers: ["Title", "Date", "Posted By", "Church"],
     tooltipFields: ["description", "church"],
+    mobileColumns: ["title", "date"],
+    mobileHeaders: ["Title", "Date"],
   },
   Sermons: {
     columns: ["title", "date", "preacher", "church"],
     headers: ["Title", "Date", "Preacher", "Church"],
     tooltipFields: ["description", "church"],
+    mobileColumns: ["title", "date"],
+    mobileHeaders: ["Title", "Date"],
   },
   "Assembly Programs": {
     columns: ["title", "date", "leader", "church"],
     headers: ["Title", "Date", "Leader", "Church"],
     tooltipFields: ["description", "church"],
+    mobileColumns: ["title", "date"],
+    mobileHeaders: ["Title", "Date"],
   },
-};
+}
 
 export const Dashboard = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [selectedCategory, setSelectedCategory] = useState("Church Members");
-  const [hoveredRowId, setHoveredRowId] = useState<number | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [selectedCategory, setSelectedCategory] = useState("Church Members")
+  const [hoveredRowId, setHoveredRowId] = useState<number | null>(null)
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 })
+  const [isMobile, ] = useState(false)
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
-    setCurrentPage(1);
-  };
+    setSelectedCategory(e.target.value)
+    setCurrentPage(1)
+  }
 
   const handleAddOption = (type: string) => {
     // Implement your logic here
-  };
+  }
 
-  const handleItemsPerPageChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setItemsPerPage(Number.parseInt(e.target.value));
-  };
+  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setItemsPerPage(Number.parseInt(e.target.value))
+  }
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage(currentPage - 1)
     }
-  };
+  }
 
   const handleNextPage = () => {
     if (currentPage < Math.ceil(mockDataByCategory.all.length / itemsPerPage)) {
-      setCurrentPage(currentPage + 1);
+      setCurrentPage(currentPage + 1)
     }
-  };
+  }
 
   const filteredData =
     selectedCategory === "Church Members"
-      ? mockDataByCategory.all.filter(
-          (item) => item.category === "Church Members"
-        )
-      : mockDataByCategory.all.filter(
-          (item) => item.category === selectedCategory
-        );
+      ? mockDataByCategory.all.filter((item) => item.category === "Church Members")
+      : mockDataByCategory.all.filter((item) => item.category === selectedCategory)
 
-  const totalItems = filteredData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-  const paginatedData = filteredData.slice(startIndex, endIndex);
+  const totalItems = filteredData.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems)
+  const paginatedData = filteredData.slice(startIndex, endIndex)
 
   const currentConfig =
     selectedCategory === "Church Members"
       ? columnConfigs["Church Members"]
-      : columnConfigs[selectedCategory as keyof typeof columnConfigs];
+      : columnConfigs[selectedCategory as keyof typeof columnConfigs]
+
+  const displayColumns = isMobile ? (currentConfig as any).mobileColumns : currentConfig.columns
+  const displayHeaders = isMobile ? (currentConfig as any).mobileHeaders : currentConfig.headers
 
   const getCellValue = (item: any, column: string) => {
-    const value = item[column as keyof typeof item];
-    return value || "N/A";
-  };
+    const value = item[column as keyof typeof item]
+    return value || "N/A"
+  }
 
   const handleTooltipHover = (e: React.MouseEvent, rowId: number) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
     setTooltipPos({
       top: rect.top - 12,
       left: rect.left + rect.width / 2,
-    });
-    setHoveredRowId(rowId);
-  };
+    })
+    setHoveredRowId(rowId)
+  }
 
   return (
     <div style={overlay}>
@@ -713,41 +728,25 @@ export const Dashboard = () => {
         <div style={body}>
           <div style={searchRow} className="search-row-mobile">
             <input style={input} placeholder="Search by name or title" />
-            <select
-              style={select}
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-            >
+            <select style={select} value={selectedCategory} onChange={handleCategoryChange}>
               <option>Church Members</option>
               <option>News & Events</option>
               <option>Sermons</option>
               <option>Assembly Programs</option>
             </select>
             <div style={dropdownContainer}>
-              <button
-                style={primaryBtn}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
+              <button style={primaryBtn} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 + Add
               </button>
               {isDropdownOpen && (
                 <div style={dropdownMenu}>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("User")}
-                  >
+                  <button style={dropdownItem} onClick={() => handleAddOption("User")}>
                     News & Events
                   </button>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("Application")}
-                  >
+                  <button style={dropdownItem} onClick={() => handleAddOption("Application")}>
                     Sermons
                   </button>
-                  <button
-                    style={dropdownItem}
-                    onClick={() => handleAddOption("Group")}
-                  >
+                  <button style={dropdownItem} onClick={() => handleAddOption("Group")}>
                     Assembly Program
                   </button>
                 </div>
@@ -767,22 +766,18 @@ export const Dashboard = () => {
                 <table style={table}>
                   <thead style={tableHeader}>
                     <tr>
-                      {currentConfig.headers.map((header, idx) => (
+                      {displayHeaders.map((header: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, idx: React.Key | null | undefined) => (
                         <th
                           key={idx}
                           style={{
                             ...tableHeaderCell,
-                            ...(idx === currentConfig.headers.length - 1
-                              ? tableCellAction
-                              : {}),
+                            ...(idx === displayHeaders.length - 1 ? tableCellAction : {}),
                           }}
                         >
                           {header}
                         </th>
                       ))}
-                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>
-                        Action
-                      </th>
+                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -790,31 +785,22 @@ export const Dashboard = () => {
                       <tr
                         key={item.id}
                         style={tableBodyRow}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f0f4ff")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
-                        }
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f0f4ff")}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                       >
-                        {currentConfig.columns.map((column, idx) => (
+                        {displayColumns.map((column: string, idx: React.Key | null | undefined) => (
                           <td
                             key={idx}
                             style={{
                               ...tableCell,
-                              ...(idx === currentConfig.columns.length - 1
-                                ? tableCellAction
-                                : {}),
+                              ...(idx === displayColumns.length - 1 ? tableCellAction : {}),
                             }}
                           >
                             {idx === 0 ? (
                               <div style={tooltipContainer}>
                                 {getCellValue(item, column)}
                                 <span
-                                  onMouseEnter={(e) =>
-                                    handleTooltipHover(e, item.id)
-                                  }
+                                  onMouseEnter={(e) => handleTooltipHover(e, item.id)}
                                   onMouseLeave={() => setHoveredRowId(null)}
                                   style={{
                                     cursor: "pointer",
@@ -834,18 +820,12 @@ export const Dashboard = () => {
                                     }}
                                   >
                                     <div style={tooltipContent}>
-                                      {currentConfig.tooltipFields.map(
-                                        (field) => (
-                                          <div key={field} style={tooltipRow}>
-                                            <span style={tooltipLabel}>
-                                              {field}:
-                                            </span>
-                                            <span>
-                                              {getCellValue(item, field)}
-                                            </span>
-                                          </div>
-                                        )
-                                      )}
+                                      {currentConfig.tooltipFields.map((field) => (
+                                        <div key={field} style={tooltipRow}>
+                                          <span style={tooltipLabel}>{field}:</span>
+                                          <span>{getCellValue(item, field)}</span>
+                                        </div>
+                                      ))}
                                     </div>
                                   </div>
                                 )}
@@ -859,30 +839,19 @@ export const Dashboard = () => {
                           {selectedCategory === "Church Members" ? (
                             <>
                               <button style={approveBtn}>Approve Member</button>
-                              <button style={cancelBtn}>
-                                Schedule Meeting
-                              </button>
+                              <button style={cancelBtn}>Schedule Meeting</button>
                             </>
-                          ) : selectedCategory === "Sermons" ||
-                            selectedCategory === "News & Events" ? (
+                          ) : selectedCategory === "Sermons" || selectedCategory === "News & Events" ? (
                             <>
-                              <button style={approveBtn}>
-                                Approve Content
-                              </button>
+                              <button style={approveBtn}>Approve Content</button>
                               <button style={holdBtn}>Hold Content</button>
-                              <button style={cancelBtn}>
-                                Request Modification
-                              </button>
+                              <button style={cancelBtn}>Request Modification</button>
                             </>
                           ) : selectedCategory === "Assembly Programs" ? (
                             <>
-                              <button style={approveBtn}>
-                                Approve Program
-                              </button>
+                              <button style={approveBtn}>Approve Program</button>
                               <button style={holdBtn}>Hold Program</button>
-                              <button style={cancelBtn}>
-                                Request Modification
-                              </button>
+                              <button style={cancelBtn}>Request Modification</button>
                             </>
                           ) : (
                             ""
@@ -903,7 +872,7 @@ export const Dashboard = () => {
                     <span style={statIcon}>👥</span>
                     Church Members
                   </div>
-                  <div style={statValue}>100+</div>
+                  <div style={statValue}>1000</div>
                 </div>
                 <div style={statCard}>
                   <div style={statLabel}>
@@ -926,24 +895,44 @@ export const Dashboard = () => {
                   </div>
                   <div style={statValue}>150</div>
                 </div>
+                <div
+                  style={{
+                    ...statCard,
+                    background: "linear-gradient(135deg, #2563eb 0%, #1e40af 100%)",
+                    marginTop: "12px",
+                  }}
+                >
+                  <div style={{ ...statLabel, color: "#fff" }}>
+                    <span style={statIcon}>⚡</span>
+                    Quick Actions
+                  </div>
+                </div>
+                <button style={{ ...approveBtn, width: "100%", textAlign: "center", justifyContent: "center" }}>
+                  📝 Create New
+                </button>
+                <button
+                  style={{
+                    ...holdBtn,
+                    width: "100%",
+                    textAlign: "center",
+                    justifyContent: "center",
+                    color: "#fff",
+                    background: "#6b7280",
+                  }}
+                >
+                  👁️ View Reports
+                </button>
               </div>
             </div>
           </div>
         </div>
         <div style={footer} className="footer-mobile">
           <div style={paginationContainer} className="pagination-mobile">
-            <select
-              style={paginationSelect}
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-            >
+            <select style={paginationSelect} value={itemsPerPage} onChange={handleItemsPerPageChange}>
               <option value={10}>10 per page</option>
               <option value={20}>20 per page</option>
             </select>
-            <div
-              style={paginationControls}
-              className="pagination-controls-mobile"
-            >
+            <div style={paginationControls} className="pagination-controls-mobile">
               <button
                 style={{
                   ...paginationBtn,
@@ -962,8 +951,7 @@ export const Dashboard = () => {
                 style={{
                   ...paginationBtn,
                   opacity: currentPage === totalPages ? 0.5 : 1,
-                  cursor:
-                    currentPage === totalPages ? "not-allowed" : "pointer",
+                  cursor: currentPage === totalPages ? "not-allowed" : "pointer",
                 }}
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
@@ -1015,7 +1003,7 @@ export const Dashboard = () => {
 
           .table-box-mobile table {
             font-size: 12px;
-            min-width: 900px;
+            min-width: 600px;
           }
 
           .table-box-mobile th,
@@ -1071,7 +1059,7 @@ export const Dashboard = () => {
 
           .table-box-mobile table {
             font-size: 11px;
-            min-width: 800px;
+            min-width: 500px;
           }
 
           .table-box-mobile th,
@@ -1097,5 +1085,5 @@ export const Dashboard = () => {
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
