@@ -1,5 +1,4 @@
 import type React from "react";
-
 import { useState } from "react";
 
 const overlay = {
@@ -91,23 +90,23 @@ const left = {
 } as const;
 
 // <CHANGE> Updated right panel to be a flex container for two sections
-const right = {
-  flex: 5,
-  display: "flex",
-  flexDirection: "column",
-  gap: "16px",
-} as const;
+// const right = {
+//   flex: 5,
+//   display: "flex",
+//   flexDirection: "column",
+//   gap: "16px",
+// } as const;
 
-// <CHANGE> New style for individual right panel sections
-const rightPanel = {
-  background: "linear-gradient(135deg, #f0f4ff 0%, #fef8f0 100%)",
-  borderRadius: "12px",
-  padding: "20px",
-  border: "1px solid #e5e7eb",
-  display: "flex",
-  flexDirection: "column",
-  gap: "16px",
-} as const;
+// // <CHANGE> New style for individual right panel sections
+// const rightPanel = {
+//   background: "linear-gradient(135deg, #f0f4ff 0%, #fef8f0 100%)",
+//   borderRadius: "12px",
+//   padding: "20px",
+//   border: "1px solid #e5e7eb",
+//   display: "flex",
+//   flexDirection: "column",
+//   gap: "16px",
+// } as const;
 
 const resultsHead = {
   display: "flex",
@@ -228,20 +227,20 @@ const cancelBtn = {
   minWidth: "fit-content",
 } as const;
 
-const rightHead = {
-  fontWeight: 700,
-  fontSize: "15px",
-  color: "#1e293b",
-  padding: "12px",
-  letterSpacing: "0.5px",
-} as const;
+// const rightHead = {
+//   fontWeight: 700,
+//   fontSize: "15px",
+//   color: "#1e293b",
+//   padding: "12px",
+//   letterSpacing: "0.5px",
+// } as const;
 
-const dashboardStatsContainer = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "12px",
-  marginTop: "8px",
-} as const;
+// const dashboardStatsContainer = {
+//   display: "grid",
+//   gridTemplateColumns: "1fr 1fr",
+//   gap: "12px",
+//   marginTop: "8px",
+// } as const;
 
 // <CHANGE> New style for single column stats (Last Sermon section)
 // const dashboardStatsContainerSingle = {
@@ -251,47 +250,47 @@ const dashboardStatsContainer = {
 //   marginTop: "8px",
 // } as const;
 
-const statCard = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  alignItems: "flex-start",
-  padding: "16px",
-  background: "#fff",
-  borderRadius: "10px",
-  border: "1px solid #e5e7eb",
-  transition: "all 200ms ease",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
-  minHeight: "110px",
-} as const;
+// const statCard = {
+//   display: "flex",
+//   flexDirection: "column",
+//   justifyContent: "space-between",
+//   alignItems: "flex-start",
+//   padding: "16px",
+//   background: "#fff",
+//   borderRadius: "10px",
+//   border: "1px solid #e5e7eb",
+//   transition: "all 200ms ease",
+//   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
+//   minHeight: "110px",
+// } as const;
 
-const statLabel = {
-  fontWeight: 600,
-  color: "#1e293b",
-  fontSize: "13px",
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-  marginBottom: "8px",
-} as const;
+// const statLabel = {
+//   fontWeight: 600,
+//   color: "#1e293b",
+//   fontSize: "13px",
+//   display: "flex",
+//   alignItems: "center",
+//   gap: "8px",
+//   marginBottom: "8px",
+// } as const;
 
-const statValue = {
-  background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
-  color: "#fff",
-  padding: "8px 14px",
-  borderRadius: "8px",
-  fontSize: "14px",
-  fontWeight: 700,
-  textAlign: "center",
-  minWidth: "70px",
-  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-  alignSelf: "flex-end",
-} as const;
+// const statValue = {
+//   background: "linear-gradient(135deg, #2563eb 0%, #fbbf24 100%)",
+//   color: "#fff",
+//   padding: "8px 14px",
+//   borderRadius: "8px",
+//   fontSize: "14px",
+//   fontWeight: 700,
+//   textAlign: "center",
+//   minWidth: "70px",
+//   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
+//   alignSelf: "flex-end",
+// } as const;
 
-const statIcon = {
-  fontSize: "18px",
-  display: "inline-block",
-} as const;
+// const statIcon = {
+//   fontSize: "18px",
+//   display: "inline-block",
+// } as const;
 
 const dropdownContainer = {
   position: "relative",
@@ -373,22 +372,22 @@ const pageInfo = {
   textAlign: "center",
 } as const;
 
-const viewReportsBtn = {
-  width: "100%",
-  textAlign: "center",
-  justifyContent: "center",
-  color: "#fff",
-  background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
-  padding: "12px 14px",
-  border: "none",
-  cursor: "pointer",
-  fontWeight: 600,
-  fontSize: "14px",
-  transition: "all 200ms ease",
-  boxShadow: "0 6px 20px rgba(99, 102, 241, 0.2)",
-  borderRadius: "8px",
-  marginTop: "4px",
-} as const;
+// const viewReportsBtn = {
+//   width: "100%",
+//   textAlign: "center",
+//   justifyContent: "center",
+//   color: "#fff",
+//   background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+//   padding: "12px 14px",
+//   border: "none",
+//   cursor: "pointer",
+//   fontWeight: 600,
+//   fontSize: "14px",
+//   transition: "all 200ms ease",
+//   boxShadow: "0 6px 20px rgba(99, 102, 241, 0.2)",
+//   borderRadius: "8px",
+//   marginTop: "4px",
+// } as const;
 
 // Mock data organized by category
 const mockDataByCategory = {
@@ -778,6 +777,13 @@ export const Dashboard = () => {
                 gap: "12px",
               }}
             >
+              <select style={select} onChange={handleCategoryChange}>
+                <option>Reports</option>
+                <option>Church Members</option>
+                <option>News & Events</option>
+                <option>Sermons</option>
+                <option>Assembly Programs</option>
+              </select>
               <select
                 style={select}
                 value={selectedCategory}
@@ -956,9 +962,8 @@ export const Dashboard = () => {
             </div>
 
             {/* <CHANGE> Split right panel into two sections: Last Sermon and General */}
-            <div style={right} className="right-panel-mobile">
-              {/* Last Sermon Section */}
-              {/* <div style={rightPanel}>
+            {/* <div style={right} className="right-panel-mobile">
+              <div style={rightPanel}>
                 <div style={rightHead}>📖 Last Sermon</div>
                 <button style={viewReportsBtn}>👁️ View Sermon Details</button>
                 <div style={dashboardStatsContainerSingle}>
@@ -987,9 +992,8 @@ export const Dashboard = () => {
                     <div style={statValue}>10</div>
                   </div>
                 </div>
-              </div> */}
+              </div>
 
-              {/* General Section */}
               <div style={rightPanel}>
                 <div style={rightHead}>💰 General</div>
                 <button style={viewReportsBtn}>
@@ -1042,7 +1046,7 @@ export const Dashboard = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div style={footer} className="footer-mobile">
