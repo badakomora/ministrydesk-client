@@ -1,4 +1,4 @@
-import { Check, Eye, PauseCircle, Pencil } from "lucide-react";
+import { Check, Eye, PauseCircle, Pencil, Calendar } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 
@@ -160,38 +160,24 @@ const tableCellAction = {
   overflow: "visible",
   whiteSpace: "normal",
   display: "flex",
-  flexDirection: "column",
-  gap: "4px",
+  flexDirection: "row",
+  gap: "12px",
+  alignItems: "center",
+  justifyContent: "flex-end",
 } as const;
 
-const approveBtn = {
-  background: "#2563eb",
-  color: "#fff",
+const iconButton = {
+  background: "none",
   border: "none",
-  padding: "5px 14px",
-  margin: "1px",
-  fontSize: "13px",
-  fontWeight: 600,
   cursor: "pointer",
-  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
+  padding: "8px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "6px",
   transition: "all 200ms ease",
-  whiteSpace: "nowrap",
-  minWidth: "fit-content",
-} as const;
-
-const cancelBtn = {
-  background: "#fbbf24",
-  color: "#fff",
-  border: "none",
-  padding: "5px 14px",
-  margin: "1px",
-  fontSize: "13px",
-  fontWeight: 600,
-  cursor: "pointer",
-  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-  transition: "all 200ms ease",
-  whiteSpace: "nowrap",
-  minWidth: "fit-content",
+  color: "#6b7280",
+  position: "relative",
 } as const;
 
 const dropdownContainer = {
@@ -286,6 +272,7 @@ const mockDataByCategory = {
       phone: "+1-555-0101",
       email: "alice@church.com",
       role: "Admin",
+      status: "approved",
     },
     {
       id: 3,
@@ -295,6 +282,7 @@ const mockDataByCategory = {
       phone: "+1-555-0103",
       email: "devs@church.com",
       role: "Group",
+      status: "pending",
     },
     {
       id: 4,
@@ -304,6 +292,7 @@ const mockDataByCategory = {
       phone: "+1-555-0102",
       email: "bob@church.com",
       role: "Member",
+      status: "approved",
     },
     {
       id: 8,
@@ -313,6 +302,7 @@ const mockDataByCategory = {
       phone: "+1-555-0104",
       email: "diana@church.com",
       role: "Admin",
+      status: "pending",
     },
     {
       id: 10,
@@ -322,6 +312,7 @@ const mockDataByCategory = {
       phone: "+1-555-0105",
       email: "finance@church.com",
       role: "Group",
+      status: "approved",
     },
     {
       id: 13,
@@ -331,6 +322,7 @@ const mockDataByCategory = {
       phone: "+1-555-0106",
       email: "hr@church.com",
       role: "Group",
+      status: "paused",
     },
     {
       id: 17,
@@ -340,6 +332,7 @@ const mockDataByCategory = {
       phone: "+1-555-0107",
       email: "ivan@church.com",
       role: "Member",
+      status: "pending",
     },
     {
       id: 25,
@@ -349,6 +342,7 @@ const mockDataByCategory = {
       phone: "+1-555-0108",
       email: "ops@church.com",
       role: "Group",
+      status: "approved",
     },
     // News & Events
     {
@@ -360,6 +354,7 @@ const mockDataByCategory = {
       postedby: "Peter Komora",
       description: "Annual Christmas food drive for the community",
       church: "Main Church",
+      status: "approved",
     },
     {
       id: 6,
@@ -370,6 +365,7 @@ const mockDataByCategory = {
       postedby: "Sarah Johnson",
       description: "Join us for our New Year celebration service",
       church: "Main Church",
+      status: "pending",
     },
     {
       id: 11,
@@ -380,6 +376,7 @@ const mockDataByCategory = {
       postedby: "Frank Miller",
       description: "Monthly community outreach program",
       church: "Downtown Branch",
+      status: "approved",
     },
     {
       id: 19,
@@ -390,6 +387,7 @@ const mockDataByCategory = {
       postedby: "Marketing Team",
       description: "Annual youth conference and fellowship",
       church: "Main Church",
+      status: "paused",
     },
     {
       id: 23,
@@ -400,6 +398,7 @@ const mockDataByCategory = {
       postedby: "Karen Davis",
       description: "Weekly prayer meeting for all members",
       church: "Prayer Room",
+      status: "approved",
     },
     // Sermons
     {
@@ -411,6 +410,7 @@ const mockDataByCategory = {
       preacher: "Charlie Brown",
       description: "A powerful message about faith in difficult times",
       church: "Main Church",
+      status: "approved",
     },
     {
       id: 9,
@@ -421,6 +421,7 @@ const mockDataByCategory = {
       preacher: "Grace Lee",
       description: "Understanding the greatest commandment",
       church: "Main Church",
+      status: "pending",
     },
     {
       id: 14,
@@ -431,6 +432,7 @@ const mockDataByCategory = {
       preacher: "Grace Lee",
       description: "How prayer transforms our lives",
       church: "Downtown Branch",
+      status: "approved",
     },
     {
       id: 18,
@@ -441,6 +443,7 @@ const mockDataByCategory = {
       preacher: "Charlie Brown",
       description: "Finding peace through forgiveness",
       church: "Main Church",
+      status: "paused",
     },
     {
       id: 22,
@@ -451,6 +454,7 @@ const mockDataByCategory = {
       preacher: "Grace Lee",
       description: "Exploring the depth of God's unconditional love",
       church: "Main Church",
+      status: "approved",
     },
     // Assembly Programs
     {
@@ -462,6 +466,7 @@ const mockDataByCategory = {
       leader: "Engineering Team",
       description: "Bible study and fellowship for all ages",
       church: "Main Church",
+      status: "approved",
     },
     {
       id: 12,
@@ -472,6 +477,7 @@ const mockDataByCategory = {
       leader: "Gamma Tool",
       description: "Weekly choir rehearsal and training",
       church: "Music Hall",
+      status: "pending",
     },
     {
       id: 16,
@@ -482,6 +488,7 @@ const mockDataByCategory = {
       leader: "IT Support",
       description: "Fellowship and activities for young adults",
       church: "Youth Center",
+      status: "approved",
     },
     {
       id: 20,
@@ -492,6 +499,7 @@ const mockDataByCategory = {
       leader: "Jack Wilson",
       description: "In-depth study of scripture",
       church: "Main Church",
+      status: "paused",
     },
     {
       id: 24,
@@ -502,6 +510,7 @@ const mockDataByCategory = {
       leader: "Kestrel Tool",
       description: "Planning and coordinating mission activities",
       church: "Conference Room",
+      status: "approved",
     },
   ],
 };
@@ -531,6 +540,70 @@ const columnConfigs = {
     mobileColumns: ["title", "date"],
     mobileHeaders: ["Title", "Date"],
   },
+};
+
+const getVisibleActions = (status: string) => {
+  const actions = {
+    view: true,
+    approve: status === "pending",
+    pauseOrSchedule: status !== "paused",
+    edit: true,
+  };
+  return actions;
+};
+
+const Tooltip = ({
+  text,
+  children,
+}: {
+  text: string;
+  children: React.ReactNode;
+}) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <div
+      style={{ position: "relative", display: "inline-flex" }}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      {children}
+      {showTooltip && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            marginBottom: "8px",
+            background: "#1e293b",
+            color: "#fff",
+            padding: "6px 10px",
+            borderRadius: "4px",
+            fontSize: "12px",
+            whiteSpace: "nowrap",
+            zIndex: 1001,
+            pointerEvents: "none",
+          }}
+        >
+          {text}
+          <div
+            style={{
+              position: "absolute",
+              top: "100%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 0,
+              height: 0,
+              borderLeft: "4px solid transparent",
+              borderRight: "4px solid transparent",
+              borderTop: "4px solid #1e293b",
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export const Dashboard = () => {
@@ -774,55 +847,149 @@ export const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedData.map((item) => (
-                      <tr
-                        key={item.id}
-                        style={tableBodyRow}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f0f4ff")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
-                        }
-                      >
-                        {displayColumns.map(
-                          (
-                            column: string,
-                            idx: React.Key | null | undefined
-                          ) => (
-                            <td
-                              key={idx}
-                              style={{
-                                ...tableCell,
-                                ...(idx === displayColumns.length - 1
-                                  ? tableCellAction
-                                  : {}),
-                              }}
-                            >
-                              {getCellValue(item, column)}
-                            </td>
-                          )
-                        )}
-                        <td style={{ ...tableCell, ...tableCellAction }}>
-                          {selectedCategory === "Church Members" ? (
-                            <>
-                              <button style={approveBtn}>Approve Member</button>
-                              <button style={cancelBtn}>
-                                Schedule Meeting
-                              </button>
-                            </>
-                          ) : (
-                            <div style={{ display: "flex" }}>
-                              <Eye size={18} />
-                              <Check size={18} />
-                              <PauseCircle size={18} />
-                              <Pencil size={18} />
-                            </div>
+                    {paginatedData.map((item) => {
+                      const visibleActions = getVisibleActions(
+                        item.status || "pending"
+                      );
+
+                      return (
+                        <tr
+                          key={item.id}
+                          style={tableBodyRow}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor = "#f0f4ff")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "transparent")
+                          }
+                        >
+                          {displayColumns.map(
+                            (
+                              column: string,
+                              idx: React.Key | null | undefined
+                            ) => (
+                              <td
+                                key={idx}
+                                style={{
+                                  ...tableCell,
+                                  ...(idx === displayColumns.length - 1
+                                    ? tableCellAction
+                                    : {}),
+                                }}
+                              >
+                                {getCellValue(item, column)}
+                              </td>
+                            )
                           )}
-                        </td>
-                      </tr>
-                    ))}
+                          <td style={{ ...tableCell, ...tableCellAction }}>
+                            {visibleActions.view && (
+                              <Tooltip text="View details">
+                                <button
+                                  style={iconButton}
+                                  onClick={() => console.log("View", item.id)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#e0e7ff";
+                                    e.currentTarget.style.color = "#2563eb";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "transparent";
+                                    e.currentTarget.style.color = "#6b7280";
+                                  }}
+                                >
+                                  <Eye size={20} />
+                                </button>
+                              </Tooltip>
+                            )}
+
+                            {visibleActions.approve && (
+                              <Tooltip
+                                text={
+                                  selectedCategory === "Church Members"
+                                    ? "Approve member"
+                                    : "Approve"
+                                }
+                              >
+                                <button
+                                  style={iconButton}
+                                  onClick={() =>
+                                    console.log("Approve", item.id)
+                                  }
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#dcfce7";
+                                    e.currentTarget.style.color = "#16a34a";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "transparent";
+                                    e.currentTarget.style.color = "#6b7280";
+                                  }}
+                                >
+                                  <Check size={20} />
+                                </button>
+                              </Tooltip>
+                            )}
+
+                            {visibleActions.pauseOrSchedule && (
+                              <Tooltip
+                                text={
+                                  selectedCategory === "Church Members"
+                                    ? "Schedule meeting"
+                                    : "Pause"
+                                }
+                              >
+                                <button
+                                  style={iconButton}
+                                  onClick={() =>
+                                    console.log("Pause/Schedule", item.id)
+                                  }
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#fef3c7";
+                                    e.currentTarget.style.color = "#d97706";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "transparent";
+                                    e.currentTarget.style.color = "#6b7280";
+                                  }}
+                                >
+                                  {selectedCategory === "Church Members" ? (
+                                    <Calendar size={20} />
+                                  ) : (
+                                    <PauseCircle size={20} />
+                                  )}
+                                </button>
+                              </Tooltip>
+                            )}
+
+                            {visibleActions.edit && (
+                              <Tooltip text="Edit">
+                                <button
+                                  style={iconButton}
+                                  onClick={() => console.log("Edit", item.id)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "#f3e8ff";
+                                    e.currentTarget.style.color = "#9333ea";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      "transparent";
+                                    e.currentTarget.style.color = "#6b7280";
+                                  }}
+                                >
+                                  <Pencil size={20} />
+                                </button>
+                              </Tooltip>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
