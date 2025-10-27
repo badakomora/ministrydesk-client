@@ -797,6 +797,14 @@ export const Home: React.FC<componentProps & ModalProps> = ({
               <div className="icon">🎙️</div>
               <h3>Churches & Sermons</h3>
               <p>
+                Ministry Desk began as a small internal platform used by a few
+                local churches to share sermons and updates. Over time, as the
+                ministry grew and more congregations needed a central place for
+                communication, it evolved into the unified system you see today,
+                connecting churches, leaders, and members under one organized
+                digital space.
+              </p>
+              <p>
                 Access powerful sermons and spiritual teachings from pastors
                 across all ministry. Deepen your faith and understanding of
                 God's word.
