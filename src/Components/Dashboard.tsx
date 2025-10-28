@@ -41,7 +41,7 @@ const footer = {
 } as const;
 
 const input = {
-  padding: "12px 14px",
+  padding: "8px 14px",
   border: "1px solid #d1d5db",
   flex: 1,
   fontSize: "14px",
@@ -50,16 +50,17 @@ const input = {
 } as const;
 
 const select = {
-  padding: "12px 14px",
+  padding: "8px 14px",
   border: "1px solid #d1d5db",
   fontSize: "14px",
   background: "#fff",
   cursor: "pointer",
+  gap:"8px",
   transition: "all 200ms ease",
 } as const;
 
 const primaryBtn = {
-  padding: "12px 14px",
+  padding: "8px 14px",
   background: "linear-gradient(135deg, #2563eb, #fbbf24)",
   color: "#fff",
   border: "none",

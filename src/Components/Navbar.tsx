@@ -386,7 +386,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
               }}
               style={{ color: "white" }}
             >
-              Membership
+              My Membership
             </a>
           </nav>
 
@@ -479,7 +479,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
             }}
             style={{ color: "white" }}
           >
-            Membership
+            My Membership
           </a>
         </nav>
       </header>
