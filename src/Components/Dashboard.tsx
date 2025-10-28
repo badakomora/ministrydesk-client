@@ -108,7 +108,7 @@ const muted = {
 
 const tableBox = {
   border: "1px solid #e5e7eb",
-  borderRadius: "10px",
+  padding: "4px",
   overflowX: "auto",
   overflowY: "hidden",
   background: "#fff",
@@ -134,7 +134,7 @@ const tableRow = {
 } as const;
 
 const tableHeaderCell = {
-  padding: "12px 8px",
+  padding: "4px",
   fontWeight: 700,
   fontSize: "13px",
   color: "#1e293b",
@@ -144,7 +144,7 @@ const tableHeaderCell = {
 } as const;
 
 const tableCell = {
-  padding: "12px 8px",
+  padding: "4px",
   fontSize: "14px",
   color: "#374151",
   whiteSpace: "normal",
@@ -188,7 +188,6 @@ const dropdownMenu = {
   marginTop: "8px",
   background: "#fff",
   border: "1px solid #e5e7eb",
-  borderRadius: "8px",
   boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
   zIndex: 1000,
   minWidth: "160px",
@@ -220,13 +219,12 @@ const paginationContainer = {
 } as const;
 
 const paginationSelect = {
-  padding: "10px 12px",
+  padding: "8px 12px",
   border: "1px solid #d1d5db",
   fontSize: "14px",
   background: "#fff",
   cursor: "pointer",
   transition: "all 200ms ease",
-  borderRadius: "6px",
 } as const;
 
 const paginationControls = {
@@ -236,7 +234,7 @@ const paginationControls = {
 } as const;
 
 const paginationBtn = {
-  padding: "10px 14px",
+  padding: "8px 14px",
   background: "#2563eb",
   color: "#fff",
   border: "none",
@@ -245,7 +243,6 @@ const paginationBtn = {
   fontSize: "13px",
   transition: "all 200ms ease",
   boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)",
-  borderRadius: "6px",
 } as const;
 
 const pageInfo = {
