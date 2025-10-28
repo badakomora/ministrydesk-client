@@ -129,6 +129,10 @@ const tableHeader = {
   borderBottom: "2px solid #2563eb",
 } as const;
 
+const tableRow = {
+  borderBottom: "1px solid #e5e7eb",
+} as const;
+
 const tableHeaderCell = {
   padding: "12px 8px",
   fontWeight: 700,
@@ -137,11 +141,6 @@ const tableHeaderCell = {
   textAlign: "left",
   textTransform: "uppercase",
   letterSpacing: "0.5px",
-} as const;
-
-const tableBodyRow = {
-  borderBottom: "1px solid #e5e7eb",
-  transition: "background-color 150ms ease",
 } as const;
 
 const tableCell = {
@@ -161,7 +160,6 @@ const tableCellAction = {
   whiteSpace: "normal",
   display: "flex",
   flexDirection: "row",
-  gap: "12px",
   alignItems: "center",
   justifyContent: "flex-end",
 } as const;
@@ -170,11 +168,9 @@ const iconButton = {
   background: "none",
   border: "none",
   cursor: "pointer",
-  padding: "8px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  borderRadius: "6px",
   transition: "all 200ms ease",
   color: "#6b7280",
   position: "relative",
@@ -517,28 +513,28 @@ const mockDataByCategory = {
 
 const columnConfigs = {
   "Church Members": {
-    columns: ["name", "email", "phone", "role"],
-    headers: ["Name", "Email", "Phone", "Role"],
-    mobileColumns: ["name", "email"],
-    mobileHeaders: ["Name", "Email"],
+    columns: ["name", "email", "phone", "role", "status", "action"],
+    headers: ["Name", "Email", "Phone", "Role", "Status", "Action"],
+    mobileColumns: ["name", "email", "phone", "role", "status", "action"],
+    mobileHeaders: ["Name", "Email", "Phone", "Role", "Status", "Action"],
   },
   "News & Events": {
-    columns: ["title", "date", "postedby", "church"],
-    headers: ["Title", "Date", "Posted By", "Church"],
-    mobileColumns: ["title", "date"],
-    mobileHeaders: ["Title", "Date"],
+    columns: ["title", "date", "postedby", "church", "status", "action"],
+    headers: ["Title", "Date", "Posted By", "Church", "Status", "Action"],
+    mobileColumns: ["title", "date", "postedby", "church", "status", "action"],
+    mobileHeaders: ["Title", "Date", "Posted By", "Church", "Status", "Action"],
   },
   Sermons: {
-    columns: ["title", "date", "preacher", "church"],
-    headers: ["Title", "Date", "Preacher", "Church"],
-    mobileColumns: ["title", "date"],
-    mobileHeaders: ["Title", "Date"],
+    columns: ["title", "date", "preacher", "church", "status", "action"],
+    headers: ["Title", "Date", "Preacher", "Church", "Status", "Action"],
+    mobileColumns: ["title", "date", "status", "action"],
+    mobileHeaders: ["Title", "Date", "Status", "Action"],
   },
   "Assembly Programs": {
-    columns: ["title", "date", "leader", "church"],
-    headers: ["Title", "Date", "Leader", "Church"],
-    mobileColumns: ["title", "date"],
-    mobileHeaders: ["Title", "Date"],
+    columns: ["title", "date", "leader", "church", "status", "action"],
+    headers: ["Title", "Date", "Leader", "Church", "Status", "Action"],
+    mobileColumns: ["title", "date", "leader", "status", "action"],
+    mobileHeaders: ["Title", "Date", "Leader", "Status", "Action"],
   },
 };
 
@@ -793,10 +789,11 @@ export const Dashboard = () => {
                   {startIndex + 1}‑{endIndex} of {totalItems}
                 </span>
               </div>
+
               <div style={tableBox} className="table-box-mobile">
                 <table style={table}>
                   <thead style={tableHeader}>
-                    <tr>
+                    <tr style={tableRow}>
                       {displayHeaders.map(
                         (
                           header:
@@ -841,9 +838,6 @@ export const Dashboard = () => {
                           </th>
                         )
                       )}
-                      <th style={{ ...tableHeaderCell, ...tableCellAction }}>
-                        Action
-                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -854,8 +848,8 @@ export const Dashboard = () => {
 
                       return (
                         <tr
+                          style={tableRow}
                           key={item.id}
-                          style={tableBodyRow}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.backgroundColor = "#f0f4ff")
                           }
@@ -867,126 +861,145 @@ export const Dashboard = () => {
                           {displayColumns.map(
                             (
                               column: string,
-                              idx: React.Key | null | undefined
+                              cidx: React.Key | null | undefined
                             ) => (
                               <td
-                                key={idx}
-                                style={{
-                                  ...tableCell,
-                                  ...(idx === displayColumns.length - 1
+                                key={cidx}
+                                style={
+                                  column === "action"
                                     ? tableCellAction
-                                    : {}),
-                                }}
+                                    : tableCell
+                                }
                               >
-                                {getCellValue(item, column)}
+                                {column === "action" ? (
+                                  <div style={tableCell}>
+                                    {visibleActions.view && (
+                                      <Tooltip text="View details">
+                                        <button
+                                          style={iconButton}
+                                          onClick={() =>
+                                            console.log("View", item.id)
+                                          }
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "#e0e7ff";
+                                            e.currentTarget.style.color =
+                                              "#2563eb";
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "transparent";
+                                            e.currentTarget.style.color =
+                                              "#6b7280";
+                                          }}
+                                        >
+                                          <Eye size={20} />
+                                        </button>
+                                      </Tooltip>
+                                    )}
+
+                                    {visibleActions.approve && (
+                                      <Tooltip
+                                        text={
+                                          selectedCategory === "Church Members"
+                                            ? "Approve member"
+                                            : "Approve"
+                                        }
+                                      >
+                                        <button
+                                          style={iconButton}
+                                          onClick={() =>
+                                            console.log("Approve", item.id)
+                                          }
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "#dcfce7";
+                                            e.currentTarget.style.color =
+                                              "#16a34a";
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "transparent";
+                                            e.currentTarget.style.color =
+                                              "#6b7280";
+                                          }}
+                                        >
+                                          <Check size={20} />
+                                        </button>
+                                      </Tooltip>
+                                    )}
+
+                                    {visibleActions.pauseOrSchedule && (
+                                      <Tooltip
+                                        text={
+                                          selectedCategory === "Church Members"
+                                            ? "Schedule meeting"
+                                            : "Pause"
+                                        }
+                                      >
+                                        <button
+                                          style={iconButton}
+                                          onClick={() =>
+                                            console.log(
+                                              "Pause/Schedule",
+                                              item.id
+                                            )
+                                          }
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "#fef3c7";
+                                            e.currentTarget.style.color =
+                                              "#d97706";
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "transparent";
+                                            e.currentTarget.style.color =
+                                              "#6b7280";
+                                          }}
+                                        >
+                                          {selectedCategory ===
+                                          "Church Members" ? (
+                                            <Calendar size={20} />
+                                          ) : (
+                                            <PauseCircle size={20} />
+                                          )}
+                                        </button>
+                                      </Tooltip>
+                                    )}
+
+                                    {visibleActions.edit && (
+                                      <Tooltip text="Edit">
+                                        <button
+                                          style={iconButton}
+                                          onClick={() =>
+                                            console.log("Edit", item.id)
+                                          }
+                                          onMouseEnter={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "#f3e8ff";
+                                            e.currentTarget.style.color =
+                                              "#9333ea";
+                                          }}
+                                          onMouseLeave={(e) => {
+                                            e.currentTarget.style.backgroundColor =
+                                              "transparent";
+                                            e.currentTarget.style.color =
+                                              "#6b7280";
+                                          }}
+                                        >
+                                          <Pencil size={20} />
+                                        </button>
+                                      </Tooltip>
+                                    )}
+                                  </div>
+                                ) : (
+                                  // ✅ Normal cell
+                                  getCellValue(item, column)
+                                )}
                               </td>
                             )
                           )}
-                          <td style={{ ...tableCell, ...tableCellAction }}>
-                            {visibleActions.view && (
-                              <Tooltip text="View details">
-                                <button
-                                  style={iconButton}
-                                  onClick={() => console.log("View", item.id)}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#e0e7ff";
-                                    e.currentTarget.style.color = "#2563eb";
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "transparent";
-                                    e.currentTarget.style.color = "#6b7280";
-                                  }}
-                                >
-                                  <Eye size={20} />
-                                </button>
-                              </Tooltip>
-                            )}
-
-                            {visibleActions.approve && (
-                              <Tooltip
-                                text={
-                                  selectedCategory === "Church Members"
-                                    ? "Approve member"
-                                    : "Approve"
-                                }
-                              >
-                                <button
-                                  style={iconButton}
-                                  onClick={() =>
-                                    console.log("Approve", item.id)
-                                  }
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#dcfce7";
-                                    e.currentTarget.style.color = "#16a34a";
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "transparent";
-                                    e.currentTarget.style.color = "#6b7280";
-                                  }}
-                                >
-                                  <Check size={20} />
-                                </button>
-                              </Tooltip>
-                            )}
-
-                            {visibleActions.pauseOrSchedule && (
-                              <Tooltip
-                                text={
-                                  selectedCategory === "Church Members"
-                                    ? "Schedule meeting"
-                                    : "Pause"
-                                }
-                              >
-                                <button
-                                  style={iconButton}
-                                  onClick={() =>
-                                    console.log("Pause/Schedule", item.id)
-                                  }
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#fef3c7";
-                                    e.currentTarget.style.color = "#d97706";
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "transparent";
-                                    e.currentTarget.style.color = "#6b7280";
-                                  }}
-                                >
-                                  {selectedCategory === "Church Members" ? (
-                                    <Calendar size={20} />
-                                  ) : (
-                                    <PauseCircle size={20} />
-                                  )}
-                                </button>
-                              </Tooltip>
-                            )}
-
-                            {visibleActions.edit && (
-                              <Tooltip text="Edit">
-                                <button
-                                  style={iconButton}
-                                  onClick={() => console.log("Edit", item.id)}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "#f3e8ff";
-                                    e.currentTarget.style.color = "#9333ea";
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                      "transparent";
-                                    e.currentTarget.style.color = "#6b7280";
-                                  }}
-                                >
-                                  <Pencil size={20} />
-                                </button>
-                              </Tooltip>
-                            )}
-                          </td>
                         </tr>
                       );
                     })}
