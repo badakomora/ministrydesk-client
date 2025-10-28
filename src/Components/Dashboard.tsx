@@ -1,6 +1,6 @@
-import { Check, Eye, PauseCircle, Pencil, Calendar } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { RowActionsDropdown } from "./RowActionsDropdown";
 
 const overlay = {
   display: "flex",
@@ -55,7 +55,7 @@ const select = {
   fontSize: "14px",
   background: "#fff",
   cursor: "pointer",
-  gap:"8px",
+  gap: "8px",
   transition: "all 200ms ease",
 } as const;
 
@@ -165,17 +165,6 @@ const tableCellAction = {
   justifyContent: "flex-end",
 } as const;
 
-const iconButton = {
-  background: "none",
-  border: "none",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  transition: "all 200ms ease",
-  color: "#6b7280",
-  position: "relative",
-} as const;
 
 const dropdownContainer = {
   position: "relative",
@@ -536,69 +525,7 @@ const columnConfigs = {
   },
 };
 
-const getVisibleActions = (status: string) => {
-  const actions = {
-    view: true,
-    approve: status === "pending",
-    pauseOrSchedule: status !== "paused",
-    edit: true,
-  };
-  return actions;
-};
 
-const Tooltip = ({
-  text,
-  children,
-}: {
-  text: string;
-  children: React.ReactNode;
-}) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  return (
-    <div
-      style={{ position: "relative", display: "inline-flex" }}
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-    >
-      {children}
-      {showTooltip && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "100%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            marginBottom: "8px",
-            background: "#1e293b",
-            color: "#fff",
-            padding: "6px 10px",
-            borderRadius: "4px",
-            fontSize: "12px",
-            whiteSpace: "nowrap",
-            zIndex: 1001,
-            pointerEvents: "none",
-          }}
-        >
-          {text}
-          <div
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: 0,
-              height: 0,
-              borderLeft: "4px solid transparent",
-              borderRight: "4px solid transparent",
-              borderTop: "4px solid #1e293b",
-            }}
-          />
-        </div>
-      )}
-    </div>
-  );
-};
 
 export const Dashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -840,9 +767,6 @@ export const Dashboard = () => {
                   </thead>
                   <tbody>
                     {paginatedData.map((item) => {
-                      const visibleActions = getVisibleActions(
-                        item.status || "pending"
-                      );
 
                       return (
                         <tr
@@ -871,125 +795,7 @@ export const Dashboard = () => {
                               >
                                 {column === "action" ? (
                                   <div style={tableCell}>
-                                    {visibleActions.view && (
-                                      <Tooltip text="View details">
-                                        <button
-                                          style={iconButton}
-                                          onClick={() =>
-                                            console.log("View", item.id)
-                                          }
-                                          onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "#e0e7ff";
-                                            e.currentTarget.style.color =
-                                              "#2563eb";
-                                          }}
-                                          onMouseLeave={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "transparent";
-                                            e.currentTarget.style.color =
-                                              "#6b7280";
-                                          }}
-                                        >
-                                          <Eye size={20} />
-                                        </button>
-                                      </Tooltip>
-                                    )}
-
-                                    {visibleActions.approve && (
-                                      <Tooltip
-                                        text={
-                                          selectedCategory === "Church Members"
-                                            ? "Approve member"
-                                            : "Approve"
-                                        }
-                                      >
-                                        <button
-                                          style={iconButton}
-                                          onClick={() =>
-                                            console.log("Approve", item.id)
-                                          }
-                                          onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "#dcfce7";
-                                            e.currentTarget.style.color =
-                                              "#16a34a";
-                                          }}
-                                          onMouseLeave={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "transparent";
-                                            e.currentTarget.style.color =
-                                              "#6b7280";
-                                          }}
-                                        >
-                                          <Check size={20} />
-                                        </button>
-                                      </Tooltip>
-                                    )}
-
-                                    {visibleActions.pauseOrSchedule && (
-                                      <Tooltip
-                                        text={
-                                          selectedCategory === "Church Members"
-                                            ? "Schedule meeting"
-                                            : "Pause"
-                                        }
-                                      >
-                                        <button
-                                          style={iconButton}
-                                          onClick={() =>
-                                            console.log(
-                                              "Pause/Schedule",
-                                              item.id
-                                            )
-                                          }
-                                          onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "#fef3c7";
-                                            e.currentTarget.style.color =
-                                              "#d97706";
-                                          }}
-                                          onMouseLeave={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "transparent";
-                                            e.currentTarget.style.color =
-                                              "#6b7280";
-                                          }}
-                                        >
-                                          {selectedCategory ===
-                                          "Church Members" ? (
-                                            <Calendar size={20} />
-                                          ) : (
-                                            <PauseCircle size={20} />
-                                          )}
-                                        </button>
-                                      </Tooltip>
-                                    )}
-
-                                    {visibleActions.edit && (
-                                      <Tooltip text="Edit">
-                                        <button
-                                          style={iconButton}
-                                          onClick={() =>
-                                            console.log("Edit", item.id)
-                                          }
-                                          onMouseEnter={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "#f3e8ff";
-                                            e.currentTarget.style.color =
-                                              "#9333ea";
-                                          }}
-                                          onMouseLeave={(e) => {
-                                            e.currentTarget.style.backgroundColor =
-                                              "transparent";
-                                            e.currentTarget.style.color =
-                                              "#6b7280";
-                                          }}
-                                        >
-                                          <Pencil size={20} />
-                                        </button>
-                                      </Tooltip>
-                                    )}
+                                     <RowActionsDropdown status={item.status} category={selectedCategory} />
                                   </div>
                                 ) : (
                                   // ✅ Normal cell
