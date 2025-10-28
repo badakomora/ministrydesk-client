@@ -14,8 +14,8 @@ const overlay = {
 const dialog = {
   background: "#fff",
   borderRadius: "12px",
-  width: "94%",
-  maxWidth: "1100px",
+  width: "100%",
+  maxWidth: "1000px",
   display: "flex",
   flexDirection: "column",
   maxHeight: "90vh",
@@ -24,7 +24,6 @@ const dialog = {
 
 const body = {
   padding: "24px",
-  overflow: "auto",
   display: "flex",
   flexDirection: "column",
   gap: "24px",
@@ -88,7 +87,6 @@ const left = {
   flexDirection: "column",
   gap: "12px",
   minWidth: 0,
-  overflow: "hidden",
 } as const;
 
 const resultsHead = {
@@ -110,13 +108,11 @@ const muted = {
 const tableBox = {
   border: "1px solid #e5e7eb",
   padding: "4px",
-  overflowX: "auto",
-  overflowY: "hidden",
   background: "#fff",
   position: "relative",
-  WebkitOverflowScrolling: "touch",
   direction: "rtl" as const,
 } as const;
+
 
 const table = {
   width: "100%",
@@ -151,20 +147,16 @@ const tableCell = {
   whiteSpace: "normal",
   wordBreak: "break-word",
   position: "relative",
-  overflow: "visible",
 } as const;
 
 const tableCellAction = {
   textAlign: "right",
   maxWidth: "none",
-  overflow: "visible",
   whiteSpace: "normal",
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  justifyContent: "flex-end",
 } as const;
-
 
 const dropdownContainer = {
   position: "relative",
@@ -181,9 +173,7 @@ const dropdownMenu = {
   boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
   zIndex: 1000,
   minWidth: "160px",
-  overflow: "hidden",
   maxHeight: "200px",
-  overflowY: "auto",
 } as const;
 
 const dropdownItem = {
@@ -525,8 +515,6 @@ const columnConfigs = {
   },
 };
 
-
-
 export const Dashboard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -767,7 +755,6 @@ export const Dashboard = () => {
                   </thead>
                   <tbody>
                     {paginatedData.map((item) => {
-
                       return (
                         <tr
                           style={tableRow}
@@ -795,7 +782,10 @@ export const Dashboard = () => {
                               >
                                 {column === "action" ? (
                                   <div style={tableCell}>
-                                     <RowActionsDropdown status={item.status} category={selectedCategory} />
+                                    <RowActionsDropdown
+                                      status={item.status}
+                                      category={selectedCategory}
+                                    />
                                   </div>
                                 ) : (
                                   // ✅ Normal cell
@@ -902,10 +892,6 @@ export const Dashboard = () => {
             gap: 16px !important;
           }
 
-          .table-box-mobile {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-          }
 
           .table-box-mobile table {
             font-size: 12px;
@@ -977,12 +963,12 @@ export const Dashboard = () => {
           }
 
           button {
-            padding: 8px 10px;
+            padding: 8px 14px;
             font-size: 12px;
           }
 
           .right-panel-mobile {
-            padding: 16px !important;
+            padding: 16px !important; 
           }
 
           .right-panel-mobile div:first-child {
