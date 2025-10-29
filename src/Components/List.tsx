@@ -30,7 +30,6 @@ const listStyles = css`
       max-width: 400px;
       padding: 8px 14px;
       border: 1px solid #cbd5e1;
-
       font-size: 15px;
       outline: none;
       transition: border-color 0.2s ease;
@@ -59,6 +58,7 @@ const listStyles = css`
     transition: transform 200ms ease, box-shadow 200ms ease,
       background 200ms ease;
     cursor: pointer;
+    position: relative;
 
     h3 {
       margin: 0 0 6px;
@@ -88,31 +88,41 @@ const listStyles = css`
     }
   }
 
-  .announcement {
-    border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
+  /* ---------- PINNED & LATEST TAG STYLES ---------- */
 
-    h3 {
-      color: #fbbf24;
+  .card.pinned {
+    border: 2px solid #fbbf24;
+    background: #fff8e6;
+
+    &::after {
+      content: "PINNED";
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #fbbf24;
+      color: #1e293b;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
     }
   }
 
-  .sermon {
-    border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
+  .card.newest {
+    border-left: 5px solid #2563eb;
+    background: #eff6ff;
 
-    h3 {
-      color: #fbbf24;
-    }
-
-    &:hover {
-      background: #dbeafe;
-    }
-  }
-
-  .program {
-    border-left: 5px solid linear-gradient(135deg, #2563eb, #fbbf24);
-
-    h3 {
-      color: #fbbf24;
+    &::after {
+      content: "LATEST";
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
     }
   }
 `;
@@ -232,7 +242,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
       {activeTab === "NewsList" && (
         <div className="section">
-          <h2> 📰 All News & Events</h2>
+          <h2>📰 All News & Events</h2>
           <p className="section-desc">
             Stay informed with the latest church news, special events, and
             community updates happening across all PAG assemblies.
@@ -240,7 +250,12 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
           <div className="grid" onClick={() => setActiveTab("NewsItem")}>
             {filteredAnnouncements.length > 0 ? (
               filteredAnnouncements.map((a, idx) => (
-                <div key={idx} className="card announcement">
+                <div
+                  key={idx}
+                  className={`card announcement ${
+                    idx === 0 ? "pinned" : idx < 4 ? "newest" : ""
+                  }`}
+                >
                   <h3>{a.title}</h3>
                   <p>{a.message}</p>
                   <small>
@@ -257,7 +272,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
       {activeTab === "SermonsList" && (
         <div className="section">
-          <h2>🎙️All Sermons</h2>
+          <h2>🎙️ All Sermons</h2>
           <p className="section-desc">
             Access powerful teachings and messages from our pastors through
             recorded sermons — available in both video and audio.
@@ -265,7 +280,12 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
           <div className="grid" onClick={() => setActiveTab("SermonsItem")}>
             {filteredSermons.length > 0 ? (
               filteredSermons.map((s, idx) => (
-                <div key={idx} className="card sermon">
+                <div
+                  key={idx}
+                  className={`card sermon ${
+                    idx === 0 ? "pinned" : idx < 4 ? "newest" : ""
+                  }`}
+                >
                   <h3>{s.title}</h3>
                   <p>Speaker: {s.speaker}</p>
                   <small>
@@ -282,7 +302,7 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
 
       {activeTab === "AssemblyProgramsList" && (
         <div className="section">
-          <h2>🌿All Assembly Programs</h2>
+          <h2>🌿 All Assembly Programs</h2>
           <p className="section-desc">
             Explore our assembly programs that nurture faith, empower youth, and
             strengthen community bonds through service and worship.
@@ -293,8 +313,13 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
           >
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((p, idx) => (
-                <div key={idx} className="card program">
-                  <h3> {p.name}</h3>
+                <div
+                  key={idx}
+                  className={`card program ${
+                    idx === 0 ? "pinned" : idx < 4 ? "newest" : ""
+                  }`}
+                >
+                  <h3>{p.name}</h3>
                   <p>{p.desc}</p>
                   <small>
                     ⛪ {p.church} • Leader: {p.leader}
