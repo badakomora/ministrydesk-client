@@ -20,10 +20,8 @@ const dropdownMenu: React.CSSProperties = {
   left: "100%",
   marginLeft: "8px",
   background: "#fff",
-  border: "1px solid #ddd",
-  borderRadius: "6px",
-  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-  padding: "6px 0",
+  padding: "8px 14px",
+  border: "none",
   zIndex: 1000,
   minWidth: "160px",
 };
@@ -32,15 +30,14 @@ const dropdownItem: React.CSSProperties = {
   display: "block",
   width: "100%",
   textAlign: "left",
-  padding: "9px 14px",
-  border: "none",
+  padding: "8px 14px",
   background: "transparent",
+  borderBottom: "2px solid #f3f4f6",
   cursor: "pointer",
   fontSize: "14px",
-};
-
-const dropdownItemHover: React.CSSProperties = {
-  background: "#f5f5f5",
+  border: "none",
+  color: "#374151",
+  transition: "all 150ms ease",
 };
 
 function normalize(str: string) {
@@ -64,9 +61,11 @@ interface RowActionsDropdownProps {
   category: string;
 }
 
-export const RowActionsDropdown = ({ status, category }: RowActionsDropdownProps) => {
+export const RowActionsDropdown = ({
+  status,
+  category,
+}: RowActionsDropdownProps) => {
   const [open, setOpen] = useState(false);
-  const [hovered, setHovered] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null); // <<< ADDED
 
   // close when other dropdown opens
@@ -117,18 +116,13 @@ export const RowActionsDropdown = ({ status, category }: RowActionsDropdownProps
       {open && (
         <div style={dropdownMenu}>
           {items.map((item, idx) => (
-            <button
+            <span
               key={item}
-              style={{
-                ...dropdownItem,
-                ...(hovered === idx ? dropdownItemHover : {}),
-              }}
-              onMouseEnter={() => setHovered(idx)}
-              onMouseLeave={() => setHovered(null)}
+              style={dropdownItem}
               onClick={() => handleClick(item)}
             >
               {item}
-            </button>
+            </span>
           ))}
         </div>
       )}

@@ -52,6 +52,13 @@ const globalStyles = css`
   * {
     box-sizing: border-box;
   }
+
+  * p {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.7;
+  }
   html,
   body,
   #root {
@@ -146,14 +153,6 @@ const heroStyles = css`
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-  }
-
-  p {
-    margin: 0 0 30px 0;
-    color: #475569;
-    font-size: 18px;
-    line-height: 1.7;
-    max-width: 540px;
   }
 
   .visual {
@@ -353,13 +352,6 @@ const infoCardStyles = css`
     font-weight: 700;
     color: #0f172a;
     margin: 0 0 12px 0;
-  }
-
-  p {
-    font-size: 15px;
-    color: #64748b;
-    margin: 0;
-    line-height: 1.7;
   }
 `;
 
@@ -725,27 +717,26 @@ export const Home: React.FC<componentProps & ModalProps> = ({
   return (
     <div css={globalStyles}>
       <main css={mainStyles}>
-        {/* ---------- HERO ---------- */} 
+        {/* ---------- HERO ---------- */}
         <div id="home" css={heroStyles}>
           <div className="content">
             <h1>
               Welcome to <span style={{ color: "#7c3aed" }}>Ministry Desk</span>
             </h1>
-            <small>
+            <p>
               Ministry Desk began as a small internal platform used by a few
               local churches to share sermons and updates. Over time, as the
               ministry grew and more congregations needed a central place for
               communication, it evolved into the unified system you see today,
               connecting churches, leaders, and members under one organized
               digital space.
-            </small>
-            <br />
-            <small>
+            </p>
+            <p>
               Access sermons, events, and ministry updates from the entire
               church ministry. Connect with local churches, participate in
               programs, and stay informed. Remember, every Sunday is a day for
               giving tithes.
-            </small>
+            </p>
 
             {/* Highlight Stats */}
             <div css={statsHighlight}>
@@ -916,7 +907,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
           <div css={testimonialGridStyles}>
             <div css={testimonialCardStyles}>
               <div className="stars">★★★★★</div>
-              <p className="quote">
+              <p>
                 "This platform has completely changed how I stay connected with
                 my church. I never miss an important update or sermon anymore."
               </p>
@@ -926,7 +917,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
 
             <div css={testimonialCardStyles}>
               <div className="stars">★★★★★</div>
-              <p className="quote">
+              <p>
                 "The sermon library is incredible. I can revisit messages and
                 share them with my family. It's strengthened our faith journey."
               </p>
@@ -936,7 +927,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
 
             <div css={testimonialCardStyles}>
               <div className="stars">★★★★★</div>
-              <p className="quote">
+              <p>
                 "Finding volunteer opportunities and assembly programs has never
                 been easier. I feel more connected to my church community."
               </p>

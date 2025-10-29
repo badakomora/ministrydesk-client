@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RowActionsDropdown } from "./RowActionsDropdown";
 
 const overlay = {
@@ -18,7 +18,8 @@ const dialog = {
   maxWidth: "1000px",
   display: "flex",
   flexDirection: "column",
-  maxHeight: "90vh",
+  maxHeight: "90vh", // modal scroll limit
+  overflowY: "auto", // scroll entire content including pagination
   boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
 } as const;
 
@@ -55,19 +56,25 @@ const select = {
   background: "#fff",
   cursor: "pointer",
   gap: "8px",
-  transition: "all 200ms ease",
+  transition: "all 0.2s ease",
+  color: "#1e293b",
+  appearance: "none", // removes default arrow in some browsers
+  boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
 } as const;
 
 const primaryBtn = {
-  padding: "8px 14px",
+  padding: "8px 16px",
   background: "linear-gradient(135deg, #2563eb, #fbbf24)",
   color: "#fff",
   border: "none",
   cursor: "pointer",
   fontWeight: 600,
   fontSize: "14px",
-  transition: "all 200ms ease",
-  boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
+  transition: "all 0.2s ease",
+  boxShadow: "0 6px 20px rgba(16, 24, 40, 0.1)",
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
 } as const;
 
 const searchRow = {
@@ -110,15 +117,17 @@ const tableBox = {
   padding: "4px",
   background: "#fff",
   position: "relative",
-  direction: "rtl" as const,
+  overflowX: "auto", // horizontal scroll if needed
+  overflowY: "visible", // let vertical scroll go to dialog
+  maxHeight: "none", // remove internal limit
+  WebkitOverflowScrolling: "touch",
+  direction: "ltr" as const,
 } as const;
-
 
 const table = {
   width: "100%",
   borderCollapse: "collapse",
-  minWidth: "900px",
-  direction: "ltr" as const,
+  minWidth: "600px", // ✅ reduce from 900px so phone can scroll less
 } as const;
 
 const tableHeader = {
@@ -514,13 +523,22 @@ const columnConfigs = {
     mobileHeaders: ["Title", "Date", "Leader", "Status", "Action"],
   },
 };
-
-export const Dashboard = () => {
+interface componentProps {
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+}
+export const Dashboard:React.FC<componentProps> = ({setActiveTab}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedCategory, setSelectedCategory] = useState("Church Members");
-  const [isMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -529,10 +547,7 @@ export const Dashboard = () => {
     setSearchQuery("");
   };
 
-  const handleAddOption = (type: string) => {
-    // Implement your logic here
-  };
-
+ 
   const handleItemsPerPageChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -672,19 +687,19 @@ export const Dashboard = () => {
                   <div style={dropdownMenu}>
                     <button
                       style={dropdownItem}
-                      onClick={() => handleAddOption("User")}
+                      onClick={() => setActiveTab("UserForm")}
                     >
                       News & Events
                     </button>
                     <button
                       style={dropdownItem}
-                      onClick={() => handleAddOption("Application")}
+                      onClick={() => setActiveTab("NewsForm")}
                     >
                       Sermons
                     </button>
                     <button
                       style={dropdownItem}
-                      onClick={() => handleAddOption("Group")}
+                      onClick={() => setActiveTab("AssemblyForm")}
                     >
                       Assembly Program
                     </button>

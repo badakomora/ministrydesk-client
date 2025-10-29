@@ -6,6 +6,7 @@ import { Item } from "./Components/Item";
 import { List } from "./Components/List";
 import { Dashboard } from "./Components/Dashboard";
 import { Footer } from "./Components/Footer";
+import { Form } from "./Components/Form";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Home");
@@ -26,8 +27,10 @@ function App() {
         activeTab === "AssemblyProgramsList" ? (
         <List activeTab={activeTab} setActiveTab={setActiveTab} />
       ) : activeTab === "Dashboard" ? (
-        <Dashboard />
-      ) : (
+        <Dashboard setActiveTab={setActiveTab} />
+      ) : activeTab === "UserForm" || activeTab === "NewsForm" || activeTab === "AssemblyForm" ? (
+        <Form  />
+      )  : (
         <Home setActiveTab={setActiveTab} setIsModalOpen={setIsModalOpen} />
       )}
       <Footer />
