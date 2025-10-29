@@ -24,6 +24,7 @@ const dropdownMenu: React.CSSProperties = {
   border: "none",
   zIndex: 1000,
   minWidth: "160px",
+    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
 };
 
 const dropdownItem: React.CSSProperties = {
