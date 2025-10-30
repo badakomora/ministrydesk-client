@@ -194,17 +194,13 @@ const formStyles = css`
 
   input,
   select {
-    padding: 8px 14px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-  }
-
-  input,
-  select {
     outline: none;
     padding: 12px 14px;
     border: #2563eb 1px solid;
     box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95rem;
   }
 
   button {
@@ -489,7 +485,13 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       {isModalOpen && (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "2px",
+              }}
+            >
               {/* Logo */}
               <div css={logoStyles}>
                 <div className="mark" aria-hidden>
@@ -537,12 +539,6 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   required
                   value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value)}
-                  style={{
-                    outline: "none",
-                    padding: "12px 14px",
-                    border: "1px solid #2563eb",
-                    boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
-                  }}
                 >
                   <option value="">Select Role</option>
                   <option value="member">Member</option>
