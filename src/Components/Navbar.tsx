@@ -297,11 +297,10 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
 
   const [selectedChurch, setSelectedChurch] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-
-  const [selectedRole, setSelectedRole] = useState(0);
+  const [selectedRole, setSelectedRole] = useState("");
   const [isCreatingChurch, setIsCreatingChurch] = useState(false);
   const [newChurchName, setNewChurchName] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
@@ -323,19 +322,22 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
     if (!newChurchName.trim()) return;
 
     try {
-      const response = await axios.post("http://localhost:4000/church/create", {
-        name: newChurchName,
-        description,
-        categoryid: selectedCategory,
-        location,
-        phone,
-        email: churchEmail,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/church/register",
+        {
+          name: newChurchName,
+          description,
+          categoryid: selectedCategory,
+          location,
+          phone,
+          email: churchEmail,
+        }
+      );
 
-      const createdChurch = response.data; // should be {id, name}
+      const registeredChurch = response.data; // should be {id, name}
 
-      setChurches([...churches, createdChurch]);
-      setSelectedChurch(createdChurch.id);
+      setChurches([...churches, registeredChurch]);
+      setSelectedChurch(registeredChurch.id);
       setSearch("");
       setNewChurchName("");
       setIsCreatingChurch(false);
@@ -348,7 +350,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
     e.preventDefault();
 
     if (!selectedChurch) {
-      alert("Please select or create a church");
+      alert("Please select or Register your church if you are a Senior pastor");
       return;
     }
 
@@ -373,7 +375,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       setFullname("");
       setPhonenumber("");
       setEmail("");
-      setSelectedRole(0);
+      setSelectedRole("");
       setSelectedChurch(null);
     } catch (error) {
       console.error("Registration error:", error);
@@ -637,35 +639,36 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                 <select
                   required
                   value={selectedRole}
-                  onChange={(e) => setSelectedRole(Number(e.target.value))}
+                  onChange={(e) => setSelectedRole(e.target.value)}
                 >
-                  <option value={0}>Select Role</option>
-                  <option value={1}>Pastor</option>
-                  <option value={2}>Member</option>
-                  <option value={3}>Bishop</option>
-                  <option value={4}>Overseer</option>
-                  <option value={5}>Secretary</option>
-                  <option value={6}>Treasurer</option>
-                  <option value={7}>CED</option>
-                  <option value={8}>Choir</option>
-                  <option value={9}>Usher</option>
-                  <option value={10}>Youth</option>
-                  <option value={11}>Women Dept</option>
-                  <option value={12}>Men Dept</option>
+                  <option value="0">Select Role</option>
+                  <option value="1">Senior Pastor</option>
+                  <option value="2">Junior Pastor</option>
+                  <option value="2">Member</option>
+                  <option value="3">Bishop</option>
+                  <option value="4">Overseer</option>
+                  <option value="5">Secretary</option>
+                  <option value="6">Treasurer</option>
+                  <option value="7">CED</option>
+                  <option value="8">Choir</option>
+                  <option value="9">Usher</option>
+                  <option value="10">Youth</option>
+                  <option value="11">Women Dept</option>
+                  <option value="12">Men Dept</option>
                 </select>
                 <div css={churchDropdownWrapper}>
                   <input
                     type="text"
                     placeholder="Search and select your church"
                     value={
-                      selectedChurch
-                        ? churches.find((c) => c.id === selectedChurch)?.name ||
+                      selectedChurch != null
+                        ? churches.find((c) => c.id === selectedChurch)?.name ??
                           ""
-                        : search
+                        : search ?? ""
                     }
                     onChange={(e) => {
                       setSearch(e.target.value);
-                      setSelectedChurch(null); // clear numeric selection when typing
+                      setSelectedChurch(null);
                     }}
                     required
                   />
@@ -686,7 +689,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                         ))
                       ) : (
                         <>
-                          {selectedRole === 1 ? (
+                          {selectedRole === "1" ? (
                             <div
                               onClick={() => setIsCreatingChurch(true)}
                               style={{
@@ -695,7 +698,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                                 cursor: "pointer",
                               }}
                             >
-                              + Create "{search}"
+                              + Register "{search}"
                             </div>
                           ) : (
                             <div style={{ color: "#999" }}>No church found</div>
@@ -736,7 +739,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <h2 style={{ marginTop: 0, marginBottom: "16px" }}>
-                    Create New Church
+                    Register My Church
                   </h2>
                   <form onSubmit={handleNewChurch}>
                     {/* Church Name */}
@@ -774,9 +777,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                     <select
                       required
                       value={selectedCategory}
-                      onChange={(e) =>
-                        setSelectedCategory(Number(e.target.value))
-                      }
+                      onChange={(e) => setSelectedCategory(e.target.value)}
                       style={{
                         width: "100%",
                         padding: "12px 14px",
@@ -785,12 +786,12 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                         boxSizing: "border-box",
                       }}
                     >
-                      <option value={0}>Select Church Category</option>
-                      <option value={1}>PAG</option>
-                      <option value={2}>Chapel</option>
-                      <option value={3}>Catholic</option>
-                      <option value={4}>Deliverance</option>
-                      <option value={5}>Presbyterian</option>
+                      <option value="0">Select Church Category</option>
+                      <option value="1">PAG</option>
+                      <option value="2">Chapel</option>
+                      <option value="3">Catholic</option>
+                      <option value="4">Deliverance</option>
+                      <option value="5">Presbyterian</option>
                     </select>
 
                     {/* Location */}
@@ -852,7 +853,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                           cursor: "pointer",
                         }}
                       >
-                        Create
+                        Register
                       </button>
                       <button
                         type="button"
@@ -860,7 +861,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                           setIsCreatingChurch(false);
                           setNewChurchName("");
                           setDescription("");
-                          setSelectedCategory(0);
+                          setSelectedCategory("");
                           setLocation("");
                           setPhone("");
                           setEmail("");
