@@ -528,9 +528,10 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
               </form>
             ) : (
               <form css={formStyles}>
+                <input type="number" placeholder="ID Number" required />
                 <input type="text" placeholder="Full Name" required />
                 <input type="tel" placeholder="Phone Number" required />
-                <input type="number" placeholder="ID Number" required />
+
                 <input type="email" placeholder="Email (optional)" />
                 <select
                   required
