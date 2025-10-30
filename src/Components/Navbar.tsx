@@ -197,10 +197,10 @@ const formStyles = css`
     outline: none;
     padding: 12px 14px;
     border: #2563eb 1px solid;
-    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
     width: 100%;
     box-sizing: border-box;
     font-size: 0.95rem;
+    background: white;
   }
 
   button {
@@ -226,6 +226,11 @@ const churchDropdownWrapper = css`
   input {
     width: 100%;
     box-sizing: border-box;
+    outline: none;
+    padding: 12px 14px;
+    border: #2563eb 1px solid;
+    font-size: 0.95rem;
+    background: white;
   }
 `;
 
