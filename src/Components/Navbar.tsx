@@ -546,7 +546,9 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value)}
                 >
-                  <option value="">Select Role</option>
+                  <option value="" style={{ color: "#999" }}>
+                    Select Role
+                  </option>
                   <option value="member">Member</option>
                   <option value="pastor">Pastor</option>
                   <option value="bishop">Bishop</option>
