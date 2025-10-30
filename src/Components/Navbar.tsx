@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from "@emotion/react";
+import axios from "axios";
 import { useState } from "react";
 
 // -------------------- Header --------------------
@@ -278,6 +279,10 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [tab, setTab] = useState<"login" | "register">("login");
+  const [idnumber, setIdnumber] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [email, setEmail] = useState("");
 
   const [churches, setChurches] = useState([
     "Central PAG",
@@ -289,9 +294,10 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
     "Nairobi PAG",
     "Mombasa PAG",
   ]);
+
   const [search, setSearch] = useState("");
   const [selectedChurch, setSelectedChurch] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState(0);
   const [isCreatingChurch, setIsCreatingChurch] = useState(false);
   const [newChurchName, setNewChurchName] = useState("");
 
@@ -306,6 +312,70 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       setSearch("");
       setIsCreatingChurch(false);
       setNewChurchName("");
+    }
+  };
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // TODO: collect values here or make controlled inputs
+    console.log("LOGIN SUBMIT");
+  };
+
+  const handleNewChurch = async () => {
+    if (!newChurchName.trim()) return;
+
+    try {
+      // POST new church to backend
+      const response = await axios.post("http://localhost:4000/church/create", {
+        name: newChurchName,
+      });
+
+      // Assume backend returns the created church object, e.g., { id, name }
+      const createdChurch = response.data;
+
+      // Add to local state and select it
+      setChurches([...churches, createdChurch.name]);
+      setSelectedChurch(createdChurch.name);
+      setSearch("");
+      setNewChurchName("");
+      setIsCreatingChurch(false);
+    } catch (error) {
+      console.error("Error creating church:", error);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!selectedChurch) {
+      alert("Please select or create a church");
+      return;
+    }
+
+    const data = {
+      idnumber,
+      fullname,
+      phonenumber,
+      email,
+      role: selectedRole,
+      church: selectedChurch,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/user/signup",
+        data
+      );
+      console.log("Server response:", response.data);
+      // Reset form
+      setIdnumber("");
+      setFullname("");
+      setPhonenumber("");
+      setEmail("");
+      setSelectedRole(0);
+      setSelectedChurch("");
+    } catch (error) {
+      console.error("Registration error:", error);
     }
   };
 
@@ -527,7 +597,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
 
             {/* Forms */}
             {tab === "login" ? (
-              <form css={formStyles}>
+              <form css={formStyles} onSubmit={handleLogin}>
                 <input type="tel" placeholder="Phone Number" required />
                 <a href="." style={{ textDecoration: "none", color: "black" }}>
                   Forgot Password?
@@ -535,32 +605,52 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                 <button type="submit">Login</button>
               </form>
             ) : (
-              <form css={formStyles}>
-                <input type="number" placeholder="ID Number" required />
-                <input type="text" placeholder="Full Name" required />
-                <input type="tel" placeholder="Phone Number" required />
-
-                <input type="email" placeholder="Email (optional)" />
+              <form css={formStyles} onSubmit={handleRegister}>
+                <input
+                  type="number"
+                  placeholder="ID Number"
+                  required
+                  value={idnumber}
+                  onChange={(e) => setIdnumber(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  required
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  required
+                  value={phonenumber}
+                  onChange={(e) => setPhonenumber(e.target.value)}
+                />
+                <input
+                  type="email"
+                  placeholder="Email (optional)"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
                 <select
                   required
                   value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
+                  onChange={(e) => setSelectedRole(Number(e.target.value))}
                 >
-                  <option value="">
-                    Select Role
-                  </option>
-                  <option value="member">Member</option>
-                  <option value="pastor">Pastor</option>
-                  <option value="bishop">Bishop</option>
-                  <option value="overseer">Overseer</option>
-                  <option value="secretary">Secretary</option>
-                  <option value="treasurer">Treasurer</option>
-                  <option value="ced">CED</option>
-                  <option value="choir">Choir</option>
-                  <option value="usher">Usher</option>
-                  <option value="youth">Youth</option>
-                  <option value="women">Women Dept</option>
-                  <option value="men">Men Dept</option>
+                  <option value={0}>Select Role</option>
+                  <option value={1}>Pastor</option>
+                  <option value={2}>Member</option>
+                  <option value={3}>Bishop</option>
+                  <option value={4}>Overseer</option>
+                  <option value={5}>Secretary</option>
+                  <option value={6}>Treasurer</option>
+                  <option value={7}>CED</option>
+                  <option value={8}>Choir</option>
+                  <option value={9}>Usher</option>
+                  <option value={10}>Youth</option>
+                  <option value={11}>Women Dept</option>
+                  <option value={12}>Men Dept</option>
                 </select>
                 <div css={churchDropdownWrapper}>
                   <input
@@ -589,7 +679,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                         ))
                       ) : (
                         <>
-                          {selectedRole === "pastor" ? (
+                          {selectedRole === 1 ? (
                             <div
                               onClick={() => setIsCreatingChurch(true)}
                               style={{
@@ -632,7 +722,6 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   style={{
                     background: "white",
                     padding: "24px",
-                    borderRadius: "8px",
                     maxWidth: "400px",
                     width: "90%",
                   }}
@@ -641,53 +730,56 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   <h2 style={{ marginTop: 0, marginBottom: "16px" }}>
                     Create New Church
                   </h2>
-                  <input
-                    type="text"
-                    placeholder="Church Name"
-                    value={newChurchName}
-                    onChange={(e) => setNewChurchName(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "12px 14px",
-                      border: "1px solid #2563eb",
-                      boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
-                      boxSizing: "border-box",
-                      marginBottom: "16px",
-                    }}
-                  />
-                  <div style={{ display: "flex", gap: "12px" }}>
-                    <button
-                      onClick={handleCreateChurch}
+                  <form onSubmit={handleNewChurch}>
+                    <input
+                      type="text"
+                      placeholder="Church Name"
+                      value={newChurchName}
+                      onChange={(e) => setNewChurchName(e.target.value)}
                       style={{
-                        flex: 1,
+                        width: "100%",
                         padding: "12px 14px",
-                        background: "#2563eb",
-                        color: "white",
-                        fontWeight: "700",
-                        border: "none",
-                        cursor: "pointer",
+                        border: "1px solid #2563eb",
+                        boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
+                        boxSizing: "border-box",
+                        marginBottom: "16px",
                       }}
-                    >
-                      Create
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsCreatingChurch(false);
-                        setNewChurchName("");
-                      }}
-                      style={{
-                        flex: 1,
-                        padding: "12px 14px",
-                        background: "#f0f0f0",
-                        color: "black",
-                        fontWeight: "700",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                    />
+
+                    <div style={{ display: "flex", gap: "12px" }}>
+                      <button
+                        onClick={handleCreateChurch}
+                        style={{
+                          flex: 1,
+                          padding: "12px 14px",
+                          background: "#2563eb",
+                          color: "white",
+                          fontWeight: "700",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Create
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsCreatingChurch(false);
+                          setNewChurchName("");
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: "12px 14px",
+                          background: "#f0f0f0",
+                          color: "black",
+                          fontWeight: "700",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             )}
