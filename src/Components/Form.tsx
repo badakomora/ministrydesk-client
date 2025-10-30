@@ -39,7 +39,7 @@ const fieldStyle = css`
     height: 42px;
     box-sizing: border-box;
     border: 1px solid #cbd5e0;
-    border-radius: 6px;
+    border-radius: 0;
     font-size: 0.95rem;
     &:focus {
       outline: none;

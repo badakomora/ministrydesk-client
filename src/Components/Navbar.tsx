@@ -197,6 +197,7 @@ const formStyles = css`
     outline: none;
     padding: 12px 14px;
     border: #2563eb 1px solid;
+    border-radius: 0;
     width: 100%;
     box-sizing: border-box;
     font-size: 0.95rem;
