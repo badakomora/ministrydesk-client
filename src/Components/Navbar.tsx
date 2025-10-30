@@ -285,35 +285,32 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
   const [email, setEmail] = useState("");
 
   const [churches, setChurches] = useState([
-    "Central PAG",
-    "East PAG",
-    "West PAG",
-    "South PAG",
-    "North PAG",
-    "Kampala PAG",
-    "Nairobi PAG",
-    "Mombasa PAG",
+    { id: 1, name: "Central PAG" },
+    { id: 2, name: "East PAG" },
+    { id: 3, name: "West PAG" },
+    { id: 4, name: "South PAG" },
+    { id: 5, name: "North PAG" },
+    { id: 6, name: "Kampala PAG" },
+    { id: 7, name: "Nairobi PAG" },
+    { id: 8, name: "Mombasa PAG" },
   ]);
 
+  const [selectedChurch, setSelectedChurch] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [selectedChurch, setSelectedChurch] = useState("");
+
   const [selectedRole, setSelectedRole] = useState(0);
   const [isCreatingChurch, setIsCreatingChurch] = useState(false);
   const [newChurchName, setNewChurchName] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [phone, setPhone] = useState("");
+  const [churchEmail, setChurchEmail] = useState("");
 
+  // Filtered list for search
   const filteredChurches = churches.filter((c) =>
-    c.toLowerCase().includes(search.toLowerCase())
+    c.name.toLowerCase().includes(search.toLowerCase())
   );
-
-  const handleCreateChurch = () => {
-    if (newChurchName.trim()) {
-      setChurches([...churches, newChurchName]);
-      setSelectedChurch(newChurchName);
-      setSearch("");
-      setIsCreatingChurch(false);
-      setNewChurchName("");
-    }
-  };
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -321,21 +318,24 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
     console.log("LOGIN SUBMIT");
   };
 
-  const handleNewChurch = async () => {
+  const handleNewChurch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!newChurchName.trim()) return;
 
     try {
-      // POST new church to backend
       const response = await axios.post("http://localhost:4000/church/create", {
         name: newChurchName,
+        description,
+        categoryid: selectedCategory,
+        location,
+        phone,
+        email: churchEmail,
       });
 
-      // Assume backend returns the created church object, e.g., { id, name }
-      const createdChurch = response.data;
+      const createdChurch = response.data; // should be {id, name}
 
-      // Add to local state and select it
-      setChurches([...churches, createdChurch.name]);
-      setSelectedChurch(createdChurch.name);
+      setChurches([...churches, createdChurch]);
+      setSelectedChurch(createdChurch.id);
       setSearch("");
       setNewChurchName("");
       setIsCreatingChurch(false);
@@ -358,8 +358,9 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       phonenumber,
       email,
       role: selectedRole,
-      church: selectedChurch,
+      churchid: selectedChurch,
     };
+    console.log("Registration data:", data);
 
     try {
       const response = await axios.post(
@@ -373,7 +374,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       setPhonenumber("");
       setEmail("");
       setSelectedRole(0);
-      setSelectedChurch("");
+      setSelectedChurch(null);
     } catch (error) {
       console.error("Registration error:", error);
     }
@@ -656,25 +657,31 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   <input
                     type="text"
                     placeholder="Search and select your church"
-                    value={selectedChurch || search}
+                    value={
+                      selectedChurch
+                        ? churches.find((c) => c.id === selectedChurch)?.name ||
+                          ""
+                        : search
+                    }
                     onChange={(e) => {
                       setSearch(e.target.value);
-                      setSelectedChurch("");
+                      setSelectedChurch(null); // clear numeric selection when typing
                     }}
                     required
                   />
+
                   {search && !selectedChurch && (
                     <div css={churchList}>
                       {filteredChurches.length > 0 ? (
                         filteredChurches.map((church) => (
                           <div
-                            key={church}
+                            key={church.id}
                             onClick={() => {
-                              setSelectedChurch(church);
-                              setSearch("");
+                              setSelectedChurch(church.id); // store ID (number only)
+                              setSearch(""); // clear search
                             }}
                           >
-                            {church}
+                            {church.name}
                           </div>
                         ))
                       ) : (
@@ -685,6 +692,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                               style={{
                                 color: "#2563eb",
                                 fontWeight: "600",
+                                cursor: "pointer",
                               }}
                             >
                               + Create "{search}"
@@ -731,24 +739,109 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                     Create New Church
                   </h2>
                   <form onSubmit={handleNewChurch}>
+                    {/* Church Name */}
                     <input
                       type="text"
                       placeholder="Church Name"
                       value={newChurchName}
                       onChange={(e) => setNewChurchName(e.target.value)}
+                      required
                       style={{
                         width: "100%",
                         padding: "12px 14px",
                         border: "1px solid #2563eb",
-                        boxShadow: "0 6px 20px rgba(16, 24, 40, 0.08)",
+                        marginBottom: "12px",
                         boxSizing: "border-box",
-                        marginBottom: "16px",
                       }}
                     />
 
+                    {/* Description */}
+                    <textarea
+                      placeholder="Description (optional)"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "12px 14px",
+                        border: "1px solid #2563eb",
+                        marginBottom: "12px",
+                        boxSizing: "border-box",
+                        resize: "vertical",
+                      }}
+                    />
+
+                    {/* Category */}
+                    <select
+                      required
+                      value={selectedCategory}
+                      onChange={(e) =>
+                        setSelectedCategory(Number(e.target.value))
+                      }
+                      style={{
+                        width: "100%",
+                        padding: "12px 14px",
+                        border: "1px solid #2563eb",
+                        marginBottom: "12px",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <option value={0}>Select Church Category</option>
+                      <option value={1}>PAG</option>
+                      <option value={2}>Chapel</option>
+                      <option value={3}>Catholic</option>
+                      <option value={4}>Deliverance</option>
+                      <option value={5}>Presbyterian</option>
+                    </select>
+
+                    {/* Location */}
+                    <input
+                      type="text"
+                      placeholder="Location"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "12px 14px",
+                        border: "1px solid #2563eb",
+                        marginBottom: "12px",
+                        boxSizing: "border-box",
+                      }}
+                    />
+
+                    {/* Phone */}
+                    <input
+                      type="tel"
+                      placeholder="Phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "12px 14px",
+                        border: "1px solid #2563eb",
+                        marginBottom: "12px",
+                        boxSizing: "border-box",
+                      }}
+                    />
+
+                    {/* Email */}
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={churchEmail}
+                      onChange={(e) => setChurchEmail(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "12px 14px",
+                        border: "1px solid #2563eb",
+                        marginBottom: "16px",
+                        boxSizing: "border-box",
+                      }}
+                    />
+
+                    {/* Buttons */}
                     <div style={{ display: "flex", gap: "12px" }}>
                       <button
-                        onClick={handleCreateChurch}
+                        type="submit"
                         style={{
                           flex: 1,
                           padding: "12px 14px",
@@ -762,9 +855,15 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                         Create
                       </button>
                       <button
+                        type="button"
                         onClick={() => {
                           setIsCreatingChurch(false);
                           setNewChurchName("");
+                          setDescription("");
+                          setSelectedCategory(0);
+                          setLocation("");
+                          setPhone("");
+                          setEmail("");
                         }}
                         style={{
                           flex: 1,
