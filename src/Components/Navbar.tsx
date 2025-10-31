@@ -3,6 +3,7 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { loggedfullname, serverurl } from "./Appconfig";
 
 // -------------------- Header --------------------
 const headerStyles = css`
@@ -332,7 +333,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     try {
       if (!otpSent) {
         // Step 1: Send phone number
-        const res = await axios.post("http://localhost:4000/user/login", {
+        const res = await axios.post(`${serverurl}/user/login`, {
           phonenumber: phone,
         });
 
@@ -341,11 +342,11 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         console.log("OTP for testing:", res.data.otp); // 🔹 Remove in production
 
         // Optional: store fullname and phone for display
-        setPhone(res.data.phonenumber);
-        setFullname(res.data.fullname);
+        localStorage.setItem("userPhone", res.data.phonenumber);
+        localStorage.setItem("userFullname", res.data.fullname);
       } else {
         // Step 2: Verify OTP
-        const res = await axios.post("http://localhost:4000/user/verifyotp", {
+        const res = await axios.post(`${serverurl}/user/verifyotp`, {
           phonenumber: phone,
           otp,
         });
@@ -364,17 +365,14 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       return toast.warning("Please enter a church name.");
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/church/register",
-        {
-          name: newChurchName,
-          description,
-          categoryid: selectedCategory,
-          location,
-          phone,
-          email: churchEmail,
-        }
-      );
+      const response = await axios.post(`${serverurl}/church/register`, {
+        name: newChurchName,
+        description,
+        categoryid: selectedCategory,
+        location,
+        phone,
+        email: churchEmail,
+      });
 
       const registeredChurch = response.data;
 
@@ -418,10 +416,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/user/register",
-        data
-      );
+      const response = await axios.post(`${serverurl}/user/register`, data);
 
       // ✅ Show message from backend
       toast.success(response.data.message || "User registered successfully!");
@@ -525,7 +520,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               }}
               style={{ color: "white" }}
             >
-              My Membership
+              {loggedfullname ? loggedfullname : "  My Membership"}
             </a>
           </nav>
 
@@ -618,7 +613,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             }}
             style={{ color: "white" }}
           >
-            My Membership
+            {loggedfullname ? loggedfullname : "  My Membership"}
           </a>
         </nav>
       </header>
