@@ -3,7 +3,12 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { loggedfullname, serverurl } from "./Appconfig";
+import {
+  loggedfullname,
+  loggedphone,
+  loggedrole,
+  serverurl,
+} from "./Appconfig";
 
 // -------------------- Header --------------------
 const headerStyles = css`
@@ -321,12 +326,24 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
   const [churchEmail, setChurchEmail] = useState("");
+  const [userLoggedFullname, setUserLoggedFullname] = useState("");
+  const [userLoggedPhone, setUserLoggedPhone] = useState("");
+  const [userLoggedRole, setUserLoggedRole] = useState("");
 
   // Filtered list for search
   const filteredChurches = churches.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
-
+  useEffect(() => {
+    const storedPhone = loggedphone;
+    const storedName = loggedfullname;
+    const storedRole = loggedrole;
+    if (storedPhone && storedName) {
+      setUserLoggedPhone(storedPhone);
+      setUserLoggedFullname(storedName);
+      setUserLoggedRole(storedRole || "");
+    }
+  }, []);
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -344,6 +361,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         // Optional: store fullname and phone for display
         localStorage.setItem("userPhone", res.data.phonenumber);
         localStorage.setItem("userFullname", res.data.fullname);
+        localStorage.setItem("userRole", res.data.role);
       } else {
         // Step 2: Verify OTP
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
@@ -511,17 +529,32 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             >
               Dashboard
             </a>
-            <a
-              href="."
-              css={myPagTabStyles}
-              onClick={(e) => {
-                e.preventDefault();
-                setIsModalOpen(true);
-              }}
-              style={{ color: "white" }}
-            >
-              {loggedfullname ? loggedfullname : "  My Membership"}
-            </a>
+
+            {loggedfullname ? (
+              <a
+                href="."
+                css={myPagTabStyles}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalOpen(true);
+                }}
+                style={{ color: "white" }}
+              >
+                {userLoggedFullname}
+              </a>
+            ) : (
+              <a
+                href="."
+                css={myPagTabStyles}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalOpen(true);
+                }}
+                style={{ color: "white" }}
+              >
+                My Membership
+              </a>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -603,23 +636,78 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
           >
             Dashboard
           </a>
-          <a
-            href="."
-            css={myPagTabStyles}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileMenuOpen(false);
-              setIsModalOpen(true);
-            }}
-            style={{ color: "white" }}
-          >
-            {loggedfullname ? loggedfullname : "  My Membership"}
-          </a>
+          {loggedfullname ? (
+            <a
+              href="."
+              css={myPagTabStyles}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModalOpen(true);
+              }}
+              style={{ color: "white" }}
+            >
+              {userLoggedFullname}
+            </a>
+          ) : (
+            <a
+              href="."
+              css={myPagTabStyles}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModalOpen(true);
+              }}
+              style={{ color: "white" }}
+            >
+              My Membership
+            </a>
+          )}
         </nav>
       </header>
 
       {/* Modal */}
-      {isModalOpen && (
+      {isModalOpen || loggedfullname ? (
+        <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
+          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
+            <div
+              style={{
+                display: "flex",
+                margin: "auto",
+              }}
+            >
+              <div css={logoStyles}>
+                <div className="mark" aria-hidden>
+                  ⛪
+                </div>
+                <div>
+                  <h1>Ministry Desk</h1>
+                  <p>Connecting churches & people</p>
+                </div>
+              </div>
+            </div>
+            <div css={formStyles}>
+              Name:{userLoggedRole}
+              {userLoggedFullname}
+              Phone:{userLoggedPhone}
+              <a
+                href="."
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  marginTop: "12px",
+                  textDecoration: "none",
+                  color: "black",
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalOpen(false);
+                }}
+              >
+                close
+              </a>
+            </div>
+          </div>
+        </div>
+      ) : isModalOpen ? (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
             <div
@@ -988,6 +1076,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             </a>
           </div>
         </div>
+      ) : (
+        ""
       )}
     </>
   );
