@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { css, keyframes } from "@emotion/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 // -------------------- Header --------------------
 const headerStyles = css`
@@ -270,11 +271,18 @@ interface ModalProps {
   isModalOpen: boolean;
 }
 
+interface LoadingProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+}
+
 // -------------------- Component --------------------
-export const Navbar: React.FC<componentProps & ModalProps> = ({
+export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   setActiveTab,
   setIsModalOpen,
   isModalOpen,
+  setLoading,
+  loading,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -284,16 +292,23 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
   const [phonenumber, setPhonenumber] = useState("");
   const [email, setEmail] = useState("");
 
-  const [churches, setChurches] = useState([
-    { id: 1, name: "Central PAG" },
-    { id: 2, name: "East PAG" },
-    { id: 3, name: "West PAG" },
-    { id: 4, name: "South PAG" },
-    { id: 5, name: "North PAG" },
-    { id: 6, name: "Kampala PAG" },
-    { id: 7, name: "Nairobi PAG" },
-    { id: 8, name: "Mombasa PAG" },
-  ]);
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+
+  const [churches, setChurches] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchChurches = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/church/list");
+        setChurches(response.data);
+      } catch (error) {
+        console.error("Error fetching churches:", error);
+      }
+    };
+
+    fetchChurches();
+  }, []);
 
   const [selectedChurch, setSelectedChurch] = useState<number | null>(null);
   const [search, setSearch] = useState("");
@@ -311,15 +326,42 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: collect values here or make controlled inputs
-    console.log("LOGIN SUBMIT");
+
+    try {
+      if (!otpSent) {
+        // Step 1: Send phone number
+        const res = await axios.post("http://localhost:4000/user/login", {
+          phonenumber: phone,
+        });
+
+        setOtpSent(true);
+        toast.success(`OTP sent to ${res.data.fullname}`);
+        console.log("OTP for testing:", res.data.otp); // 🔹 Remove in production
+
+        // Optional: store fullname and phone for display
+        setPhone(res.data.phonenumber);
+        setFullname(res.data.fullname);
+      } else {
+        // Step 2: Verify OTP
+        const res = await axios.post("http://localhost:4000/user/verifyotp", {
+          phonenumber: phone,
+          otp,
+        });
+        toast.success("Login successful!");
+        console.log("User:", res.data.user);
+        // TODO: Redirect or save user session
+      }
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || "Something went wrong");
+    }
   };
 
   const handleNewChurch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!newChurchName.trim()) return;
+    if (!newChurchName.trim())
+      return toast.warning("Please enter a church name.");
 
     try {
       const response = await axios.post(
@@ -334,15 +376,26 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
         }
       );
 
-      const registeredChurch = response.data; // should be {id, name}
+      const registeredChurch = response.data;
 
+      // ✅ Show actual message from backend
+      toast.success(response.data.message || "Church registered successfully!");
+
+      // Update state
       setChurches([...churches, registeredChurch]);
       setSelectedChurch(registeredChurch.id);
       setSearch("");
       setNewChurchName("");
       setIsCreatingChurch(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating church:", error);
+
+      // ✅ Show backend error message if available
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An error occurred while creating the church.");
+      }
     }
   };
 
@@ -350,8 +403,9 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
     e.preventDefault();
 
     if (!selectedChurch) {
-      alert("Please select or Register your church if you are a Senior pastor");
-      return;
+      return toast.warning(
+        "Please select or register your church if you are a senior pastor."
+      );
     }
 
     const data = {
@@ -362,14 +416,16 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       role: selectedRole,
       churchid: selectedChurch,
     };
-    console.log("Registration data:", data);
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/user/signup",
+        "http://localhost:4000/user/register",
         data
       );
-      console.log("Server response:", response.data);
+
+      // ✅ Show message from backend
+      toast.success(response.data.message || "User registered successfully!");
+
       // Reset form
       setIdnumber("");
       setFullname("");
@@ -377,8 +433,15 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
       setEmail("");
       setSelectedRole("");
       setSelectedChurch(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error);
+
+      // ✅ Show backend error message
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An error occurred during registration.");
+      }
     }
   };
 
@@ -601,11 +664,36 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
             {/* Forms */}
             {tab === "login" ? (
               <form css={formStyles} onSubmit={handleLogin}>
-                <input type="tel" placeholder="Phone Number" required />
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  disabled={otpSent}
+                />
+
+                {otpSent && (
+                  <input
+                    type="text"
+                    placeholder="Enter OTP"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required
+                  />
+                )}
+
                 <a href="." style={{ textDecoration: "none", color: "black" }}>
                   Forgot Password?
                 </a>
-                <button type="submit">Login</button>
+
+                <button type="submit" disabled={loading}>
+                  {loading
+                    ? "Processing..."
+                    : otpSent
+                    ? "Verify OTP"
+                    : "Login with Phone"}
+                </button>
               </form>
             ) : (
               <form css={formStyles} onSubmit={handleRegister}>
@@ -644,17 +732,17 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   <option value="0">Select Role</option>
                   <option value="1">Senior Pastor</option>
                   <option value="2">Junior Pastor</option>
-                  <option value="2">Member</option>
-                  <option value="3">Bishop</option>
-                  <option value="4">Overseer</option>
-                  <option value="5">Secretary</option>
-                  <option value="6">Treasurer</option>
-                  <option value="7">CED</option>
-                  <option value="8">Choir</option>
-                  <option value="9">Usher</option>
-                  <option value="10">Youth</option>
-                  <option value="11">Women Dept</option>
-                  <option value="12">Men Dept</option>
+                  <option value="3">Member</option>
+                  <option value="4">Bishop</option>
+                  <option value="5">Overseer</option>
+                  <option value="6">Secretary</option>
+                  <option value="7">Treasurer</option>
+                  <option value="8">CED</option>
+                  <option value="9">Choir</option>
+                  <option value="10">Usher</option>
+                  <option value="11">Youth</option>
+                  <option value="12">Women Dept</option>
+                  <option value="13">Men Dept</option>
                 </select>
                 <div css={churchDropdownWrapper}>
                   <input
@@ -709,7 +797,9 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                   )}
                 </div>
 
-                <button type="submit">Register</button>
+                <button type="submit">
+                  {loading ? "Loading..." : "Register Church"}
+                </button>
               </form>
             )}
 
@@ -763,6 +853,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                       placeholder="Description (optional)"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
+                      maxLength={100}
                       style={{
                         width: "100%",
                         padding: "12px 14px",
@@ -853,7 +944,7 @@ export const Navbar: React.FC<componentProps & ModalProps> = ({
                           cursor: "pointer",
                         }}
                       >
-                        Register
+                        {loading ? "Loading..." : "Register Church"}
                       </button>
                       <button
                         type="button"

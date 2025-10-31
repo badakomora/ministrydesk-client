@@ -972,7 +972,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
               <h3>Send us a Message</h3>
               <form onSubmit={(e) => e.preventDefault()}>
                 <input type="text" placeholder="Your Name" required />
-                <input type="email" placeholder="Your Email" required />
+                <input type="text" placeholder="Your Phone" required />
                 <textarea placeholder="Your Message" required />
                 <button type="submit">Send Message</button>
               </form>
