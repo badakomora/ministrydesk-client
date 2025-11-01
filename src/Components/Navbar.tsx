@@ -4,9 +4,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
-  loggedfullname,
-  loggedphone,
-  loggedrole,
+  localstoragefullname,
+  localstoragephone,
+  localstoragerole, 
   serverurl,
 } from "./Appconfig";
 
@@ -326,22 +326,22 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
   const [churchEmail, setChurchEmail] = useState("");
-  const [userLoggedFullname, setUserLoggedFullname] = useState("");
-  const [userLoggedPhone, setUserLoggedPhone] = useState("");
-  const [userLoggedRole, setUserLoggedRole] = useState("");
+  const [loggedFullname, setLoggedFullname] = useState("");
+  const [loggedPhone, setLoggedPhone] = useState("");
+  const [loggedRole, setLoggedRole] = useState("");
 
   // Filtered list for search
   const filteredChurches = churches.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
   useEffect(() => {
-    const storedPhone = loggedphone;
-    const storedName = loggedfullname;
-    const storedRole = loggedrole;
+    const storedPhone = localstoragephone;
+    const storedName = localstoragefullname;
+    const storedRole = localstoragerole;
     if (storedPhone && storedName) {
-      setUserLoggedPhone(storedPhone);
-      setUserLoggedFullname(storedName);
-      setUserLoggedRole(storedRole || "");
+      setLoggedPhone(storedPhone);
+      setLoggedFullname(storedName);
+      setLoggedRole(storedRole || "");
     }
   }, []);
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -530,31 +530,17 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               Dashboard
             </a>
 
-            {loggedfullname ? (
-              <a
-                href="."
-                css={myPagTabStyles}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsModalOpen(true);
-                }}
-                style={{ color: "white" }}
-              >
-                {userLoggedFullname}
-              </a>
-            ) : (
-              <a
-                href="."
-                css={myPagTabStyles}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsModalOpen(true);
-                }}
-                style={{ color: "white" }}
-              >
-                My Membership
-              </a>
-            )}
+            <a
+              href="."
+              css={myPagTabStyles}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsModalOpen(true);
+              }}
+              style={{ color: "white" }}
+            >
+              {loggedFullname ? loggedFullname : "My Membership"}
+            </a>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -636,78 +622,23 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
           >
             Dashboard
           </a>
-          {loggedfullname ? (
-            <a
-              href="."
-              css={myPagTabStyles}
-              onClick={(e) => {
-                e.preventDefault();
-                setIsModalOpen(true);
-              }}
-              style={{ color: "white" }}
-            >
-              {userLoggedFullname}
-            </a>
-          ) : (
-            <a
-              href="."
-              css={myPagTabStyles}
-              onClick={(e) => {
-                e.preventDefault();
-                setIsModalOpen(true);
-              }}
-              style={{ color: "white" }}
-            >
-              My Membership
-            </a>
-          )}
+
+          <a
+            href="."
+            css={myPagTabStyles}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsModalOpen(true);
+            }}
+            style={{ color: "white" }}
+          >
+            {loggedFullname ? loggedFullname : "My Membership"}
+          </a>
         </nav>
       </header>
 
       {/* Modal */}
-      {isModalOpen || loggedfullname ? (
-        <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
-          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            <div
-              style={{
-                display: "flex",
-                margin: "auto",
-              }}
-            >
-              <div css={logoStyles}>
-                <div className="mark" aria-hidden>
-                  ⛪
-                </div>
-                <div>
-                  <h1>Ministry Desk</h1>
-                  <p>Connecting churches & people</p>
-                </div>
-              </div>
-            </div>
-            <div css={formStyles}>
-              Name:{userLoggedRole}
-              {userLoggedFullname}
-              Phone:{userLoggedPhone}
-              <a
-                href="."
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  marginTop: "12px",
-                  textDecoration: "none",
-                  color: "black",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsModalOpen(false);
-                }}
-              >
-                close
-              </a>
-            </div>
-          </div>
-        </div>
-      ) : isModalOpen ? (
+      {isModalOpen && (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
             <div
@@ -743,9 +674,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </button>
               </div>
             </div>
-
-            {/* Forms */}
-            {tab === "login" ? (
+            {loggedFullname ? (
+              <div css={formStyles}>Name:{}</div>
+            ) : tab === "login" ? (
               <form css={formStyles} onSubmit={handleLogin}>
                 <input
                   type="tel"
@@ -1076,8 +1007,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             </a>
           </div>
         </div>
-      ) : (
-        ""
       )}
     </>
   );
