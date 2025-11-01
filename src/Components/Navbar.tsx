@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import {
   localstoragefullname,
   localstoragephone,
-  localstoragerole, 
+  localstoragerole,
   serverurl,
 } from "./Appconfig";
 
