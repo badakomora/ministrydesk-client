@@ -4,7 +4,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
+  localstoragechurchid,
+  localstorageemail,
   localstoragefullname,
+  localstorageidnumber,
   localstoragephone,
   localstoragerole,
   serverurl,
@@ -329,6 +332,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [loggedFullname, setLoggedFullname] = useState("");
   const [loggedPhone, setLoggedPhone] = useState("");
   const [loggedRole, setLoggedRole] = useState("");
+  const [loggedEmail, setLoggedEmail] = useState("");
+  const [loggedChurchId, setLoggedChurchId] = useState("");
+  const [loggedIdNumber, setLoggedIdNumber] = useState("");
 
   // Filtered list for search
   const filteredChurches = churches.filter((c) =>
@@ -338,12 +344,38 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     const storedPhone = localstoragephone;
     const storedName = localstoragefullname;
     const storedRole = localstoragerole;
-    if (storedPhone && storedName) {
+    const storedIdNumber = localstorageidnumber;
+    const storedChurchId = localstoragechurchid;
+    const storedEmail = localstorageemail;
+    if (
+      storedPhone &&
+      storedName &&
+      storedRole &&
+      storedChurchId &&
+      storedEmail &&
+      storedIdNumber
+    ) {
       setLoggedPhone(storedPhone);
       setLoggedFullname(storedName);
-      setLoggedRole(storedRole || "");
+      setLoggedRole(storedRole);
+      setLoggedChurchId(storedChurchId);
+      setLoggedEmail(storedEmail);
+      setLoggedIdNumber(storedIdNumber);
     }
   }, []);
+
+  const LogOut = () => {
+    localStorage.removeItem("userPhone");
+    localStorage.removeItem("userFullname");
+    localStorage.removeItem("userRole");
+
+    setLoggedPhone("");
+    setLoggedFullname("");
+    setLoggedRole("");
+
+    toast.success("You have logged out successfully.");
+  };
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -356,21 +388,42 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
         setOtpSent(true);
         toast.success(`OTP sent to ${res.data.fullname}`);
-        console.log("OTP for testing:", res.data.otp); // 🔹 Remove in production
+        console.log("OTP for testing:", res.data.otp);
 
-        // Optional: store fullname and phone for display
-        localStorage.setItem("userPhone", res.data.phonenumber);
+        // Pre-store for display (optional, not final login)
+
+        localStorage.setItem("userIdNumber", res.data.idnumber);
         localStorage.setItem("userFullname", res.data.fullname);
+        localStorage.setItem("userPhone", res.data.phonenumber);
+        localStorage.setItem("userEmail", res.data.email);
         localStorage.setItem("userRole", res.data.role);
+        localStorage.setItem("userChurchId", res.data.churchid);
       } else {
-        // Step 2: Verify OTP
+        // Step 2: Verify OTP (real login)
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
           phonenumber: phone,
           otp,
         });
+
         toast.success("Login successful!");
-        console.log("User:", res.data.user);
-        // TODO: Redirect or save user session
+
+        // ✅ Save logged-in details
+        localStorage.setItem("userIdNumber", res.data.idnumber);
+        localStorage.setItem("userFullname", res.data.fullname);
+        localStorage.setItem("userPhone", res.data.phonenumber);
+        localStorage.setItem("userEmail", res.data.email);
+        localStorage.setItem("userRole", res.data.role);
+        localStorage.setItem("userChurchId", res.data.churchid);
+
+        // ✅ Update state so UI updates immediately
+        setLoggedIdNumber(res.data.user.idnumber);
+        setLoggedFullname(res.data.user.fullname);
+        setLoggedPhone(res.data.user.phonenumber);
+        setLoggedEmail(res.data.user.email);
+        setLoggedRole(res.data.user.role);
+        setLoggedChurchId(res.data.user.churchid);
+
+        setIsModalOpen(false);
       }
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Something went wrong");
@@ -446,6 +499,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       setEmail("");
       setSelectedRole("");
       setSelectedChurch(null);
+      setIsModalOpen(false);
     } catch (error: any) {
       console.error("Registration error:", error);
 
@@ -659,23 +713,43 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </div>
               </div>
               {/* Tabs */}
-              <div css={tabs}>
-                <button
-                  className={tab === "login" ? "active" : "inactive"}
-                  onClick={() => setTab("login")}
-                >
-                  Login
-                </button>
-                <button
-                  className={tab === "register" ? "active" : "inactive"}
-                  onClick={() => setTab("register")}
-                >
-                  Register
-                </button>
-              </div>
+              {loggedFullname ? (
+                ""
+              ) : (
+                <div css={tabs}>
+                  <button
+                    className={tab === "login" ? "active" : "inactive"}
+                    onClick={() => setTab("login")}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className={tab === "register" ? "active" : "inactive"}
+                    onClick={() => setTab("register")}
+                  >
+                    Register
+                  </button>
+                </div>
+              )}
             </div>
             {loggedFullname ? (
-              <div css={formStyles}>Name:{}</div>
+              <div css={formStyles}>
+                <p>Name:{loggedFullname}</p>
+                <p>Id N0. :{loggedIdNumber} </p>
+                <p>Email:{loggedEmail}</p>
+                <p>Phone:{loggedPhone}</p>
+                <p>Role: {loggedRole}</p>
+                <p>ChurchID:{loggedChurchId}</p>
+                <a
+                  href="."
+                  onClick={(e) => {
+                    e.preventDefault();
+                    LogOut();
+                  }}
+                >
+                  Logout
+                </a>
+              </div>
             ) : tab === "login" ? (
               <form css={formStyles} onSubmit={handleLogin}>
                 <input
