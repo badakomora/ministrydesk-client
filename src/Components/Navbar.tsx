@@ -3,15 +3,7 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  localstoragechurchid,
-  localstorageemail,
-  localstoragefullname,
-  localstorageidnumber,
-  localstoragephone,
-  localstoragerole,
-  serverurl,
-} from "./Appconfig";
+import { serverurl } from "./Appconfig";
 
 // -------------------- Header --------------------
 const headerStyles = css`
@@ -113,6 +105,50 @@ const mobileMenuBtn = (isOpen: boolean) => css`
   }
 `;
 
+const personaldetails = css`
+  background: #ffffff;
+  padding: 5px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 300px;
+  margin: 20px auto;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 6px 0;
+
+    span {
+      font-weight: 600;
+      color: #555;
+    }
+  }
+
+  a {
+    margin-top: 15px;
+    text-align: center;
+    display: inline-block;
+    padding: 10px;
+    background: #ff4b4b;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease-in-out;
+
+    &:hover {
+      background: #d93636;
+    }
+  }
+`;
+
 const mobileNavStyles = (isOpen: boolean) => css`
   display: ${isOpen ? "flex" : "none"};
   flex-direction: column;
@@ -202,6 +238,8 @@ const formStyles = css`
   display: flex;
   flex-direction: column;
   gap: 14px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
   input,
   select {
@@ -341,12 +379,13 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     c.name.toLowerCase().includes(search.toLowerCase())
   );
   useEffect(() => {
-    const storedPhone = localstoragephone;
-    const storedName = localstoragefullname;
-    const storedRole = localstoragerole;
-    const storedIdNumber = localstorageidnumber;
-    const storedChurchId = localstoragechurchid;
-    const storedEmail = localstorageemail;
+    const storedPhone = localStorage.getItem("userPhone");
+    const storedName = localStorage.getItem("userFullname");
+    const storedRole = localStorage.getItem("userRole");
+    const storedIdNumber = localStorage.getItem("userIdNumber");
+    const storedChurchId = localStorage.getItem("userChurchId");
+    const storedEmail = localStorage.getItem("userEmail");
+
     if (
       storedPhone &&
       storedName &&
@@ -368,6 +407,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     localStorage.removeItem("userPhone");
     localStorage.removeItem("userFullname");
     localStorage.removeItem("userRole");
+    localStorage.removeItem("userIdNumber");
+    localStorage.removeItem("userChurchId");
+    localStorage.removeItem("userEmail");
 
     setLoggedPhone("");
     setLoggedFullname("");
@@ -381,41 +423,36 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
     try {
       if (!otpSent) {
-        // Step 1: Send phone number
+        // Step 1: Send phone number only
         const res = await axios.post(`${serverurl}/user/login`, {
           phonenumber: phone,
         });
 
         setOtpSent(true);
         toast.success(`OTP sent to ${res.data.fullname}`);
-        console.log("OTP for testing:", res.data.otp);
-
-        // Pre-store for display (optional, not final login)
-
+        // ✅ Now save logged-in details
         localStorage.setItem("userIdNumber", res.data.idnumber);
         localStorage.setItem("userFullname", res.data.fullname);
         localStorage.setItem("userPhone", res.data.phonenumber);
         localStorage.setItem("userEmail", res.data.email);
         localStorage.setItem("userRole", res.data.role);
         localStorage.setItem("userChurchId", res.data.churchid);
+
+        console.log("OTP for testing:", res.data.otp); // remove later
       } else {
-        // Step 2: Verify OTP (real login)
+        // Step 2: Verify OTP and login for real
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
           phonenumber: phone,
           otp,
         });
 
-        toast.success("Login successful!");
+        // ✅ Now save logged-in details
+        localStorage.setItem("userFullname", res.data.user.fullname);
+        localStorage.setItem("userPhone", res.data.user.phonenumber);
+        localStorage.setItem("userEmail", res.data.user.email);
+        localStorage.setItem("userRole", res.data.user.role);
+        localStorage.setItem("userChurchId", res.data.user.churchid);
 
-        // ✅ Save logged-in details
-        localStorage.setItem("userIdNumber", res.data.idnumber);
-        localStorage.setItem("userFullname", res.data.fullname);
-        localStorage.setItem("userPhone", res.data.phonenumber);
-        localStorage.setItem("userEmail", res.data.email);
-        localStorage.setItem("userRole", res.data.role);
-        localStorage.setItem("userChurchId", res.data.churchid);
-
-        // ✅ Update state so UI updates immediately
         setLoggedIdNumber(res.data.user.idnumber);
         setLoggedFullname(res.data.user.fullname);
         setLoggedPhone(res.data.user.phonenumber);
@@ -423,7 +460,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         setLoggedRole(res.data.user.role);
         setLoggedChurchId(res.data.user.churchid);
 
-        setIsModalOpen(false);
+        toast.success("Login successful!");
       }
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Something went wrong");
@@ -499,7 +536,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       setEmail("");
       setSelectedRole("");
       setSelectedChurch(null);
-      setIsModalOpen(false);
     } catch (error: any) {
       console.error("Registration error:", error);
 
@@ -733,7 +769,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               )}
             </div>
             {loggedFullname ? (
-              <div css={formStyles}>
+              <div css={personaldetails}>
                 <p>Name:{loggedFullname}</p>
                 <p>Id N0. :{loggedIdNumber} </p>
                 <p>Email:{loggedEmail}</p>
