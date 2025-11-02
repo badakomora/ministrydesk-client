@@ -472,7 +472,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userRole", res.data.role);
         localStorage.setItem("userChurchId", res.data.churchid);
         localStorage.setItem("userSubscription", res.data.subscription);
-        localStorage.setItem("userDateJoined", res.data.user.datecreated);
+        localStorage.setItem("userDateJoined", res.data.datecreated);
       } else {
         // Step 2: Verify OTP and login for real
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
@@ -486,7 +486,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userEmail", res.data.user.email);
         localStorage.setItem("userRole", res.data.user.role);
         localStorage.setItem("userChurchId", res.data.user.churchid);
-        localStorage.setItem("userSubscription", res.data.subscription);
+        localStorage.setItem("userSubscription", res.data.user.subscription);
         localStorage.setItem("userDateJoined", res.data.user.datecreated);
 
         setLoggedIdNumber(res.data.user.idnumber);
@@ -589,10 +589,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const roles = [
     { value: "1", label: "Senior Pastor" },
     { value: "2", label: "Junior Pastor" },
-    { value: "3", label: "Member" },
-    { value: "4", label: "Bishop" },
-    { value: "5", label: "Overseer" },
-    { value: "6", label: "Secretary" },
+    { value: "3", label: "Secretary" },
+    { value: "4", label: "Member" },
+    { value: "5", label: "Bishop" },
+    { value: "6", label: "Overseer" },
     { value: "7", label: "Treasurer" },
     { value: "8", label: "CED" },
     { value: "9", label: "Choir" },
@@ -670,15 +670,19 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             >
               Community
             </a>
-            <a
-              href="."
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveTab("Dashboard");
-              }}
-            >
-              Dashboard
-            </a>
+            {loggedRole === "3" ? (
+              <a
+                href="."
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveTab("Dashboard");
+                }}
+              >
+                Dashboard
+              </a>
+            ) : (
+              ""
+            )}
 
             <a
               href="."
@@ -762,16 +766,20 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
           >
             Community
           </a>
-          <a
-            href="."
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveTab("Dashboard");
-              setIsMobileMenuOpen(false);
-            }}
-          >
-            Dashboard
-          </a>
+          {loggedRole === "3" ? (
+            <a
+              href="."
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab("Dashboard");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Dashboard
+            </a>
+          ) : (
+            ""
+          )}
 
           <a
             href="."
