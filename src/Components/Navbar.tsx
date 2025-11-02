@@ -589,7 +589,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const roles = [
     { value: "1", label: "Senior Pastor" },
     { value: "2", label: "Junior Pastor" },
-    { value: "3", label: "Secretary" },
+    { value: "3", label: "Secretary(Assembly Level)" },
+    { value: "3", label: "Secretary(District Level)" },
+    { value: "3", label: "Secretary(Executive Level)" },
     { value: "4", label: "Member" },
     { value: "5", label: "Bishop" },
     { value: "6", label: "Overseer" },
