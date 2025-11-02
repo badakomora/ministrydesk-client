@@ -105,46 +105,59 @@ const mobileMenuBtn = (isOpen: boolean) => css`
   }
 `;
 
-const personaldetails = css`
-  background: #ffffff;
-  padding: 5px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  width: 300px;
-  margin: 20px auto;
+const profileCard = css`
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  width: 360px;
+  margin: 25px auto;
   font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 
-  p {
-    margin: 0;
+  .row {
+    display: flex;
+    justify-content: space-between;
     font-size: 15px;
-    color: #333;
-    font-weight: 500;
-    border-bottom: 1px solid #f0f0f0;
-    padding: 6px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #efefef;
+    color: #444;
 
-    span {
+    span.label {
       font-weight: 600;
-      color: #555;
+      color: #222;
+    }
+
+    span.value {
+      font-weight: 500;
     }
   }
 
-  a {
-    margin-top: 15px;
+  .active {
+    color: #16a34a;
+    font-weight: 700;
+  }
+
+  .expired {
+    color: #dc2626;
+    font-weight: 700;
+  }
+
+  .logout-btn {
+    margin-top: 18px;
     text-align: center;
-    display: inline-block;
-    padding: 10px;
-    background: #ff4b4b;
+    padding: 10px 0;
+    background: #f59e0b;
     color: white;
-    border-radius: 8px;
+    border-radius: 10px;
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s ease-in-out;
 
     &:hover {
-      background: #d93636;
+      background: #2563eb;
     }
   }
 `;
@@ -373,6 +386,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [loggedEmail, setLoggedEmail] = useState("");
   const [loggedChurchId, setLoggedChurchId] = useState("");
   const [loggedIdNumber, setLoggedIdNumber] = useState("");
+  const [loggedSubscription, setLoggedSubscription] = useState("");
+  const [loggedDateJoined, setLoggedDateJoined] = useState("");
 
   // Filtered list for search
   const filteredChurches = churches.filter((c) =>
@@ -385,6 +400,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     const storedIdNumber = localStorage.getItem("userIdNumber");
     const storedChurchId = localStorage.getItem("userChurchId");
     const storedEmail = localStorage.getItem("userEmail");
+    const storedSubscription = localStorage.getItem("userSubscription");
+    const storedDateJoined = localStorage.getItem("userDateJoined");
 
     if (
       storedPhone &&
@@ -392,7 +409,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       storedRole &&
       storedChurchId &&
       storedEmail &&
-      storedIdNumber
+      storedIdNumber &&
+      storedSubscription &&
+      storedDateJoined
     ) {
       setLoggedPhone(storedPhone);
       setLoggedFullname(storedName);
@@ -400,6 +419,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       setLoggedChurchId(storedChurchId);
       setLoggedEmail(storedEmail);
       setLoggedIdNumber(storedIdNumber);
+      setLoggedSubscription(storedSubscription);
+      setLoggedDateJoined(storedDateJoined);
     }
   }, []);
 
@@ -437,6 +458,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userEmail", res.data.email);
         localStorage.setItem("userRole", res.data.role);
         localStorage.setItem("userChurchId", res.data.churchid);
+        localStorage.setItem("userSubscription", res.data.subscription);
+        localStorage.setItem("userDateJoined", res.data.datejoined);
 
         console.log("OTP for testing:", res.data.otp); // remove later
       } else {
@@ -452,6 +475,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userEmail", res.data.user.email);
         localStorage.setItem("userRole", res.data.user.role);
         localStorage.setItem("userChurchId", res.data.user.churchid);
+        localStorage.setItem("userSubscription", res.data.subscription);
+        localStorage.setItem("userDateJoined", res.data.datejoined);
 
         setLoggedIdNumber(res.data.user.idnumber);
         setLoggedFullname(res.data.user.fullname);
@@ -459,6 +484,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         setLoggedEmail(res.data.user.email);
         setLoggedRole(res.data.user.role);
         setLoggedChurchId(res.data.user.churchid);
+        setLoggedSubscription(res.data.user.subscription);
+        setLoggedDateJoined(res.data.user.datecreated);
 
         toast.success("Login successful!");
       }
@@ -769,15 +796,56 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               )}
             </div>
             {loggedFullname ? (
-              <div css={personaldetails}>
-                <p>Name:{loggedFullname}</p>
-                <p>Id N0. :{loggedIdNumber} </p>
-                <p>Email:{loggedEmail}</p>
-                <p>Phone:{loggedPhone}</p>
-                <p>Role: {loggedRole}</p>
-                <p>ChurchID:{loggedChurchId}</p>
+              <div css={profileCard}>
+                <div className="row">
+                  <span className="label">Name</span>
+                  <span className="value">{loggedFullname}</span>
+                </div>
+
+                <div className="row">
+                  <span className="label">ID No.</span>
+                  <span className="value">{loggedIdNumber}</span>
+                </div>
+
+                <div className="row">
+                  <span className="label">Email</span>
+                  <span className="value">{loggedEmail}</span>
+                </div>
+
+                <div className="row">
+                  <span className="label">Phone</span>
+                  <span className="value">{loggedPhone}</span>
+                </div>
+
+                <div className="row">
+                  <span className="label">Role</span>
+                  <span className="value">{loggedRole}</span>
+                </div>
+
+                <div className="row">
+                  <span className="label">Church ID</span>
+                  <span className="value">{loggedChurchId}</span>
+                </div>
+
+                <div className="row">
+                  <span className="label">Subscription</span>
+                  <span
+                    className={loggedSubscription === '1' ? "active" : "expired"}
+                  >
+                    {loggedSubscription === '1' ? "Active" : "Expired"}
+                  </span>
+                </div>
+
+                <div className="row">
+                  <span className="label">Date Joined</span>
+                  <span className="value">
+                    {new Date(loggedDateJoined).toDateString()}
+                  </span>
+                </div>
+
                 <a
                   href="."
+                  className="logout-btn"
                   onClick={(e) => {
                     e.preventDefault();
                     LogOut();
