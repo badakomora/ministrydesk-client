@@ -869,7 +869,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </div>
 
                 <div className="row">
-                  <span className="label">Date Joined</span>
+                  <span className="label">Member Since</span>
                   <span className="value">
                     {new Date(loggedDateJoined).toDateString()}
                   </span>
