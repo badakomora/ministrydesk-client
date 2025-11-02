@@ -108,7 +108,6 @@ const mobileMenuBtn = (isOpen: boolean) => css`
 const profileCard = css`
   background: #fff;
   padding: 20px;
-  border-radius: 14px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   width: 360px;
   margin: 25px auto;
@@ -151,7 +150,6 @@ const profileCard = css`
     padding: 10px 0;
     background: #f59e0b;
     color: white;
-    border-radius: 10px;
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s ease-in-out;
@@ -444,6 +442,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     localStorage.removeItem("userIdNumber");
     localStorage.removeItem("userChurchId");
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("userDateJoined");
+    localStorage.removeItem("userSubscription");
 
     setLoggedPhone("");
     setLoggedFullname("");
@@ -472,9 +472,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userRole", res.data.role);
         localStorage.setItem("userChurchId", res.data.churchid);
         localStorage.setItem("userSubscription", res.data.subscription);
-        localStorage.setItem("userDateJoined", res.data.datejoined);
-
-        console.log("OTP for testing:", res.data.otp); // remove later
+        localStorage.setItem("userDateJoined", res.data.user.datecreated);
       } else {
         // Step 2: Verify OTP and login for real
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
@@ -489,7 +487,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userRole", res.data.user.role);
         localStorage.setItem("userChurchId", res.data.user.churchid);
         localStorage.setItem("userSubscription", res.data.subscription);
-        localStorage.setItem("userDateJoined", res.data.datejoined);
+        localStorage.setItem("userDateJoined", res.data.user.datecreated);
 
         setLoggedIdNumber(res.data.user.idnumber);
         setLoggedFullname(res.data.user.fullname);
@@ -586,6 +584,28 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         toast.error("An error occurred during registration.");
       }
     }
+  };
+
+  const roles = [
+    { value: "1", label: "Senior Pastor" },
+    { value: "2", label: "Junior Pastor" },
+    { value: "3", label: "Member" },
+    { value: "4", label: "Bishop" },
+    { value: "5", label: "Overseer" },
+    { value: "6", label: "Secretary" },
+    { value: "7", label: "Treasurer" },
+    { value: "8", label: "CED" },
+    { value: "9", label: "Choir" },
+    { value: "10", label: "Usher" },
+    { value: "11", label: "Youth" },
+    { value: "12", label: "Women Dept" },
+    { value: "13", label: "Men Dept" },
+  ];
+
+  const getRoleLabel = (roleNumber: string | number) => {
+    return (
+      roles.find((r) => r.value === String(roleNumber))?.label || "Unknown Role"
+    );
   };
 
   return (
@@ -831,13 +851,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </div>
 
                 <div className="row">
-                  <span className="label">Role</span>
-                  <span className="value">{loggedRole}</span>
-                </div>
-
-                <div className="row">
-                  <span className="label">My Church</span>
-                  <span className="value">{userChurch}</span>
+                  <span className="label">Membership Role</span>
+                  <span className="value">
+                    {getRoleLabel(loggedRole)} at {userChurch}
+                  </span>
                 </div>
 
                 <div className="row">
@@ -937,20 +954,13 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   onChange={(e) => setSelectedRole(e.target.value)}
                 >
                   <option value="0">Select Role</option>
-                  <option value="1">Senior Pastor</option>
-                  <option value="2">Junior Pastor</option>
-                  <option value="3">Member</option>
-                  <option value="4">Bishop</option>
-                  <option value="5">Overseer</option>
-                  <option value="6">Secretary</option>
-                  <option value="7">Treasurer</option>
-                  <option value="8">CED</option>
-                  <option value="9">Choir</option>
-                  <option value="10">Usher</option>
-                  <option value="11">Youth</option>
-                  <option value="12">Women Dept</option>
-                  <option value="13">Men Dept</option>
+                  {roles.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
                 </select>
+
                 <div css={churchDropdownWrapper}>
                   <input
                     type="text"
