@@ -357,19 +357,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
   const [churches, setChurches] = useState<{ id: number; name: string }[]>([]);
 
-  useEffect(() => {
-    const fetchChurches = async () => {
-      try {
-        const response = await axios.get("http://localhost:4000/church/list");
-        setChurches(response.data);
-      } catch (error) {
-        console.error("Error fetching churches:", error);
-      }
-    };
-
-    fetchChurches();
-  }, []);
-
   const [selectedChurch, setSelectedChurch] = useState<number | null>(null);
   const [search, setSearch] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -388,11 +375,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [loggedIdNumber, setLoggedIdNumber] = useState("");
   const [loggedSubscription, setLoggedSubscription] = useState("");
   const [loggedDateJoined, setLoggedDateJoined] = useState("");
-
-  // Filtered list for search
-  const filteredChurches = churches.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const [userChurch, setUserChurch] = useState("");
   useEffect(() => {
     const storedPhone = localStorage.getItem("userPhone");
     const storedName = localStorage.getItem("userFullname");
@@ -423,6 +406,36 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       setLoggedDateJoined(storedDateJoined);
     }
   }, []);
+  useEffect(() => {
+    const fetchChurches = async () => {
+      try {
+        const response = await axios.get(`${serverurl}/church/list`);
+        setChurches(response.data);
+      } catch (error) {
+        console.error("Error fetching churches:", error);
+      }
+    };
+
+    const fetchChurch = async () => {
+      try {
+        const response = await axios.post(`${serverurl}/church/church`, {
+          id: loggedChurchId,
+        });
+
+        setUserChurch(response.data.church.name); // ✅ response.church not the whole response
+      } catch (error) {
+        console.error("Error fetching church:", error);
+      }
+    };
+
+    fetchChurch();
+    fetchChurches();
+  }, [loggedChurchId]);
+
+  // Filtered list for search
+  const filteredChurches = churches.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const LogOut = () => {
     localStorage.removeItem("userPhone");
@@ -823,16 +836,18 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </div>
 
                 <div className="row">
-                  <span className="label">Church ID</span>
-                  <span className="value">{loggedChurchId}</span>
+                  <span className="label">My Church</span>
+                  <span className="value">{userChurch}</span>
                 </div>
 
                 <div className="row">
                   <span className="label">Subscription</span>
                   <span
-                    className={loggedSubscription === '1' ? "active" : "expired"}
+                    className={
+                      loggedSubscription === "1" ? "active" : "expired"
+                    }
                   >
-                    {loggedSubscription === '1' ? "Active" : "Expired"}
+                    {loggedSubscription === "1" ? "Active" : "Expired"}
                   </span>
                 </div>
 
