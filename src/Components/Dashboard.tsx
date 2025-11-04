@@ -768,11 +768,12 @@
 /** @jsxImportSource @emotion/react */
 import type React from "react";
 import { useEffect, useState } from "react";
-import { RowActionsDropdown } from "./RowActionsDropdown";
 import {
   getRoleLabel,
   getStatusLabel,
+  getStatusStyle,
   getSubscriptionLabel,
+  getSubscriptionStyle,
   serverurl,
 } from "./Appconfig";
 import axios from "axios";
@@ -789,7 +790,7 @@ const dialog = {
   background: "#fff",
   borderRadius: "12px",
   width: "100%",
-  maxWidth: "1000px",
+  maxWidth: "1200px",
   display: "flex",
   flexDirection: "column",
   maxHeight: "90vh",
@@ -890,7 +891,7 @@ const tableHeader = {
 } as const;
 const tableRow = { borderBottom: "1px solid #e5e7eb" } as const;
 const tableHeaderCell = {
-  padding: "4px",
+  padding: "5px",
   fontWeight: 700,
   fontSize: "13px",
   color: "#1e293b",
@@ -1241,8 +1242,6 @@ const columnConfigs = {
   "Church Members": {
     columns: [
       "fullname",
-      "email",
-      "phonenumber",
       "role",
       "churchid",
       "status",
@@ -1252,13 +1251,11 @@ const columnConfigs = {
     ],
     headers: [
       "Full Name",
-      "Email",
-      "Phone",
-      "Role",
-      "Church ID",
-      "Status",
+      "Ministry Role",
+      "Assembly",
+      "Account Status",
       "Subscription",
-      "Date Created",
+      "Member Since",
       "Action",
     ],
     // optional mobile overrides — safe to omit
@@ -1448,14 +1445,37 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
   const getCellValue = (item: any, column: string) => {
     const value = item[column];
 
-    if (column === "status") return getStatusLabel(Number(value));
-    if (column === "subscription") return getSubscriptionLabel(Number(value));
+    // ✅ Colored status badge
+    if (column === "status") {
+      const statusNum = Number(value);
+      return (
+        <span style={getStatusStyle(statusNum)}>
+          {getStatusLabel(statusNum)}
+        </span>
+      );
+    }
+
+    // ✅ Colored subscription badge
+    if (column === "subscription") {
+      const subNum = Number(value);
+      return (
+        <span style={getSubscriptionStyle(subNum)}>
+          {getSubscriptionLabel(subNum)}
+        </span>
+      );
+    }
+
     if (column === "role") return getRoleLabel(value);
+
     if (column === "churchid") return churches[value] ?? "Unknown";
 
     if (column === "datecreated" && value) {
       try {
-        return new Date(value).toLocaleString();
+        return new Date(value).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
       } catch {
         return value ?? "N/A";
       }
@@ -1615,12 +1635,9 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
                                     }
                                   >
                                     {column === "action" ? (
-                                      <div style={tableCell}>
+                                      <div style={{ cursor: "pointer" }}>
                                         {/* ensure we pass number for status if available; fallback to -1 */}
-                                        <RowActionsDropdown
-                                          status={Number(item.status ?? -1)}
-                                          category={selectedCategory}
-                                        />
+                                        •••
                                       </div>
                                     ) : (
                                       getCellValue(item, column)

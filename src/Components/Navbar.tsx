@@ -828,7 +828,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
                 <div className="row">
                   <span className="label">Email</span>
-                  <span className="value">{loggedEmail}</span>
+                  <span className="value">
+                    {loggedEmail ? loggedEmail : "N/A"}
+                  </span>
                 </div>
 
                 <div className="row">
@@ -850,13 +852,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       padding: "4px 8px",
                       borderRadius: "6px",
                       background:
-                        Number(loggedSubscription) === 1
-                          ? "#d1fae5"
-                          : "#fee2e2",
+                        Number(loggedSubscription) === 1 ? "#d1fae5" : "red",
                       color:
-                        Number(loggedSubscription) === 1
-                          ? "#065f46"
-                          : "#b91c1c",
+                        Number(loggedSubscription) === 1 ? "#065f46" : "white",
                       fontWeight: 500,
                     }}
                   >

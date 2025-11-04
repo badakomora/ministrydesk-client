@@ -37,3 +37,25 @@ export const getStatusLabel = (status: number) => {
 export const getSubscriptionLabel = (sub: number) => {
   return sub === 1 ? "Active" : "Expired";
 };
+
+export const getStatusStyle = (status: number) => {
+  switch (status) {
+    case 1:
+      return { color: "white", background: "green", padding: "4px 6px",  };
+    case 0:
+      return { color: "white", background: "#fbbf24", padding: "4px 6px", };
+    default:
+      return { color: "white", background: "gray", padding: "4px 6px",  };
+  }
+};
+
+export const getSubscriptionStyle = (sub: number) => {
+  switch (sub) {
+    case 1:
+      return { color: "white", background: "blue", padding: "4px 6px",  };
+    case 0:
+      return { color: "white", background: "red", padding: "4px 6px",  };
+    default:
+      return { color: "white", background: "gray", padding: "4px 6px",  };
+  }
+};
