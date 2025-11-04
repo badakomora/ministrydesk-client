@@ -54,6 +54,7 @@ const listStyles = css`
   .card {
     padding: 8px 14px;
     border: 1px solid #e2e8f0;
+    background: #ffffff;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
     transition: transform 200ms ease, box-shadow 200ms ease,
       background 200ms ease;
@@ -65,8 +66,23 @@ const listStyles = css`
       font-size: 18px;
       font-weight: 600;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+    }
+
+    h3 .title {
+      flex: 1;
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    h3 .tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
     p {
@@ -88,42 +104,26 @@ const listStyles = css`
     }
   }
 
-  /* ---------- PINNED & LATEST TAG STYLES ---------- */
+  /* ---------- PINNED & LATEST TAG STYLES WITH FULL BACKGROUND ---------- */
 
   .card.pinned {
-    border: 2px solid #fbbf24;
     background: #fff8e6;
-
-    &::after {
-      content: "PINNED";
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #fbbf24;
-      color: #1e293b;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-weight: 600;
-    }
+    border-left: 5px solid #fbbf24;
   }
 
-  .card.newest {
-    border-left: 5px solid #2563eb;
+  .card.latest {
     background: #eff6ff;
+    border-left: 5px solid #2563eb;
+  }
 
-    &::after {
-      content: "LATEST";
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: #2563eb;
-      color: #ffffff;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-weight: 600;
-    }
+  .tag.pinned {
+    background: #fbbf24;
+    color: #1e293b;
+  }
+
+  .tag.latest {
+    background: #2563eb;
+    color: #ffffff;
   }
 `;
 
@@ -136,90 +136,25 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
   const [search, setSearch] = useState("");
 
   const announcements = [
-    {
-      title: "Christmas Food Drive",
-      message: "Help families in need.",
-      date: "Dec 10",
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Church Office Holiday Hours",
-      message: "Closed Dec 23-26 and Jan 1.",
-      date: "Dec 5",
-      church: "PAG Westlands",
-    },
-    {
-      title: "New Member Orientation",
-      message: "Jan 7th at 2 PM.",
-      date: "Nov 28",
-      church: "PAG Karen",
-    },
-    {
-      title: "Weekly Newsletter",
-      message: "Subscribe to stay updated.",
-      date: "Nov 25",
-      church: "PAG Nairobi",
-    },
+    { title: "Christmas Food Drive", message: "Help families in need.", date: "Dec 10", church: "PAG Nairobi" },
+    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5", church: "PAG Westlands" },
+    { title: "New Member Orientation", message: "Jan 7th at 2 PM.", date: "Nov 28", church: "PAG Karen" },
+    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25", church: "PAG Nairobi" },
   ];
 
   const sermons = [
-    {
-      title: "Walking in Faith",
-      speaker: "Pastor Peter",
-      date: "Dec 15",
-      church: "PAG Nairobi",
-    },
-    {
-      title: "Power of Prayer",
-      speaker: "Pastor Everlyne",
-      date: "Dec 8",
-      church: "PAG Westlands",
-    },
-    {
-      title: "God's Grace",
-      speaker: "Pastor Mike",
-      date: "Dec 1",
-      church: "PAG Karen",
-    },
-    {
-      title: "Faith & Patience",
-      speaker: "Pastor John",
-      date: "Nov 24",
-      church: "PAG Nairobi",
-    },
+    { title: "Walking in Faith", speaker: "Pastor Peter", date: "Dec 15", church: "PAG Nairobi" },
+    { title: "Power of Prayer", speaker: "Pastor Everlyne", date: "Dec 8", church: "PAG Westlands" },
+    { title: "God's Grace", speaker: "Pastor Mike", date: "Dec 1", church: "PAG Karen" },
+    { title: "Faith & Patience", speaker: "Pastor John", date: "Nov 24", church: "PAG Nairobi" },
   ];
 
   const programs = [
-    {
-      name: "Women",
-      desc: "Leading in worship",
-      leader: "Sarah Johnson",
-      church: "PAG Nairobi",
-    },
-    {
-      name: "Youth",
-      desc: "Youth programs",
-      leader: "Mike Chen",
-      church: "PAG Westlands",
-    },
-    {
-      name: "Sunday School",
-      desc: "Children ministry",
-      leader: "Mary Rodriguez",
-      church: "PAG Karen",
-    },
-    {
-      name: "CED",
-      desc: "Community service",
-      leader: "James Wilson",
-      church: "PAG Nairobi",
-    },
-    {
-      name: "Development Committee",
-      desc: "Community service",
-      leader: "James Wilson",
-      church: "PAG Nairobi",
-    },
+    { name: "Women", desc: "Leading in worship", leader: "Sarah Johnson", church: "PAG Nairobi" },
+    { name: "Youth", desc: "Youth programs", leader: "Mike Chen", church: "PAG Westlands" },
+    { name: "Sunday School", desc: "Children ministry", leader: "Mary Rodriguez", church: "PAG Karen" },
+    { name: "CED", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
+    { name: "Development Committee", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
   ];
 
   const filterByChurch = (item: { church: string }) =>
@@ -253,14 +188,16 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
                 <div
                   key={idx}
                   className={`card announcement ${
-                    idx === 0 ? "pinned" : idx < 4 ? "newest" : ""
+                    idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
                   }`}
                 >
-                  <h3>{a.title}</h3>
+                  <h3>
+                    <span className="title">{a.title}</span>
+                    {idx === 0 && <span className="tag pinned">PINNED</span>}
+                    {idx > 0 && idx < 4 && <span className="tag latest">LATEST</span>}
+                  </h3>
                   <p>{a.message}</p>
-                  <small>
-                    ⛪ {a.church} • {a.date}
-                  </small>
+                  <small>⛪ {a.church} • {a.date}</small>
                 </div>
               ))
             ) : (
@@ -283,14 +220,16 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
                 <div
                   key={idx}
                   className={`card sermon ${
-                    idx === 0 ? "pinned" : idx < 4 ? "newest" : ""
+                    idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
                   }`}
                 >
-                  <h3>{s.title}</h3>
+                  <h3>
+                    <span className="title">{s.title}</span>
+                    {idx === 0 && <span className="tag pinned">PINNED</span>}
+                    {idx > 0 && idx < 4 && <span className="tag latest">LATEST</span>}
+                  </h3>
                   <p>Speaker: {s.speaker}</p>
-                  <small>
-                    ⛪ {s.church} • {s.date}
-                  </small>
+                  <small>⛪ {s.church} • {s.date}</small>
                 </div>
               ))
             ) : (
@@ -307,23 +246,22 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
             Explore our assembly programs that nurture faith, empower youth, and
             strengthen community bonds through service and worship.
           </p>
-          <div
-            className="grid"
-            onClick={() => setActiveTab("AssemblyProgramsItem")}
-          >
+          <div className="grid" onClick={() => setActiveTab("AssemblyProgramsItem")}>
             {filteredPrograms.length > 0 ? (
               filteredPrograms.map((p, idx) => (
                 <div
                   key={idx}
                   className={`card program ${
-                    idx === 0 ? "pinned" : idx < 4 ? "newest" : ""
+                    idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
                   }`}
                 >
-                  <h3>{p.name}</h3>
+                  <h3>
+                    <span className="title">{p.name}</span>
+                    {idx === 0 && <span className="tag pinned">PINNED</span>}
+                    {idx > 0 && idx < 4 && <span className="tag latest">LATEST</span>}
+                  </h3>
                   <p>{p.desc}</p>
-                  <small>
-                    ⛪ {p.church} • Leader: {p.leader}
-                  </small>
+                  <small>⛪ {p.church} • Leader: {p.leader}</small>
                 </div>
               ))
             ) : (
