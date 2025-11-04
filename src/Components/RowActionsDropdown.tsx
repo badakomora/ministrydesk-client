@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const bus = new EventTarget(); // shared event to close others
+const bus = new EventTarget(); // shared event to close all dropdowns
 
 const dropdownContainer: React.CSSProperties = {
   position: "relative",
@@ -24,7 +24,7 @@ const dropdownMenu: React.CSSProperties = {
   border: "none",
   zIndex: 1000,
   minWidth: "160px",
-    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
+  boxShadow: "0 20px 60px rgba(0, 0, 0, 0.15)",
 };
 
 const dropdownItem: React.CSSProperties = {
@@ -36,47 +36,46 @@ const dropdownItem: React.CSSProperties = {
   borderBottom: "2px solid #f3f4f6",
   cursor: "pointer",
   fontSize: "14px",
-  border: "none",
   color: "#374151",
   transition: "all 150ms ease",
 };
 
-function normalize(str: string) {
-  return str.trim().toLowerCase();
+// ✅ Safe normalize function
+function normalize(str: any) {
+  if (str === null || str === undefined) return "";
+  return String(str).trim().toLowerCase();
 }
 
-function getVisibleActions(status: string, category: string) {
-  const s = normalize(status);
+// ✅ Uses number for status, string for category
+function getVisibleActions(status: number, category: string) {
   const c = normalize(category);
 
   return {
     view: true,
     schedule: c === "church members",
-    approve: s === "pending",
+    approve: status === 0, // 0 = pending (show Approve)
     edit: true,
   };
 }
 
+// ✅ Updated TS types
 interface RowActionsDropdownProps {
-  status: string;
+  status: number;   // was string before ❌
   category: string;
 }
 
-export const RowActionsDropdown = ({
-  status,
-  category,
-}: RowActionsDropdownProps) => {
+export const RowActionsDropdown = ({ status, category }: RowActionsDropdownProps) => {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null); // <<< ADDED
+  const ref = useRef<HTMLDivElement>(null);
 
-  // close when other dropdown opens
+  // Close when another dropdown opens
   useEffect(() => {
     const close = () => setOpen(false);
     bus.addEventListener("closeAll", close);
     return () => bus.removeEventListener("closeAll", close);
   }, []);
 
-  // close when clicking outside
+  // Close when clicking outside
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -106,9 +105,9 @@ export const RowActionsDropdown = ({
       <button
         style={iconButton}
         onClick={(e) => {
-          e.stopPropagation(); // <<< prevent immediate close
+          e.stopPropagation();
           bus.dispatchEvent(new Event("closeAll"));
-          setOpen((p) => !p);
+          setOpen((prev) => !prev);
         }}
       >
         •••
@@ -116,7 +115,7 @@ export const RowActionsDropdown = ({
 
       {open && (
         <div style={dropdownMenu}>
-          {items.map((item, idx) => (
+          {items.map((item) => (
             <span
               key={item}
               style={dropdownItem}

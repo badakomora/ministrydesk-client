@@ -216,7 +216,6 @@ const themeOfWeekStyles = css`
   text-align: center;
   background: white;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
 
   p {
     font-size: 16px;

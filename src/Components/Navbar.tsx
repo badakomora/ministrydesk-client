@@ -3,7 +3,7 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { serverurl } from "./Appconfig";
+import { getRoleLabel, roles, serverurl } from "./Appconfig";
 
 // -------------------- Header --------------------
 const headerStyles = css`
@@ -586,30 +586,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     }
   };
 
-  const roles = [
-    { value: "1", label: "Senior Pastor" },
-    { value: "2", label: "Junior Pastor" },
-    { value: "3", label: "Secretary(Assembly Level)" },
-    { value: "3", label: "Secretary(District Level)" },
-    { value: "3", label: "Secretary(Executive Level)" },
-    { value: "4", label: "Member" },
-    { value: "5", label: "Bishop" },
-    { value: "6", label: "Overseer" },
-    { value: "7", label: "Treasurer" },
-    { value: "8", label: "CED" },
-    { value: "9", label: "Choir" },
-    { value: "10", label: "Usher" },
-    { value: "11", label: "Youth" },
-    { value: "12", label: "Women Dept" },
-    { value: "13", label: "Men Dept" },
-  ];
-
-  const getRoleLabel = (roleNumber: string | number) => {
-    return (
-      roles.find((r) => r.value === String(roleNumber))?.label || "Unknown Role"
-    );
-  };
-
   return (
     <>
       <header css={headerStyles} aria-label="Site header">
@@ -861,18 +837,28 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </div>
 
                 <div className="row">
-                  <span className="label">Membership Role</span>
+                  <span className="label">Ministry Role & Assembly</span>
                   <span className="value">
-                    {getRoleLabel(loggedRole)} at {userChurch}
+                    {getRoleLabel(loggedRole)}, {userChurch}
                   </span>
                 </div>
 
                 <div className="row">
                   <span className="label">Subscription</span>
                   <span
-                    className={
-                      loggedSubscription === "1" ? "active" : "expired"
-                    }
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      background:
+                        Number(loggedSubscription) === 1
+                          ? "#d1fae5"
+                          : "#fee2e2",
+                      color:
+                        Number(loggedSubscription) === 1
+                          ? "#065f46"
+                          : "#b91c1c",
+                      fontWeight: 500,
+                    }}
                   >
                     {loggedSubscription === "1" ? "Active" : "Expired"}
                   </span>
@@ -964,11 +950,36 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   onChange={(e) => setSelectedRole(e.target.value)}
                 >
                   <option value="0">Select Role</option>
-                  {roles.map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
+
+                  <optgroup label="Assembly Level">
+                    {roles
+                      .filter((r) => r.level === 1)
+                      .map((r) => (
+                        <option key={r.label + r.level} value={r.value}>
+                          {r.label}
+                        </option>
+                      ))}
+                  </optgroup>
+
+                  <optgroup label="District Level">
+                    {roles
+                      .filter((r) => r.level === 2)
+                      .map((r) => (
+                        <option key={r.label + r.level} value={r.value}>
+                          {r.label}
+                        </option>
+                      ))}
+                  </optgroup>
+
+                  <optgroup label="Executive committee">
+                    {roles
+                      .filter((r) => r.level === 3)
+                      .map((r) => (
+                        <option key={r.label + r.level} value={r.value}>
+                          {r.label}
+                        </option>
+                      ))}
+                  </optgroup>
                 </select>
 
                 <div css={churchDropdownWrapper}>
