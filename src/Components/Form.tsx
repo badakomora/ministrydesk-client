@@ -1,355 +1,748 @@
 /** @jsxImportSource @emotion/react */
+import React, { useMemo, useState } from "react";
 import { css } from "@emotion/react";
-import { useState } from "react";
 
+/**
+ * EnhancedForm.tsx
+ * - Responsive 2-column layout on wide screens
+ * - Custom file inputs with filename / previews
+ * - Professional design tokens (spacing, type scale, radius, shadows)
+ * - Refined toggle switches for "Enable Buttons"
+ * - Inline error UI and disabled submit state
+ */
+
+/* ----------------------
+   Design tokens / tokens
+   ---------------------- */
+const tokens = {
+  radius: "8px",
+  shadow: "0 6px 18px rgba(12, 22, 39, 0.06)",
+  containerBg: "#ffffff",
+  surface: "#f7fafc",
+  inputBg: "#fbfdff",
+  border: "#e6eef6",
+  text: "#0f1724",
+  muted: "#556070",
+  primary: "#2563eb", // accent blue
+  danger: "#dc2626",
+  spacing: {
+    xs: "6px",
+    sm: "12px",
+    md: "18px",
+    lg: "28px",
+  },
+  font: {
+    base: "16px",
+    large: "20px",
+  },
+};
+
+/* ----------------------
+   Styles
+   ---------------------- */
 const containerStyle = css`
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  max-width: 980px;
+  margin: 28px auto;
+  padding: 28px;
+  background: ${tokens.containerBg};
+  box-shadow: ${tokens.shadow};
+  color: ${tokens.text};
+  font-size: ${tokens.font.base};
+  border: 1px solid ${tokens.border};
 `;
 
+/* Header */
 const headingStyle = css`
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 ${tokens.spacing.md} 0;
+  color: ${tokens.text};
 `;
 
-const subHeadingStyle = css`
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #4a5568;
-`;
-
-const fieldStyle = css`
-  margin-bottom: 1.5rem;
-  label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: #2d3748;
-  }
-
-  input,
-  select {
-    width: 100%;
-    height: 42px;
-    box-sizing: border-box;
-    border: 1px solid #cbd5e0;
-    border-radius: 0;
-    font-size: 0.95rem;
-    &:focus {
-      outline: none;
-      border-color: #3182ce;
-      box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.3);
-    }
-  }
-
-  textarea {
-    width: 100%;
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
-    font-size: 0.95rem;
-  }
-`;
-
-const errorStyle = css`
-  color: #e53e3e;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-`;
-
-const submitButtonStyle = css`
-  display: block;
-  margin: 2rem auto 0;
-  background-color: #3182ce;
-  color: #fff;
-  padding: 0.75rem 2rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  &:hover {
-    background-color: #2b6cb0;
-  }
-`;
-
-const messageStyle = css`
-  text-align: center;
-  margin-top: 1rem;
+/* Subheading / section */
+const sectionTitle = css`
   font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: ${tokens.spacing.sm};
+  color: ${tokens.muted};
 `;
 
-export const Form = () => {
+/* Grid layout: single column by default, two columns above 920px */
+const formGrid = css`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${tokens.spacing.md};
+
+  @media (min-width: 920px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+`;
+
+/* Full width area (for description textarea spanning both columns) */
+const fullWidth = css`
+  grid-column: 1 / -1;
+`;
+
+/* Field wrapper */
+const fieldStyle = css`
+  display: flex;
+  flex-direction: column;
+  margin: ${tokens.spacing.xs};
+`;
+
+/* Label */
+const labelStyle = css`
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: ${tokens.muted};
+`;
+
+/* Shared input style */
+const inputBase = css`
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid ${tokens.border};
+  background: ${tokens.inputBg};
+  font-size: 0.95rem;
+  color: ${tokens.text};
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${tokens.primary};
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
+    background: #ffffff;
+  }
+
+  &::placeholder {
+    color: #9aa7b8;
+  }
+`;
+
+/* Textarea */
+const textareaStyle = css`
+  ${inputBase};
+  min-height: 120px;
+  resize: vertical;
+`;
+
+/* Small helper text */
+const helpText = css`
+  font-size: 0.85rem;
+  color: #6b7280;
+`;
+
+/* Error text */
+const errorText = css`
+  color: ${tokens.danger};
+  font-size: 0.85rem;
+  margin-top: 6px;
+`;
+
+/* Custom file input: hidden native input + styled label */
+const fileInputWrapper = css`
+  display: flex;
+  gap: ${tokens.spacing.sm};
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+const fileButton = css`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: ${tokens.primary};
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: none;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+const filenameBox = css`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f3f7fb;
+  border: 1px solid ${tokens.border};
+  font-size: 0.9rem;
+  color: ${tokens.muted};
+`;
+
+/* Thumbnails for multiple images */
+const thumbsWrap = css`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
+`;
+
+const thumb = css`
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 1px solid ${tokens.border};
+`;
+
+/* Toggle (switch) */
+const toggleRow = css`
+  display: flex;
+  gap: ${tokens.spacing.sm};
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+const toggleLabel = css`
+  display: flex;
+  align-items: center;
+  gap: 12;
+`;
+
+const switchTrack = (checked: boolean) => css`
+  width: 20px;
+  height: 20px;
+  background: ${checked ? tokens.primary : "#e6eef6"};
+  padding: 4px;
+  position: relative;
+  transition: background 0.18s ease;
+  box-shadow: ${checked ? "0 6px 18px rgba(37,99,235,0.12)" : "none"};
+`;
+
+const switchThumb = (checked: boolean) => css`
+  width: 22px;
+  height: 22px;
+  background: ${checked ? "white" : "white"};
+  transform: translateX(${checked ? "22px" : "0"});
+  transition: transform 0.18s ease;
+  box-shadow: 0 3px 8px rgba(12, 22, 39, 0.12);
+`;
+
+/* Submit button */
+const actionsRow = css`
+  display: flex;
+  gap: ${tokens.spacing.sm};
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: ${tokens.spacing.md};
+  grid-column: 1 / -1;
+`;
+
+const primaryButton = (disabled = false) => css`
+  ${fileButton};
+  background: ${tokens.primary};
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  cursor: ${disabled ? "not-allowed" : "pointer"};
+  opacity: ${disabled ? 0.6 : 1};
+`;
+
+/* Secondary button */
+const secondaryButton = css`
+  padding: 8px 12px;
+  font-weight: 600;
+  background: transparent;
+  border: 1px solid ${tokens.border};
+  color: ${tokens.muted};
+  cursor: pointer;
+`;
+
+/* Small subtle divider for grouping */
+const divider = css`
+  height: 1px;
+  background: ${tokens.border};
+  margin: ${tokens.spacing.md} 0;
+`;
+
+/* ----------------------
+   Component
+   ---------------------- */
+
+type ButtonToggles = {
+  showDownload: boolean;
+  showComment: boolean;
+  showShare: boolean;
+};
+
+export const Form: React.FC = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    businessName: "",
-    niche: "",
-    otherNiche: "",
-    primaryGoal: "",
-    secondaryGoal: "",
-    colorScheme: "",
-    referenceUrls: "",
-    logoPreference: "",
-    contentPreferences: "",
-    advertisingFocus: "",
-    targetAudience: "",
+    title: "",
+    datePosted: "",
+    description: "",
+    buttons: {
+      showDownload: false,
+      showComment: false,
+      showShare: false,
+    } as ButtonToggles,
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [message, setMessage] = useState<{
-    text: string;
-    type: "success" | "error";
-  } | null>(null);
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [carouselImages, setCarouselImages] = useState<File[]>([]);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+
+  /* Create previews for thumbnails (object URLs) */
+  const imagePreviews = useMemo(() => {
+    return carouselImages.map((f) => ({
+      file: f,
+      url: URL.createObjectURL(f),
+    }));
+    // Note: In a real app you'd revokeObjectURL when component unmounts or image removed
+  }, [carouselImages]);
+
+  const handleInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    const { name, value, type } = target;
+
+    if (type === "checkbox") {
+      // not used here; toggles handled separately
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
+  const handleToggle =
+    (key: keyof ButtonToggles) => (e: React.MouseEvent | React.ChangeEvent) => {
+      setFormData((prev) => ({
+        ...prev,
+        buttons: { ...prev.buttons, [key]: !prev.buttons[key] },
+      }));
+    };
+
+  /* File handlers */
+  const onDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] ?? null;
+    setDocumentFile(f);
+    setErrors((prev) => ({ ...prev, documentFile: "" }));
+  };
+
+  const onCarouselChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    // convert FileList to array and append (or replace)
+    const arr = Array.from(files);
+    setCarouselImages(arr);
+    setErrors((prev) => ({ ...prev, carouselImages: "" }));
+  };
+
+  const onAudioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] ?? null;
+    setAudioFile(f);
+  };
+
+  const removeImageAt = (index: number) => {
+    setCarouselImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeDocument = () => setDocumentFile(null);
+  const removeAudio = () => setAudioFile(null);
+
+  /* Validation */
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) newErrors.name = "Full name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Invalid email address";
-    if (!formData.niche) newErrors.niche = "Please select a niche";
-    if (!formData.primaryGoal)
-      newErrors.primaryGoal = "Please select a primary goal";
-    if (!formData.colorScheme.trim())
-      newErrors.colorScheme = "Please specify a color scheme";
-    if (!formData.advertisingFocus)
-      newErrors.advertisingFocus = "Please select advertising focus";
-    if (!formData.targetAudience.trim())
-      newErrors.targetAudience = "Please describe your target audience";
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.datePosted.trim()) newErrors.datePosted = "Date is required";
+    if (!formData.description.trim())
+      newErrors.description = "Description is required";
+    if (!documentFile) newErrors.documentFile = "Document file is required";
+    if (!carouselImages.length)
+      newErrors.carouselImages = "At least one carousel image is required";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  /* Submit */
   const handleSubmit = async () => {
     if (!validate()) return;
+    setSubmitting(true);
 
     try {
-      // Placeholder for API submission
-      // await fetch('/submit', { method: 'POST', body: JSON.stringify(formData) });
+      const form = new FormData();
+      form.append("title", formData.title);
+      form.append("datePosted", formData.datePosted);
+      form.append("description", formData.description);
+      form.append("showDownload", String(formData.buttons.showDownload));
+      form.append("showComment", String(formData.buttons.showComment));
+      form.append("showShare", String(formData.buttons.showShare));
 
-      setMessage({
-        text: "Request submitted successfully! We’ll get back to you soon.",
-        type: "success",
-      });
+      if (documentFile) form.append("documentFile", documentFile);
+      if (audioFile) form.append("audioFile", audioFile);
+      if (carouselImages.length)
+        carouselImages.forEach((f) => form.append("carouselImages", f));
+
+      // TODO: replace with real API request (axios/fetch)
+      await new Promise((res) => setTimeout(res, 800)); // fake delay
+      // console.log('form ready to upload', form);
+      alert("✅ Submitted successfully!");
+      // reset lightly
       setFormData({
-        name: "",
-        email: "",
-        businessName: "",
-        niche: "",
-        otherNiche: "",
-        primaryGoal: "",
-        secondaryGoal: "",
-        colorScheme: "",
-        referenceUrls: "",
-        logoPreference: "",
-        contentPreferences: "",
-        advertisingFocus: "",
-        targetAudience: "",
+        title: "",
+        datePosted: "",
+        description: "",
+        buttons: { showDownload: false, showComment: false, showShare: false },
       });
+      setDocumentFile(null);
+      setCarouselImages([]);
+      setAudioFile(null);
+      setErrors({});
     } catch (err) {
-      setMessage({
-        text: "Error submitting request. Please try again.",
-        type: "error",
-      });
+      console.error(err);
+      alert("❌ Error submitting");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div css={containerStyle}>
-      <h2 css={headingStyle}>Request a Custom Website or Funnel</h2>
-      <p css={subHeadingStyle}>
-        Tell us about your vision! Fill out the form below to get a tailored
-        website or funnel designed for your business.
-      </p>
+      <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
-      {/* Form Fields */}
-      <div>
+      <div css={formGrid}>
+        {/* Title */}
         <div css={fieldStyle}>
-          <label htmlFor="name">
-            Full Name <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
+          <div css={labelStyle}>Title *</div>
           <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Your Full Name"
+            name="title"
+            value={formData.title}
+            onChange={handleInput}
+            css={inputBase}
+            placeholder="Add a short, descriptive title"
+            aria-invalid={!!errors.title}
+            aria-describedby={errors.title ? "title-error" : undefined}
           />
-          {errors.name && <p css={errorStyle}>{errors.name}</p>}
+          {errors.title && (
+            <div id="title-error" css={errorText}>
+              {errors.title}
+            </div>
+          )}
         </div>
 
+        {/* Date Posted */}
         <div css={fieldStyle}>
-          <label htmlFor="email">
-            Email Address <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
+          <div css={labelStyle}>Date Posted *</div>
           <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Your Email Address"
+            type="date"
+            name="datePosted"
+            value={formData.datePosted}
+            onChange={handleInput}
+            css={inputBase}
+            aria-invalid={!!errors.datePosted}
+            aria-describedby={errors.datePosted ? "date-error" : undefined}
           />
-          {errors.email && <p css={errorStyle}>{errors.email}</p>}
+          {errors.datePosted && (
+            <div id="date-error" css={errorText}>
+              {errors.datePosted}
+            </div>
+          )}
         </div>
 
-        <div css={fieldStyle}>
-          <label htmlFor="businessName">Business Name</label>
-          <input
-            type="text"
-            id="businessName"
-            name="businessName"
-            value={formData.businessName}
-            onChange={handleChange}
-            placeholder="Your Business Name"
-          />
-        </div>
-
-        <div css={fieldStyle}>
-          <label htmlFor="niche">
-            Business Niche <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
-          <select
-            id="niche"
-            name="niche"
-            value={formData.niche}
-            onChange={handleChange}
-          >
-            <option value="" disabled>
-              Select Your Niche
-            </option>
-            <option value="ecommerce">E-commerce</option>
-            <option value="fitness">Fitness & Wellness</option>
-            <option value="technology">Technology & SaaS</option>
-            <option value="restaurant">Restaurant & Hospitality</option>
-            <option value="real-estate">Real Estate</option>
-            <option value="education">Education</option>
-            <option value="other">Other</option>
-          </select>
-          {errors.niche && <p css={errorStyle}>{errors.niche}</p>}
-        </div>
-
-        {formData.niche === "other" && (
+        {/* Description - full width */}
+        <div css={fullWidth}>
           <div css={fieldStyle}>
-            <label htmlFor="otherNiche">If Other, Please Specify</label>
-            <input
-              type="text"
-              id="otherNiche"
-              name="otherNiche"
-              value={formData.otherNiche}
-              onChange={handleChange}
-              placeholder="Specify your niche"
+            <div css={labelStyle}>Description *</div>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInput}
+              css={textareaStyle}
+              placeholder="Write a short description or summary for the post..."
+              aria-invalid={!!errors.description}
+              aria-describedby={errors.description ? "desc-error" : undefined}
             />
+            <div css={helpText}>{formData.description.length} characters</div>
+            {errors.description && (
+              <div id="desc-error" css={errorText}>
+                {errors.description}
+              </div>
+            )}
           </div>
-        )}
-
-        <div css={fieldStyle}>
-          <label htmlFor="primaryGoal">
-            Primary Goal <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
-          <select
-            id="primaryGoal"
-            name="primaryGoal"
-            value={formData.primaryGoal}
-            onChange={handleChange}
-          >
-            <option value="" disabled>
-              Select Primary Goal
-            </option>
-            <option value="lead-generation">Lead Generation</option>
-            <option value="sales">Sales</option>
-            <option value="brand-awareness">Brand Awareness</option>
-            <option value="booking">Booking/Appointments</option>
-            <option value="content-engagement">Content Engagement</option>
-          </select>
-          {errors.primaryGoal && <p css={errorStyle}>{errors.primaryGoal}</p>}
         </div>
 
+        {/* Document File */}
         <div css={fieldStyle}>
-          <label htmlFor="colorScheme">
-            Preferred Color Scheme <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
-          <input
-            type="text"
-            id="colorScheme"
-            name="colorScheme"
-            value={formData.colorScheme}
-            onChange={handleChange}
-            placeholder="e.g., Blue and White, Green and Gold"
-          />
-          {errors.colorScheme && <p css={errorStyle}>{errors.colorScheme}</p>}
-        </div>
+          <div css={labelStyle}>Document File (If any)</div>
 
-        <div css={fieldStyle}>
-          <label htmlFor="advertisingFocus">
-            Advertising Focus <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
-          <select
-            id="advertisingFocus"
-            name="advertisingFocus"
-            value={formData.advertisingFocus}
-            onChange={handleChange}
-          >
-            <option value="" disabled>
-              Select Advertising Focus
-            </option>
-            <option value="lead-generation">Lead Generation</option>
-            <option value="ecommerce-sales">E-commerce Sales</option>
-            <option value="brand-awareness">Brand Awareness</option>
-            <option value="event-promotion">Event Promotion</option>
-            <option value="other">Other</option>
-          </select>
-          {errors.advertisingFocus && (
-            <p css={errorStyle}>{errors.advertisingFocus}</p>
+          <div css={fileInputWrapper}>
+            <label css={fileButton} aria-hidden>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                style={{ display: "none" }}
+                onChange={onDocumentChange}
+              />
+              Upload Document
+            </label>
+
+            <div css={filenameBox}>
+              {documentFile ? (
+                <>
+                  <span style={{ fontWeight: 700 }}>{documentFile.name}</span>
+                  <button
+                    onClick={removeDocument}
+                    style={{
+                      marginLeft: 8,
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: tokens.muted,
+                    }}
+                    aria-label="Remove document"
+                    title="Remove"
+                  >
+                    ✕
+                  </button>
+                </>
+              ) : (
+                <span css={helpText}>No document selected</span>
+              )}
+            </div>
+          </div>
+
+          {errors.documentFile && (
+            <div css={errorText}>{errors.documentFile}</div>
           )}
         </div>
 
+        {/* Carousel Photos */}
         <div css={fieldStyle}>
-          <label htmlFor="targetAudience">
-            Target Audience <span style={{ color: "#e53e3e" }}>*</span>
-          </label>
-          <textarea
-            id="targetAudience"
-            name="targetAudience"
-            value={formData.targetAudience}
-            onChange={handleChange}
-            rows={3}
-            placeholder="Describe your target audience (e.g., age, interests, location)"
-          />
-          {errors.targetAudience && (
-            <p css={errorStyle}>{errors.targetAudience}</p>
+          <div css={labelStyle}>Videos/Photos (If any)</div>
+
+          <div css={fileInputWrapper}>
+            <label css={fileButton} aria-hidden>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                style={{ display: "none" }}
+                onChange={onCarouselChange}
+              />
+              Add Files
+            </label>
+
+            <div css={filenameBox}>
+              {carouselImages.length ? (
+                <span>{carouselImages.length} image(s)</span>
+              ) : (
+                <span css={helpText}>No images selected</span>
+              )}
+            </div>
+          </div>
+
+          {imagePreviews.length > 0 && (
+            <div css={thumbsWrap}>
+              {imagePreviews.map((p, idx) => (
+                <div key={idx} style={{ position: "relative" }}>
+                  <img src={p.url} alt={`thumb-${idx}`} css={thumb} />
+                  <button
+                    onClick={() => removeImageAt(idx)}
+                    title="Remove image"
+                    style={{
+                      position: "absolute",
+                      top: -8,
+                      right: -8,
+                      background: "white",
+                      borderRadius: "50%",
+                      width: 22,
+                      height: 22,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px solid " + tokens.border,
+                      cursor: "pointer",
+                      boxShadow: "0 6px 18px rgba(12,22,39,0.06)",
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {errors.carouselImages && (
+            <div css={errorText}>{errors.carouselImages}</div>
           )}
         </div>
 
-        <button type="button" css={submitButtonStyle} onClick={handleSubmit}>
-          Submit Request
-        </button>
-        {message && (
-          <p
-            css={messageStyle}
-            style={{
-              color: message.type === "success" ? "#38a169" : "#e53e3e",
+        {/* Audio File */}
+        <div css={fieldStyle}>
+          <div css={labelStyle}>Audio File((If any))</div>
+
+          <div css={fileInputWrapper}>
+            <label css={fileButton} aria-hidden>
+              <input
+                type="file"
+                accept="audio/*"
+                style={{ display: "none" }}
+                onChange={onAudioChange}
+              />
+              Upload Audio
+            </label>
+
+            <div css={filenameBox}>
+              {audioFile ? (
+                <>
+                  <span style={{ fontWeight: 700 }}>{audioFile.name}</span>
+                  <button
+                    onClick={removeAudio}
+                    style={{
+                      marginLeft: 8,
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      color: tokens.muted,
+                    }}
+                    aria-label="Remove audio"
+                    title="Remove"
+                  >
+                    ✕
+                  </button>
+                </>
+              ) : (
+                <span css={helpText}>Optional</span>
+              )}
+            </div>
+          </div>
+
+          {audioFile && (
+            <div style={{ marginTop: 8 }}>
+              <audio controls src={URL.createObjectURL(audioFile)} />
+            </div>
+          )}
+        </div>
+
+        {/* Enable Buttons group - toggles */}
+        <div css={fullWidth}>
+          <div css={sectionTitle}>Enable Buttons</div>
+          <div css={toggleRow}>
+            <label css={toggleLabel}>
+              <div style={{ minWidth: 140 }} css={labelStyle}>
+                show Offer tithes and donations
+              </div>
+              <button
+                type="button"
+                onClick={handleToggle("showDownload")}
+                aria-pressed={formData.buttons.showDownload}
+                css={switchTrack(formData.buttons.showDownload)}
+                title="Toggle Show Download"
+              >
+                <span css={switchThumb(formData.buttons.showDownload)} />
+                <input
+                  type="checkbox"
+                  checked={formData.buttons.showDownload}
+                  onChange={handleToggle("showDownload")}
+                  style={{ display: "none" }}
+                />
+              </button>
+            </label>
+
+            <label css={toggleLabel}>
+              <div style={{ minWidth: 140 }} css={labelStyle}>
+                Show Request Special prayers
+              </div>
+              <button
+                type="button"
+                onClick={handleToggle("showComment")}
+                aria-pressed={formData.buttons.showComment}
+                css={switchTrack(formData.buttons.showComment)}
+                title="Toggle Show Comment"
+              >
+                <span css={switchThumb(formData.buttons.showComment)} />
+                <input
+                  type="checkbox"
+                  checked={formData.buttons.showComment}
+                  onChange={handleToggle("showComment")}
+                  style={{ display: "none" }}
+                />
+              </button>
+            </label>
+
+            <label css={toggleLabel}>
+              <div style={{ minWidth: 140 }} css={labelStyle}>
+                Show Contribute Offering
+              </div>
+              <button
+                type="button"
+                onClick={handleToggle("showShare")}
+                aria-pressed={formData.buttons.showShare}
+                css={switchTrack(formData.buttons.showShare)}
+                title="Toggle Show Share"
+              >
+                <span css={switchThumb(formData.buttons.showShare)} />
+                <input
+                  type="checkbox"
+                  checked={formData.buttons.showShare}
+                  onChange={handleToggle("showShare")}
+                  style={{ display: "none" }}
+                />
+              </button>
+            </label>
+          </div>
+        </div>
+
+        <div css={divider} />
+
+        {/* actions */}
+        <div css={actionsRow}>
+          <button
+            onClick={() => {
+              // reset form quick
+              setFormData({
+                title: "",
+                datePosted: "",
+                description: "",
+                buttons: {
+                  showDownload: false,
+                  showComment: false,
+                  showShare: false,
+                },
+              });
+              setDocumentFile(null);
+              setCarouselImages([]);
+              setAudioFile(null);
+              setErrors({});
             }}
+            css={secondaryButton}
+            type="button"
           >
-            {message.text}
-          </p>
-        )}
+            Reset
+          </button>
+
+          <button
+            css={primaryButton(submitting)}
+            onClick={handleSubmit}
+            disabled={submitting}
+            type="button"
+          >
+            {submitting ? "Submitting..." : "Submit"}
+          </button>
+        </div>
       </div>
     </div>
   );
 };
+
+export default Form;

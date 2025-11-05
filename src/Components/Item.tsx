@@ -192,7 +192,7 @@ const styles = {
     fontWeight: 600,
     cursor: "pointer",
     border: "none",
-    background: "linear-gradient(90deg, #2563eb, #fbbf24)",
+    background: "#2563eb",
     color: "white",
     boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
     transition: "all 0.25s ease",
@@ -347,7 +347,7 @@ export const Item: React.FC<componentProps> = ({ activeTab }) => {
           css={css({
             display: "inline-block",
             padding: "8px 14px",
-            background: "linear-gradient(90deg, #2563eb, #fbbf24)",
+            background: "#fbbf24",
             color: "white",
             fontWeight: 600,
             textDecoration: "none",
@@ -359,7 +359,7 @@ export const Item: React.FC<componentProps> = ({ activeTab }) => {
             },
           })}
         >
-          ⬇️ Download Document
+          ⬇ Download Document
         </a>
         <br />
         <br />
@@ -389,12 +389,15 @@ export const Item: React.FC<componentProps> = ({ activeTab }) => {
             </div>
             <div css={styles.ctaRow}>
               <button css={[styles.btn, styles.btnPrimary]}>
-                Offer tithes and donations
+                Offer tithes
               </button>
-              <button css={[styles.btn, styles.btnGhost]}>
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Offer donations
+              </button>
+              <button css={[styles.btn, styles.btnPrimary]}>
                 Request Special prayers
               </button>
-              <button css={[styles.btn, styles.btnGhost]}>
+              <button css={[styles.btn, styles.btnPrimary]}>
                 Contribute Offering
               </button>
             </div>

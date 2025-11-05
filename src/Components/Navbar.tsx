@@ -448,6 +448,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     setLoggedPhone("");
     setLoggedFullname("");
     setLoggedRole("");
+    setActiveTab("");
 
     toast.success("You have logged out successfully.");
   };
@@ -484,7 +485,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userFullname", res.data.user.fullname);
         localStorage.setItem("userPhone", res.data.user.phonenumber);
         localStorage.setItem("userEmail", res.data.user.email);
-        localStorage.setItem("userRole", res.data.user.role);
+        localStorage.setItem("userRole", String(res.data.user.role));
         localStorage.setItem("userChurchId", res.data.user.churchid);
         localStorage.setItem("userSubscription", res.data.user.subscription);
         localStorage.setItem("userDateJoined", res.data.user.datecreated);
@@ -499,6 +500,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         setLoggedDateJoined(res.data.user.datecreated);
 
         toast.success("Login successful!");
+        if (res.data.user.role === 3) {
+          setActiveTab("Dashboard");
+        }
       }
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Something went wrong");

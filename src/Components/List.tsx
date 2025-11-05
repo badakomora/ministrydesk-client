@@ -80,7 +80,6 @@ const listStyles = css`
     h3 .tag {
       font-size: 10px;
       padding: 2px 6px;
-      border-radius: 3px;
       font-weight: 600;
       white-space: nowrap;
     }

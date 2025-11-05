@@ -1243,19 +1243,17 @@ const columnConfigs = {
     columns: [
       "fullname",
       "role",
-      "churchid",
+      "datecreated",
       "status",
       "subscription",
-      "datecreated",
       "action",
     ],
     headers: [
       "Full Name",
       "Ministry Role",
-      "Assembly",
+      "Member Since",
       "Account Status",
       "Subscription",
-      "Member Since",
       "Action",
     ],
     // optional mobile overrides — safe to omit
