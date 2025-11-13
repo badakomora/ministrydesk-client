@@ -1291,7 +1291,7 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
     let mounted = true;
     setLoadingUsers(true);
     axios
-      .get(`${serverurl}/user/list`)
+      .post(`${serverurl}/user/list`, {churchid: localStorage.getItem("userChurchId") })
       .then((res) => {
         if (!mounted) return;
         // ensure it's an array

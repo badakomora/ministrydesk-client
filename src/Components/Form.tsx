@@ -201,38 +201,7 @@ const thumb = css`
   border: 1px solid ${tokens.border};
 `;
 
-/* Toggle (switch) */
-const toggleRow = css`
-  display: flex;
-  gap: ${tokens.spacing.sm};
-  align-items: center;
-  flex-wrap: wrap;
-`;
 
-const toggleLabel = css`
-  display: flex;
-  align-items: center;
-  gap: 12;
-`;
-
-const switchTrack = (checked: boolean) => css`
-  width: 20px;
-  height: 20px;
-  background: ${checked ? tokens.primary : "#e6eef6"};
-  padding: 4px;
-  position: relative;
-  transition: background 0.18s ease;
-  box-shadow: ${checked ? "0 6px 18px rgba(37,99,235,0.12)" : "none"};
-`;
-
-const switchThumb = (checked: boolean) => css`
-  width: 22px;
-  height: 22px;
-  background: ${checked ? "white" : "white"};
-  transform: translateX(${checked ? "22px" : "0"});
-  transition: transform 0.18s ease;
-  box-shadow: 0 3px 8px rgba(12, 22, 39, 0.12);
-`;
 
 /* Submit button */
 const actionsRow = css`
@@ -268,6 +237,70 @@ const divider = css`
   height: 1px;
   background: ${tokens.border};
   margin: ${tokens.spacing.md} 0;
+`;
+
+/* Modern Toggle Switch Styles */
+const toggleWrapper = css`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.sm};
+  padding: ${tokens.spacing.sm} 0;
+`;
+
+const checkboxRow = css`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: ${tokens.surface};
+  border: 1px solid ${tokens.border};
+  border-radius: ${tokens.radius};
+  padding: 10px 14px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background: #f9fbfe;
+    box-shadow: 0 4px 14px rgba(12, 22, 39, 0.06);
+  }
+`;
+
+const checkboxInput = css`
+  position: relative;
+  width: 44px;
+  height: 24px;
+  appearance: none;
+  background: #e5e7eb;
+  border-radius: 24px;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.3s ease;
+
+  &:checked {
+    background: ${tokens.primary};
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  &:checked::before {
+    transform: translateX(20px);
+  }
+`;
+
+const checkboxLabel = css`
+  font-weight: 600;
+  color: ${tokens.text};
+  flex: 1;
+  user-select: none;
 `;
 
 /* ----------------------
@@ -635,70 +668,48 @@ export const Form: React.FC = () => {
         </div>
 
         {/* Enable Buttons group - toggles */}
+        {/* Enable Buttons group - toggles */}
         <div css={fullWidth}>
           <div css={sectionTitle}>Enable Buttons</div>
-          <div css={toggleRow}>
-            <label css={toggleLabel}>
-              <div style={{ minWidth: 140 }} css={labelStyle}>
-                show Offer tithes and donations
-              </div>
-              <button
-                type="button"
-                onClick={handleToggle("showDownload")}
-                aria-pressed={formData.buttons.showDownload}
-                css={switchTrack(formData.buttons.showDownload)}
-                title="Toggle Show Download"
-              >
-                <span css={switchThumb(formData.buttons.showDownload)} />
-                <input
-                  type="checkbox"
-                  checked={formData.buttons.showDownload}
-                  onChange={handleToggle("showDownload")}
-                  style={{ display: "none" }}
-                />
-              </button>
+          <div css={toggleWrapper}>
+            <label css={checkboxRow}>
+              <input
+                type="checkbox"
+                checked={formData.buttons.showDownload}
+                onChange={handleToggle("showDownload")}
+                css={checkboxInput}
+              />
+              <span css={checkboxLabel}>Offer Tithes</span>
             </label>
 
-            <label css={toggleLabel}>
-              <div style={{ minWidth: 140 }} css={labelStyle}>
-                Show Request Special prayers
-              </div>
-              <button
-                type="button"
-                onClick={handleToggle("showComment")}
-                aria-pressed={formData.buttons.showComment}
-                css={switchTrack(formData.buttons.showComment)}
-                title="Toggle Show Comment"
-              >
-                <span css={switchThumb(formData.buttons.showComment)} />
-                <input
-                  type="checkbox"
-                  checked={formData.buttons.showComment}
-                  onChange={handleToggle("showComment")}
-                  style={{ display: "none" }}
-                />
-              </button>
+            <label css={checkboxRow}>
+              <input
+                type="checkbox"
+                checked={formData.buttons.showComment}
+                onChange={handleToggle("showComment")}
+                css={checkboxInput}
+              />
+              <span css={checkboxLabel}>Request Special Prayers</span>
             </label>
 
-            <label css={toggleLabel}>
-              <div style={{ minWidth: 140 }} css={labelStyle}>
-                Show Contribute Offering
-              </div>
-              <button
-                type="button"
-                onClick={handleToggle("showShare")}
-                aria-pressed={formData.buttons.showShare}
-                css={switchTrack(formData.buttons.showShare)}
-                title="Toggle Show Share"
-              >
-                <span css={switchThumb(formData.buttons.showShare)} />
-                <input
-                  type="checkbox"
-                  checked={formData.buttons.showShare}
-                  onChange={handleToggle("showShare")}
-                  style={{ display: "none" }}
-                />
-              </button>
+            <label css={checkboxRow}>
+              <input
+                type="checkbox"
+                checked={formData.buttons.showShare}
+                onChange={handleToggle("showShare")}
+                css={checkboxInput}
+              />
+              <span css={checkboxLabel}>Contribute Offering</span>
+            </label>
+
+            <label css={checkboxRow}>
+              <input
+                type="checkbox"
+                checked={formData.buttons.showShare}
+                onChange={handleToggle("showShare")}
+                css={checkboxInput}
+              />
+              <span css={checkboxLabel}>Offer Donation</span>
             </label>
           </div>
         </div>
@@ -741,6 +752,7 @@ export const Form: React.FC = () => {
           </button>
         </div>
       </div>
+      
     </div>
   );
 };
