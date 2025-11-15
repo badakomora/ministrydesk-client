@@ -1,39 +1,26 @@
 /** @jsxImportSource @emotion/react */
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
 
-/**
- * EnhancedForm.tsx
- * - Responsive 2-column layout on wide screens
- * - Custom file inputs with filename / previews
- * - Professional design tokens (spacing, type scale, radius, shadows)
- * - Refined toggle switches for "Enable Buttons"
- * - Inline error UI and disabled submit state
- */
-
 /* ----------------------
-   Design tokens / tokens
+   Design tokens
    ---------------------- */
 const tokens = {
   radius: "8px",
-  shadow: "0 6px 18px rgba(12, 22, 39, 0.06)",
+  shadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
   containerBg: "#ffffff",
-  surface: "#f7fafc",
   inputBg: "#fbfdff",
-  border: "#e6eef6",
+  border: "#e2e8f0",
   text: "#0f1724",
-  muted: "#556070",
-  primary: "#2563eb", // accent blue
-  danger: "#dc2626",
+  muted: "#64748b",
+  primary: "#2563eb",
+  danger: "#ef4444",
   spacing: {
-    xs: "6px",
-    sm: "12px",
-    md: "18px",
-    lg: "28px",
-  },
-  font: {
-    base: "16px",
-    large: "20px",
+    xs: "4px",
+    sm: "8px",
+    md: "12px",
+    lg: "20px",
+    xl: "28px",
   },
 };
 
@@ -41,238 +28,224 @@ const tokens = {
    Styles
    ---------------------- */
 const containerStyle = css`
-  max-width: 980px;
-  margin: 28px auto;
-  padding: 28px;
+  max-width: 920px;
+  margin: 24px auto;
+  padding: ${tokens.spacing.xl};
   background: ${tokens.containerBg};
   box-shadow: ${tokens.shadow};
   color: ${tokens.text};
-  font-size: ${tokens.font.base};
   border: 1px solid ${tokens.border};
 `;
 
-/* Header */
 const headingStyle = css`
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0 ${tokens.spacing.md} 0;
+  margin: 0 0 ${tokens.spacing.lg} 0;
   color: ${tokens.text};
 `;
 
-/* Subheading / section */
 const sectionTitle = css`
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: ${tokens.spacing.sm};
+  margin-bottom: ${tokens.spacing.md};
   color: ${tokens.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 `;
 
-/* Grid layout: single column by default, two columns above 920px */
 const formGrid = css`
   display: grid;
   grid-template-columns: 1fr;
-  gap: ${tokens.spacing.md};
+  gap: ${tokens.spacing.lg};
 
   @media (min-width: 920px) {
     grid-template-columns: 1fr 1fr;
-    align-items: start;
   }
 `;
 
-/* Full width area (for description textarea spanning both columns) */
 const fullWidth = css`
   grid-column: 1 / -1;
 `;
 
-/* Field wrapper */
 const fieldStyle = css`
   display: flex;
+  margin: 10px;
   flex-direction: column;
-  margin: ${tokens.spacing.xs};
+  gap: ${tokens.spacing.xs};
 `;
 
-/* Label */
 const labelStyle = css`
   font-weight: 600;
-  font-size: 0.95rem;
-  color: ${tokens.muted};
+  font-size: 0.9rem;
+  color: ${tokens.text};
 `;
 
-/* Shared input style */
 const inputBase = css`
   width: 100%;
-  padding: 10px 12px;
+  padding: ${tokens.spacing.sm};
   border: 1px solid ${tokens.border};
   background: ${tokens.inputBg};
   font-size: 0.95rem;
   color: ${tokens.text};
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
 
   &:focus {
     outline: none;
     border-color: ${tokens.primary};
-    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
-    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
   }
 
   &::placeholder {
-    color: #9aa7b8;
+    color: #9ca3af;
   }
 `;
 
-/* Textarea */
 const textareaStyle = css`
   ${inputBase};
-  min-height: 120px;
+  min-height: 110px;
   resize: vertical;
 `;
 
-/* Small helper text */
 const helpText = css`
-  font-size: 0.85rem;
-  color: #6b7280;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-top: 2px;
 `;
 
-/* Error text */
 const errorText = css`
   color: ${tokens.danger};
-  font-size: 0.85rem;
-  margin-top: 6px;
+  font-size: 0.8rem;
+  margin-top: 4px;
 `;
 
-/* Custom file input: hidden native input + styled label */
 const fileInputWrapper = css`
   display: flex;
-  gap: ${tokens.spacing.sm};
   align-items: center;
+  gap: ${tokens.spacing.md};
   flex-wrap: wrap;
 `;
 
 const fileButton = css`
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: ${tokens.spacing.sm} ${tokens.spacing.sm};
   background: ${tokens.primary};
   color: white;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   border: none;
   cursor: pointer;
-  box-shadow: none;
-  transition: transform 0.12s ease, opacity 0.12s ease;
+  transition: all 0.15s ease;
 
   &:hover {
-    transform: translateY(-2px);
-    opacity: 0.95;
+    opacity: 0.9;
+    transform: translateY(-1px);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    transform: none;
   }
 `;
 
 const filenameBox = css`
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: #f3f7fb;
+  gap: 8px;
+  padding: ${tokens.spacing.sm} ${tokens.spacing.sm};
+  background: #f8fafc;
   border: 1px solid ${tokens.border};
   font-size: 0.9rem;
   color: ${tokens.muted};
 `;
 
-/* Thumbnails for multiple images */
 const thumbsWrap = css`
   display: flex;
-  gap: 8px;
-  align-items: center;
+  gap: ${tokens.spacing.md};
+  margin-top: ${tokens.spacing.md};
   flex-wrap: wrap;
-  margin-top: 8px;
 `;
 
 const thumb = css`
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   object-fit: cover;
   border: 1px solid ${tokens.border};
 `;
 
+const divider = css`
+  height: 1px;
+  background: ${tokens.border};
+  margin: ${tokens.spacing.lg} 0;
+  grid-column: 1 / -1;
+`;
 
-
-/* Submit button */
 const actionsRow = css`
   display: flex;
-  gap: ${tokens.spacing.sm};
-  align-items: center;
+  gap: ${tokens.spacing.md};
   justify-content: flex-end;
-  margin-top: ${tokens.spacing.md};
+  margin-top: ${tokens.spacing.xl};
   grid-column: 1 / -1;
 `;
 
 const primaryButton = (disabled = false) => css`
-  ${fileButton};
+  padding: ${tokens.spacing.md} ${tokens.spacing.lg};
+  font-weight: 600;
+  font-size: 0.9rem;
   background: ${tokens.primary};
-  padding: 10px 16px;
-  font-size: 0.95rem;
+  color: white;
+  border: none;
   cursor: ${disabled ? "not-allowed" : "pointer"};
-  opacity: ${disabled ? 0.6 : 1};
+  opacity: ${disabled ? 0.7 : 1};
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
 `;
 
-/* Secondary button */
 const secondaryButton = css`
-  padding: 8px 12px;
+  padding: ${tokens.spacing.md} ${tokens.spacing.lg};
   font-weight: 600;
-  background: transparent;
+  font-size: 0.9rem;
+  background: white;
   border: 1px solid ${tokens.border};
   color: ${tokens.muted};
   cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: ${tokens.primary};
+    color: ${tokens.primary};
+  }
 `;
 
-/* Small subtle divider for grouping */
-const divider = css`
-  height: 1px;
-  background: ${tokens.border};
-  margin: ${tokens.spacing.md} 0;
-`;
-
-/* Modern Toggle Switch Styles */
 const toggleWrapper = css`
   display: flex;
-  flex-direction: column;
-  gap: ${tokens.spacing.sm};
-  padding: ${tokens.spacing.sm} 0;
+  gap: ${tokens.spacing.md};
+  flex-wrap: wrap;
 `;
 
 const checkboxRow = css`
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: ${tokens.surface};
-  border: 1px solid ${tokens.border};
-  border-radius: ${tokens.radius};
-  padding: 10px 14px;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    background: #f9fbfe;
-    box-shadow: 0 4px 14px rgba(12, 22, 39, 0.06);
-  }
+  gap: ${tokens.spacing.md};
+  cursor: pointer;
+  padding: ${tokens.spacing.sm} 0;
 `;
 
 const checkboxInput = css`
   position: relative;
-  width: 44px;
-  height: 24px;
+  width: 35px;
+  height: 14px;
   appearance: none;
   background: #e5e7eb;
-  border-radius: 24px;
   cursor: pointer;
   outline: none;
-  transition: background 0.3s ease;
+  transition: background 0.2s ease;
 
   &:checked {
     background: ${tokens.primary};
@@ -281,14 +254,13 @@ const checkboxInput = css`
   &::before {
     content: "";
     position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    transition: transform 0.25s ease;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    background: white;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   &:checked::before {
@@ -298,9 +270,69 @@ const checkboxInput = css`
 
 const checkboxLabel = css`
   font-weight: 600;
+  font-size: 0.9rem;
   color: ${tokens.text};
-  flex: 1;
   user-select: none;
+`;
+
+const bibleVersesSection = css`
+  ${fullWidth};
+`;
+
+const versesList = css`
+  display: flex;
+  flex-direction: column;
+  gap: ${tokens.spacing.md};
+  margin-bottom: ${tokens.spacing.md};
+`;
+
+const verseRow = css`
+  display: flex;
+  align-items: center;
+  gap: ${tokens.spacing.sm};
+`;
+
+
+
+const verseInput = css`
+  ${inputBase};
+  flex: 1;
+`;
+
+const removeVerseBtn = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #fee2e2;
+  color: ${tokens.danger};
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background: ${tokens.danger};
+    color: white;
+  }
+`;
+
+const addVerseBtn = css`
+  padding: ${tokens.spacing.md} ${tokens.spacing.lg};
+  background: white;
+  border: 1px solid ${tokens.border};
+  color: ${tokens.muted};
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: ${tokens.primary};
+    color: ${tokens.primary};
+  }
 `;
 
 /* ----------------------
@@ -310,7 +342,8 @@ const checkboxLabel = css`
 type ButtonToggles = {
   showDownload: boolean;
   showComment: boolean;
-  showShare: boolean;
+  showContribution: boolean;
+  showDonation: boolean;
 };
 
 export const Form: React.FC = () => {
@@ -321,50 +354,48 @@ export const Form: React.FC = () => {
     buttons: {
       showDownload: false,
       showComment: false,
-      showShare: false,
+      showContribution: false,
+      showDonation: false,
     } as ButtonToggles,
   });
 
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [carouselImages, setCarouselImages] = useState<File[]>([]);
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [bibleVerses, setBibleVerses] = useState<string[]>([""]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  /* Create previews for thumbnails (object URLs) */
   const imagePreviews = useMemo(() => {
     return carouselImages.map((f) => ({
       file: f,
       url: URL.createObjectURL(f),
     }));
-    // Note: In a real app you'd revokeObjectURL when component unmounts or image removed
   }, [carouselImages]);
+
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((p) => URL.revokeObjectURL(p.url));
+    };
+  }, [imagePreviews]);
 
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
-    const { name, value, type } = target;
-
-    if (type === "checkbox") {
-      // not used here; toggles handled separately
-      return;
-    }
-
+    const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleToggle =
-    (key: keyof ButtonToggles) => (e: React.MouseEvent | React.ChangeEvent) => {
+    (key: keyof ButtonToggles) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFormData((prev) => ({
         ...prev,
         buttons: { ...prev.buttons, [key]: !prev.buttons[key] },
       }));
     };
 
-  /* File handlers */
   const onDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
     setDocumentFile(f);
@@ -374,9 +405,7 @@ export const Form: React.FC = () => {
   const onCarouselChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    // convert FileList to array and append (or replace)
-    const arr = Array.from(files);
-    setCarouselImages(arr);
+    setCarouselImages(Array.from(files));
     setErrors((prev) => ({ ...prev, carouselImages: "" }));
   };
 
@@ -385,14 +414,17 @@ export const Form: React.FC = () => {
     setAudioFile(f);
   };
 
-  const removeImageAt = (index: number) => {
+  const removeImageAt = (index: number) =>
     setCarouselImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const removeDocument = () => setDocumentFile(null);
   const removeAudio = () => setAudioFile(null);
 
-  /* Validation */
+  const addVerse = () => setBibleVerses((prev) => [...prev, ""]);
+  const removeVerse = (idx: number) =>
+    setBibleVerses((prev) => prev.filter((_, i) => i !== idx));
+  const handleVerseChange = (idx: number, value: string) =>
+    setBibleVerses((prev) => prev.map((v, i) => (i === idx ? value : v)));
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.title.trim()) newErrors.title = "Title is required";
@@ -407,7 +439,6 @@ export const Form: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  /* Submit */
   const handleSubmit = async () => {
     if (!validate()) return;
     setSubmitting(true);
@@ -417,29 +448,34 @@ export const Form: React.FC = () => {
       form.append("title", formData.title);
       form.append("datePosted", formData.datePosted);
       form.append("description", formData.description);
-      form.append("showDownload", String(formData.buttons.showDownload));
-      form.append("showComment", String(formData.buttons.showComment));
-      form.append("showShare", String(formData.buttons.showShare));
+      Object.entries(formData.buttons).forEach(([k, v]) =>
+        form.append(k, String(v))
+      );
+      bibleVerses.forEach((v, i) => form.append(`bibleVerse[${i}]`, v));
 
       if (documentFile) form.append("documentFile", documentFile);
       if (audioFile) form.append("audioFile", audioFile);
       if (carouselImages.length)
         carouselImages.forEach((f) => form.append("carouselImages", f));
 
-      // TODO: replace with real API request (axios/fetch)
-      await new Promise((res) => setTimeout(res, 800)); // fake delay
-      // console.log('form ready to upload', form);
+      await new Promise((res) => setTimeout(res, 800));
       alert("✅ Submitted successfully!");
-      // reset lightly
+
       setFormData({
         title: "",
         datePosted: "",
         description: "",
-        buttons: { showDownload: false, showComment: false, showShare: false },
+        buttons: {
+          showDownload: false,
+          showComment: false,
+          showContribution: false,
+          showDonation: false,
+        },
       });
       setDocumentFile(null);
       setCarouselImages([]);
       setAudioFile(null);
+      setBibleVerses([""]);
       setErrors({});
     } catch (err) {
       console.error(err);
@@ -456,68 +492,51 @@ export const Form: React.FC = () => {
       <div css={formGrid}>
         {/* Title */}
         <div css={fieldStyle}>
-          <div css={labelStyle}>Title *</div>
+          <label css={labelStyle}>Title *</label>
           <input
             name="title"
             value={formData.title}
             onChange={handleInput}
             css={inputBase}
             placeholder="Add a short, descriptive title"
-            aria-invalid={!!errors.title}
-            aria-describedby={errors.title ? "title-error" : undefined}
           />
-          {errors.title && (
-            <div id="title-error" css={errorText}>
-              {errors.title}
-            </div>
-          )}
+          {errors.title && <div css={errorText}>{errors.title}</div>}
         </div>
 
         {/* Date Posted */}
         <div css={fieldStyle}>
-          <div css={labelStyle}>Date Posted *</div>
+          <label css={labelStyle}>Date Posted *</label>
           <input
             type="date"
             name="datePosted"
             value={formData.datePosted}
             onChange={handleInput}
             css={inputBase}
-            aria-invalid={!!errors.datePosted}
-            aria-describedby={errors.datePosted ? "date-error" : undefined}
           />
-          {errors.datePosted && (
-            <div id="date-error" css={errorText}>
-              {errors.datePosted}
-            </div>
-          )}
+          {errors.datePosted && <div css={errorText}>{errors.datePosted}</div>}
         </div>
 
-        {/* Description - full width */}
+        {/* Description */}
         <div css={fullWidth}>
           <div css={fieldStyle}>
-            <div css={labelStyle}>Description *</div>
+            <label css={labelStyle}>Description *</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInput}
               css={textareaStyle}
               placeholder="Write a short description or summary for the post..."
-              aria-invalid={!!errors.description}
-              aria-describedby={errors.description ? "desc-error" : undefined}
             />
             <div css={helpText}>{formData.description.length} characters</div>
             {errors.description && (
-              <div id="desc-error" css={errorText}>
-                {errors.description}
-              </div>
+              <div css={errorText}>{errors.description}</div>
             )}
           </div>
         </div>
 
         {/* Document File */}
         <div css={fieldStyle}>
-          <div css={labelStyle}>Document File (If any)</div>
-
+          <label css={labelStyle}>Document File (If any)</label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
@@ -528,11 +547,10 @@ export const Form: React.FC = () => {
               />
               Upload Document
             </label>
-
             <div css={filenameBox}>
               {documentFile ? (
                 <>
-                  <span style={{ fontWeight: 700 }}>{documentFile.name}</span>
+                  <span style={{ fontWeight: 600 }}>{documentFile.name}</span>
                   <button
                     onClick={removeDocument}
                     style={{
@@ -540,10 +558,11 @@ export const Form: React.FC = () => {
                       background: "transparent",
                       border: "none",
                       cursor: "pointer",
-                      color: tokens.muted,
+                      color: tokens.danger,
+                      fontWeight: 700,
+                      fontSize: "1rem",
                     }}
                     aria-label="Remove document"
-                    title="Remove"
                   >
                     ✕
                   </button>
@@ -553,16 +572,14 @@ export const Form: React.FC = () => {
               )}
             </div>
           </div>
-
           {errors.documentFile && (
             <div css={errorText}>{errors.documentFile}</div>
           )}
         </div>
 
-        {/* Carousel Photos */}
+        {/* Carousel Images */}
         <div css={fieldStyle}>
-          <div css={labelStyle}>Videos/Photos (If any)</div>
-
+          <label css={labelStyle}>Videos/Photos (If any)</label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
@@ -574,7 +591,6 @@ export const Form: React.FC = () => {
               />
               Add Files
             </label>
-
             <div css={filenameBox}>
               {carouselImages.length ? (
                 <span>{carouselImages.length} image(s)</span>
@@ -583,12 +599,15 @@ export const Form: React.FC = () => {
               )}
             </div>
           </div>
-
           {imagePreviews.length > 0 && (
             <div css={thumbsWrap}>
               {imagePreviews.map((p, idx) => (
                 <div key={idx} style={{ position: "relative" }}>
-                  <img src={p.url} alt={`thumb-${idx}`} css={thumb} />
+                  <img
+                    src={p.url || "/placeholder.svg"}
+                    alt={`Thumbnail ${idx}`}
+                    css={thumb}
+                  />
                   <button
                     onClick={() => removeImageAt(idx)}
                     title="Remove image"
@@ -598,14 +617,15 @@ export const Form: React.FC = () => {
                       right: -8,
                       background: "white",
                       borderRadius: "50%",
-                      width: 22,
-                      height: 22,
+                      width: 24,
+                      height: 24,
                       display: "inline-flex",
                       alignItems: "center",
                       justifyContent: "center",
                       border: "1px solid " + tokens.border,
                       cursor: "pointer",
-                      boxShadow: "0 6px 18px rgba(12,22,39,0.06)",
+                      fontSize: "0.9rem",
+                      boxShadow: tokens.shadow,
                     }}
                   >
                     ✕
@@ -614,7 +634,6 @@ export const Form: React.FC = () => {
               ))}
             </div>
           )}
-
           {errors.carouselImages && (
             <div css={errorText}>{errors.carouselImages}</div>
           )}
@@ -622,8 +641,7 @@ export const Form: React.FC = () => {
 
         {/* Audio File */}
         <div css={fieldStyle}>
-          <div css={labelStyle}>Audio File((If any))</div>
-
+          <label css={labelStyle}>Audio File (If any)</label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
@@ -634,11 +652,10 @@ export const Form: React.FC = () => {
               />
               Upload Audio
             </label>
-
             <div css={filenameBox}>
               {audioFile ? (
                 <>
-                  <span style={{ fontWeight: 700 }}>{audioFile.name}</span>
+                  <span style={{ fontWeight: 600 }}>{audioFile.name}</span>
                   <button
                     onClick={removeAudio}
                     style={{
@@ -646,115 +663,102 @@ export const Form: React.FC = () => {
                       background: "transparent",
                       border: "none",
                       cursor: "pointer",
-                      color: tokens.muted,
+                      color: tokens.danger,
+                      fontWeight: 700,
+                      fontSize: "1rem",
                     }}
                     aria-label="Remove audio"
-                    title="Remove"
                   >
                     ✕
                   </button>
                 </>
               ) : (
-                <span css={helpText}>Optional</span>
+                <span css={helpText}>No audio selected</span>
               )}
             </div>
           </div>
-
           {audioFile && (
-            <div style={{ marginTop: 8 }}>
-              <audio controls src={URL.createObjectURL(audioFile)} />
-            </div>
+            <audio
+              controls
+              src={URL.createObjectURL(audioFile)}
+              style={{ width: "100%", marginTop: tokens.spacing.md }}
+            />
           )}
-        </div>
-
-        {/* Enable Buttons group - toggles */}
-        {/* Enable Buttons group - toggles */}
-        <div css={fullWidth}>
-          <div css={sectionTitle}>Enable Buttons</div>
-          <div css={toggleWrapper}>
-            <label css={checkboxRow}>
-              <input
-                type="checkbox"
-                checked={formData.buttons.showDownload}
-                onChange={handleToggle("showDownload")}
-                css={checkboxInput}
-              />
-              <span css={checkboxLabel}>Offer Tithes</span>
-            </label>
-
-            <label css={checkboxRow}>
-              <input
-                type="checkbox"
-                checked={formData.buttons.showComment}
-                onChange={handleToggle("showComment")}
-                css={checkboxInput}
-              />
-              <span css={checkboxLabel}>Request Special Prayers</span>
-            </label>
-
-            <label css={checkboxRow}>
-              <input
-                type="checkbox"
-                checked={formData.buttons.showShare}
-                onChange={handleToggle("showShare")}
-                css={checkboxInput}
-              />
-              <span css={checkboxLabel}>Contribute Offering</span>
-            </label>
-
-            <label css={checkboxRow}>
-              <input
-                type="checkbox"
-                checked={formData.buttons.showShare}
-                onChange={handleToggle("showShare")}
-                css={checkboxInput}
-              />
-              <span css={checkboxLabel}>Offer Donation</span>
-            </label>
-          </div>
         </div>
 
         <div css={divider} />
 
-        {/* actions */}
+        {/* Button Toggles */}
+        <div css={fullWidth}>
+          <div css={sectionTitle}>Enable Buttons</div>
+          <div css={toggleWrapper}>
+            {Object.entries(formData.buttons).map(([key, value]) => (
+              <label key={key} css={checkboxRow}>
+                <input
+                  type="checkbox"
+                  checked={value}
+                  onChange={handleToggle(key as keyof ButtonToggles)}
+                  css={checkboxInput}
+                />
+                <span css={checkboxLabel}>
+                  {key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Bible Verses */}
+        <div css={bibleVersesSection}>
+          <div css={sectionTitle}>Bible Verses (Optional)</div>
+          <div css={versesList}>
+            {bibleVerses.map((verse, idx) => (
+              <div key={idx} css={verseRow}>
+                <input
+                  value={verse}
+                  onChange={(e) => handleVerseChange(idx, e.target.value)}
+                  css={verseInput}
+                  placeholder={`Verse ${idx + 1}`}
+                />
+                {bibleVerses.length > 1 && (
+                  <button
+                    type="button"
+                    css={removeVerseBtn}
+                    onClick={() => removeVerse(idx)}
+                    title="Remove verse"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <button type="button" css={addVerseBtn} onClick={addVerse}>
+            + Add Verse
+          </button>
+        </div>
+
         <div css={actionsRow}>
           <button
-            onClick={() => {
-              // reset form quick
-              setFormData({
-                title: "",
-                datePosted: "",
-                description: "",
-                buttons: {
-                  showDownload: false,
-                  showComment: false,
-                  showShare: false,
-                },
-              });
-              setDocumentFile(null);
-              setCarouselImages([]);
-              setAudioFile(null);
-              setErrors({});
-            }}
             css={secondaryButton}
             type="button"
+            onClick={() => window.location.reload()}
+            disabled={submitting}
           >
             Reset
           </button>
-
           <button
             css={primaryButton(submitting)}
+            type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            type="button"
           >
             {submitting ? "Submitting..." : "Submit"}
           </button>
         </div>
       </div>
-      
     </div>
   );
 };
-
-export default Form;
