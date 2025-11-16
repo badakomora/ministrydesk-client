@@ -32,9 +32,7 @@ function App() {
         <List activeTab={activeTab} setActiveTab={setActiveTab} />
       ) : activeTab === "Dashboard" ? (
         <Dashboard setActiveTab={setActiveTab} />
-      ) : activeTab === "UserForm" ||
-        activeTab === "NewsForm" ||
-        activeTab === "AssemblyForm" ? (
+      ) : activeTab === "UserForm" ? (
         <Form />
       ) : (
         <Home setActiveTab={setActiveTab} setIsModalOpen={setIsModalOpen} />

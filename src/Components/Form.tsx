@@ -1,6 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React, { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { serverurl } from "./Appconfig";
 
 /* ----------------------
    Design tokens
@@ -87,6 +90,7 @@ const inputBase = css`
   background: ${tokens.inputBg};
   font-size: 0.95rem;
   color: ${tokens.text};
+
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   font-family: inherit;
 
@@ -99,6 +103,11 @@ const inputBase = css`
   &::placeholder {
     color: #9ca3af;
   }
+`;
+
+const selectStyle = css`
+  ${inputBase};
+  cursor: pointer;
 `;
 
 const textareaStyle = css`
@@ -130,23 +139,30 @@ const fileButton = css`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: ${tokens.spacing.sm} ${tokens.spacing.sm};
+  padding: ${tokens.spacing.sm} ${tokens.spacing.md};
   background: ${tokens.primary};
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
   border: none;
+
   cursor: pointer;
   transition: all 0.15s ease;
 
   &:hover {
     opacity: 0.9;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.primary};
+    outline-offset: 2px;
   }
 `;
 
@@ -154,11 +170,17 @@ const filenameBox = css`
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: ${tokens.spacing.sm} ${tokens.spacing.sm};
+  padding: ${tokens.spacing.sm} ${tokens.spacing.md};
   background: #f8fafc;
   border: 1px solid ${tokens.border};
+
   font-size: 0.9rem;
   color: ${tokens.muted};
+`;
+
+const filenameText = css`
+  font-weight: 600;
+  color: ${tokens.text};
 `;
 
 const thumbsWrap = css`
@@ -168,11 +190,47 @@ const thumbsWrap = css`
   flex-wrap: wrap;
 `;
 
+const thumbContainer = css`
+  position: relative;
+
+  overflow: hidden;
+`;
+
 const thumb = css`
   width: 72px;
   height: 72px;
   object-fit: cover;
   border: 1px solid ${tokens.border};
+
+  display: block;
+`;
+
+const removeThumbBtn = css`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: white;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${tokens.border};
+  cursor: pointer;
+  font-size: 0.9rem;
+  box-shadow: ${tokens.shadow};
+  color: ${tokens.danger};
+  font-weight: 700;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: ${tokens.danger};
+    color: white;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.primary};
+  }
 `;
 
 const divider = css`
@@ -197,6 +255,7 @@ const primaryButton = (disabled = false) => css`
   background: ${tokens.primary};
   color: white;
   border: none;
+
   cursor: ${disabled ? "not-allowed" : "pointer"};
   opacity: ${disabled ? 0.7 : 1};
   transition: all 0.15s ease;
@@ -204,6 +263,12 @@ const primaryButton = (disabled = false) => css`
   &:hover:not(:disabled) {
     opacity: 0.9;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid ${tokens.primary};
+    outline-offset: 2px;
   }
 `;
 
@@ -213,6 +278,7 @@ const secondaryButton = css`
   font-size: 0.9rem;
   background: white;
   border: 1px solid ${tokens.border};
+
   color: ${tokens.muted};
   cursor: pointer;
   transition: all 0.15s ease;
@@ -220,12 +286,18 @@ const secondaryButton = css`
   &:hover {
     border-color: ${tokens.primary};
     color: ${tokens.primary};
+    background: #f8fafc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.primary};
+    outline-offset: 2px;
   }
 `;
 
 const toggleWrapper = css`
   display: flex;
-  gap: ${tokens.spacing.md};
+  gap: ${tokens.spacing.lg};
   flex-wrap: wrap;
 `;
 
@@ -249,6 +321,11 @@ const checkboxInput = css`
 
   &:checked {
     background: ${tokens.primary};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.primary};
+    outline-offset: 2px;
   }
 
   &::before {
@@ -292,8 +369,6 @@ const verseRow = css`
   gap: ${tokens.spacing.sm};
 `;
 
-
-
 const verseInput = css`
   ${inputBase};
   flex: 1;
@@ -308,6 +383,7 @@ const removeVerseBtn = css`
   background: #fee2e2;
   color: ${tokens.danger};
   border: none;
+
   cursor: pointer;
   font-weight: 700;
   transition: all 0.15s ease;
@@ -317,12 +393,18 @@ const removeVerseBtn = css`
     background: ${tokens.danger};
     color: white;
   }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.danger};
+    outline-offset: 2px;
+  }
 `;
 
 const addVerseBtn = css`
   padding: ${tokens.spacing.md} ${tokens.spacing.lg};
   background: white;
   border: 1px solid ${tokens.border};
+
   color: ${tokens.muted};
   font-weight: 600;
   font-size: 0.9rem;
@@ -332,6 +414,38 @@ const addVerseBtn = css`
   &:hover {
     border-color: ${tokens.primary};
     color: ${tokens.primary};
+    background: #f8fafc;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.primary};
+    outline-offset: 2px;
+  }
+`;
+
+const audioPlayer = css`
+  width: 100%;
+  margin-top: ${tokens.spacing.md};
+`;
+
+const removeFileBtn = css`
+  margin-left: ${tokens.spacing.sm};
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: ${tokens.danger};
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.15s ease;
+  padding: 0;
+
+  &:hover {
+    transform: scale(1.15);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${tokens.danger};
+    outline-offset: 2px;
   }
 `;
 
@@ -348,6 +462,8 @@ type ButtonToggles = {
 
 export const Form: React.FC = () => {
   const [formData, setFormData] = useState({
+    category: "",
+    department: "",
     title: "",
     datePosted: "",
     description: "",
@@ -381,7 +497,9 @@ export const Form: React.FC = () => {
   }, [imagePreviews]);
 
   const handleInput = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -427,6 +545,12 @@ export const Form: React.FC = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
+    if (!formData.category.trim()) newErrors.category = "Category is required";
+    if (
+      formData.category === "assembly programs" &&
+      !formData.department.trim()
+    )
+      newErrors.department = "Department is required";
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.datePosted.trim()) newErrors.datePosted = "Date is required";
     if (!formData.description.trim())
@@ -445,23 +569,40 @@ export const Form: React.FC = () => {
 
     try {
       const form = new FormData();
+      form.append("category", formData.category);
+      if (formData.department) form.append("department", formData.department);
       form.append("title", formData.title);
       form.append("datePosted", formData.datePosted);
       form.append("description", formData.description);
+
       Object.entries(formData.buttons).forEach(([k, v]) =>
         form.append(k, String(v))
       );
+
       bibleVerses.forEach((v, i) => form.append(`bibleVerse[${i}]`, v));
 
       if (documentFile) form.append("documentFile", documentFile);
       if (audioFile) form.append("audioFile", audioFile);
-      if (carouselImages.length)
+
+      if (carouselImages.length) {
         carouselImages.forEach((f) => form.append("carouselImages", f));
+      }
 
-      await new Promise((res) => setTimeout(res, 800));
-      alert("✅ Submitted successfully!");
+      // ⭐ Replace with your URL
+      const url = `${serverurl}/item/create`;
 
+      await axios.post(url, form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("Submitted successfully!");
+
+      // reset
       setFormData({
+        category: "",
+        department: "",
         title: "",
         datePosted: "",
         description: "",
@@ -479,7 +620,7 @@ export const Form: React.FC = () => {
       setErrors({});
     } catch (err) {
       console.error(err);
-      alert("❌ Error submitting");
+      toast.error("Error submitting form!");
     } finally {
       setSubmitting(false);
     }
@@ -490,7 +631,44 @@ export const Form: React.FC = () => {
       <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
       <div css={formGrid}>
-        {/* Title */}
+        <div css={fieldStyle}>
+          <label css={labelStyle}>Category *</label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleInput}
+            css={selectStyle}
+          >
+            <option value="">Select a category</option>
+            <option value="news_events">News & Events</option>
+            <option value="churches_sermons">Churches & Sermons</option>
+            <option value="assembly programs">Assembly Programs</option>
+          </select>
+          {errors.category && <div css={errorText}>{errors.category}</div>}
+        </div>
+
+        {formData.category === "assembly programs" && (
+          <div css={fieldStyle}>
+            <label css={labelStyle}>Department *</label>
+            <select
+              name="department"
+              value={formData.department}
+              onChange={handleInput}
+              css={selectStyle}
+            >
+              <option value="">Select a department</option>
+              <option value="youth">Youth</option>
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="children">Children</option>
+              <option value="seniors">Seniors</option>
+            </select>
+            {errors.department && (
+              <div css={errorText}>{errors.department}</div>
+            )}
+          </div>
+        )}
+
         <div css={fieldStyle}>
           <label css={labelStyle}>Title *</label>
           <input
@@ -503,7 +681,6 @@ export const Form: React.FC = () => {
           {errors.title && <div css={errorText}>{errors.title}</div>}
         </div>
 
-        {/* Date Posted */}
         <div css={fieldStyle}>
           <label css={labelStyle}>Date Posted *</label>
           <input
@@ -516,7 +693,6 @@ export const Form: React.FC = () => {
           {errors.datePosted && <div css={errorText}>{errors.datePosted}</div>}
         </div>
 
-        {/* Description */}
         <div css={fullWidth}>
           <div css={fieldStyle}>
             <label css={labelStyle}>Description *</label>
@@ -534,7 +710,10 @@ export const Form: React.FC = () => {
           </div>
         </div>
 
-        {/* Document File */}
+        <div css={fullWidth}>
+          <div css={sectionTitle}>Files Uploads</div>
+        </div>
+
         <div css={fieldStyle}>
           <label css={labelStyle}>Document File (If any)</label>
           <div css={fileInputWrapper}>
@@ -550,18 +729,10 @@ export const Form: React.FC = () => {
             <div css={filenameBox}>
               {documentFile ? (
                 <>
-                  <span style={{ fontWeight: 600 }}>{documentFile.name}</span>
+                  <span css={filenameText}>{documentFile.name}</span>
                   <button
                     onClick={removeDocument}
-                    style={{
-                      marginLeft: 8,
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      color: tokens.danger,
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                    }}
+                    css={removeFileBtn}
                     aria-label="Remove document"
                   >
                     ✕
@@ -577,7 +748,6 @@ export const Form: React.FC = () => {
           )}
         </div>
 
-        {/* Carousel Images */}
         <div css={fieldStyle}>
           <label css={labelStyle}>Videos/Photos (If any)</label>
           <div css={fileInputWrapper}>
@@ -602,7 +772,7 @@ export const Form: React.FC = () => {
           {imagePreviews.length > 0 && (
             <div css={thumbsWrap}>
               {imagePreviews.map((p, idx) => (
-                <div key={idx} style={{ position: "relative" }}>
+                <div key={idx} css={thumbContainer}>
                   <img
                     src={p.url || "/placeholder.svg"}
                     alt={`Thumbnail ${idx}`}
@@ -610,23 +780,8 @@ export const Form: React.FC = () => {
                   />
                   <button
                     onClick={() => removeImageAt(idx)}
-                    title="Remove image"
-                    style={{
-                      position: "absolute",
-                      top: -8,
-                      right: -8,
-                      background: "white",
-                      borderRadius: "50%",
-                      width: 24,
-                      height: 24,
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "1px solid " + tokens.border,
-                      cursor: "pointer",
-                      fontSize: "0.9rem",
-                      boxShadow: tokens.shadow,
-                    }}
+                    css={removeThumbBtn}
+                    aria-label="Remove image"
                   >
                     ✕
                   </button>
@@ -639,7 +794,6 @@ export const Form: React.FC = () => {
           )}
         </div>
 
-        {/* Audio File */}
         <div css={fieldStyle}>
           <label css={labelStyle}>Audio File (If any)</label>
           <div css={fileInputWrapper}>
@@ -655,18 +809,10 @@ export const Form: React.FC = () => {
             <div css={filenameBox}>
               {audioFile ? (
                 <>
-                  <span style={{ fontWeight: 600 }}>{audioFile.name}</span>
+                  <span css={filenameText}>{audioFile.name}</span>
                   <button
                     onClick={removeAudio}
-                    style={{
-                      marginLeft: 8,
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      color: tokens.danger,
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                    }}
+                    css={removeFileBtn}
                     aria-label="Remove audio"
                   >
                     ✕
@@ -681,14 +827,13 @@ export const Form: React.FC = () => {
             <audio
               controls
               src={URL.createObjectURL(audioFile)}
-              style={{ width: "100%", marginTop: tokens.spacing.md }}
+              css={audioPlayer}
             />
           )}
         </div>
 
         <div css={divider} />
 
-        {/* Button Toggles */}
         <div css={fullWidth}>
           <div css={sectionTitle}>Enable Buttons</div>
           <div css={toggleWrapper}>
@@ -710,7 +855,6 @@ export const Form: React.FC = () => {
           </div>
         </div>
 
-        {/* Bible Verses */}
         <div css={bibleVersesSection}>
           <div css={sectionTitle}>Bible Verses (Optional)</div>
           <div css={versesList}>
@@ -727,7 +871,7 @@ export const Form: React.FC = () => {
                     type="button"
                     css={removeVerseBtn}
                     onClick={() => removeVerse(idx)}
-                    title="Remove verse"
+                    aria-label="Remove verse"
                   >
                     ✕
                   </button>
