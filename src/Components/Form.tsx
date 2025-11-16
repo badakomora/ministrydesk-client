@@ -47,14 +47,6 @@ const headingStyle = css`
   color: ${tokens.text};
 `;
 
-const sectionTitle = css`
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: ${tokens.spacing.md};
-  color: ${tokens.muted};
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-`;
 
 const formGrid = css`
   display: grid;
@@ -231,13 +223,6 @@ const removeThumbBtn = css`
   &:focus-visible {
     outline: 2px solid ${tokens.primary};
   }
-`;
-
-const divider = css`
-  height: 1px;
-  background: ${tokens.border};
-  margin: ${tokens.spacing.lg} 0;
-  grid-column: 1 / -1;
 `;
 
 const actionsRow = css`
@@ -454,10 +439,17 @@ const removeFileBtn = css`
    ---------------------- */
 
 type ButtonToggles = {
-  showDownload: boolean;
-  showComment: boolean;
-  showContribution: boolean;
-  showDonation: boolean;
+  offerTithes: boolean;
+  offerDonations: boolean;
+  requestSpecialPrayers: boolean;
+  contributeOffering: boolean;
+};
+
+const buttonLabels: Record<keyof ButtonToggles, string> = {
+  offerTithes: "Offer Tithes",
+  offerDonations: "Offer Donations",
+  requestSpecialPrayers: "Request Special Prayers",
+  contributeOffering: "Contribute Offering",
 };
 
 export const Form: React.FC = () => {
@@ -468,10 +460,10 @@ export const Form: React.FC = () => {
     datePosted: "",
     description: "",
     buttons: {
-      showDownload: false,
-      showComment: false,
-      showContribution: false,
-      showDonation: false,
+      offerTithes: false,
+      offerDonations: false,
+      requestSpecialPrayers: false,
+      contributeOffering: false,
     } as ButtonToggles,
   });
 
@@ -569,6 +561,14 @@ export const Form: React.FC = () => {
 
     try {
       const form = new FormData();
+
+      // ⭐ Safely get churchid & userid
+      const churchId = localStorage.getItem("userChurchId") || "";
+      const userId = localStorage.getItem("userId") || "";
+
+      form.append("churchid", churchId);
+      form.append("userid", userId);
+
       form.append("category", formData.category);
       if (formData.department) form.append("department", formData.department);
       form.append("title", formData.title);
@@ -588,7 +588,6 @@ export const Form: React.FC = () => {
         carouselImages.forEach((f) => form.append("carouselImages", f));
       }
 
-      // ⭐ Replace with your URL
       const url = `${serverurl}/item/create`;
 
       await axios.post(url, form, {
@@ -599,7 +598,6 @@ export const Form: React.FC = () => {
 
       toast.success("Submitted successfully!");
 
-      // reset
       setFormData({
         category: "",
         department: "",
@@ -607,12 +605,13 @@ export const Form: React.FC = () => {
         datePosted: "",
         description: "",
         buttons: {
-          showDownload: false,
-          showComment: false,
-          showContribution: false,
-          showDonation: false,
+          offerTithes: false,
+          offerDonations: false,
+          requestSpecialPrayers: false,
+          contributeOffering: false,
         },
       });
+
       setDocumentFile(null);
       setCarouselImages([]);
       setAudioFile(null);
@@ -640,14 +639,14 @@ export const Form: React.FC = () => {
             css={selectStyle}
           >
             <option value="">Select a category</option>
-            <option value="news_events">News & Events</option>
-            <option value="churches_sermons">Churches & Sermons</option>
-            <option value="assembly programs">Assembly Programs</option>
+            <option value="1">News & Events</option>
+            <option value="2">Churches & Sermons</option>
+            <option value="3">Assembly Programs</option>
           </select>
           {errors.category && <div css={errorText}>{errors.category}</div>}
         </div>
 
-        {formData.category === "assembly programs" && (
+        {formData.category === "3" && (
           <div css={fieldStyle}>
             <label css={labelStyle}>Department *</label>
             <select
@@ -708,10 +707,6 @@ export const Form: React.FC = () => {
               <div css={errorText}>{errors.description}</div>
             )}
           </div>
-        </div>
-
-        <div css={fullWidth}>
-          <div css={sectionTitle}>Files Uploads</div>
         </div>
 
         <div css={fieldStyle}>
@@ -832,10 +827,7 @@ export const Form: React.FC = () => {
           )}
         </div>
 
-        <div css={divider} />
-
         <div css={fullWidth}>
-          <div css={sectionTitle}>Enable Buttons</div>
           <div css={toggleWrapper}>
             {Object.entries(formData.buttons).map(([key, value]) => (
               <label key={key} css={checkboxRow}>
@@ -846,9 +838,7 @@ export const Form: React.FC = () => {
                   css={checkboxInput}
                 />
                 <span css={checkboxLabel}>
-                  {key
-                    .replace(/([A-Z])/g, " $1")
-                    .replace(/^./, (str) => str.toUpperCase())}
+                  {buttonLabels[key as keyof ButtonToggles]}
                 </span>
               </label>
             ))}
@@ -856,7 +846,6 @@ export const Form: React.FC = () => {
         </div>
 
         <div css={bibleVersesSection}>
-          <div css={sectionTitle}>Bible Verses (Optional)</div>
           <div css={versesList}>
             {bibleVerses.map((verse, idx) => (
               <div key={idx} css={verseRow}>

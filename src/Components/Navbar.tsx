@@ -426,7 +426,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       }
     };
 
-    fetchChurch();
+    if (loggedChurchId) {
+      fetchChurch();
+    }
     fetchChurches();
   }, [loggedChurchId]);
 
@@ -466,6 +468,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         setOtpSent(true);
         toast.success(`OTP sent to ${res.data.fullname}`);
         // ✅ Now save logged-in details
+        localStorage.setItem("userId", res.data.id);
         localStorage.setItem("userIdNumber", res.data.idnumber);
         localStorage.setItem("userFullname", res.data.fullname);
         localStorage.setItem("userPhone", res.data.phonenumber);
@@ -482,6 +485,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         });
 
         // ✅ Now save logged-in details
+        localStorage.setItem("userId", res.data.user.id);
         localStorage.setItem("userFullname", res.data.user.fullname);
         localStorage.setItem("userPhone", res.data.user.phonenumber);
         localStorage.setItem("userEmail", res.data.user.email);
