@@ -214,98 +214,16 @@ const columnConfigs = {
     // optional mobile overrides — safe to omit
   },
   "News & Events": {
-    columns: [
-      "title",
-      "dateposted",
-      "userid",
-      "description",
-      "documentfile",
-      "audiofile",
-      "showdownload",
-      "showcomment",
-      "showcontribution",
-      "showdonation",
-      "carouselimages",
-      "action",
-    ],
-    headers: [
-      "Title",
-      "Date Posted",
-      "Posted By",
-      "Description",
-      "Document",
-      "Audio",
-      "Download",
-      "Comment",
-      "Contribution",
-      "Donation",
-      "Images",
-      "Action",
-    ],
+    columns: ["dateposted", "title", "description", "action"],
+    headers: ["Date", "Title", "Description", "Action"],
   },
   Sermons: {
-    columns: [
-      "title",
-      "dateposted",
-      "userid",
-      "department",
-      "description",
-      "documentfile",
-      "audiofile",
-      "showdownload",
-      "showcomment",
-      "showcontribution",
-      "showdonation",
-      "carouselimages",
-      "action",
-    ],
-    headers: [
-      "Title",
-      "Date Posted",
-      "Posted By",
-      "Department",
-      "Description",
-      "Document",
-      "Audio",
-      "Download",
-      "Comment",
-      "Contribution",
-      "Donation",
-      "Images",
-      "Action",
-    ],
+    columns: ["dateposted", "title", "description", "action"],
+    headers: ["Date ", "Title", "Description", "Action"],
   },
   "Assembly Programs": {
-    columns: [
-      "title",
-      "dateposted",
-      "userid",
-      "department",
-      "description",
-      "documentfile",
-      "audiofile",
-      "showdownload",
-      "showcomment",
-      "showcontribution",
-      "showdonation",
-      "carouselimages",
-      "action",
-    ],
-    headers: [
-      "Title",
-      "Date Posted",
-      "Posted By",
-      "Department",
-      "Description",
-      "Document",
-      "Audio",
-      "Download",
-      "Comment",
-      "Contribution",
-      "Donation",
-      "Images",
-      "Action",
-    ],
+    columns: ["dateposted", "title", "description", "action"],
+    headers: ["Date ", "Title", "Description", "Action"],
   },
 };
 
@@ -511,6 +429,14 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
       );
     }
 
+    if (column === "description" || column === "title") {
+      const maxLength = 50; // change this to whatever length you want
+      if (!value) return "—";
+      return value.length > maxLength
+        ? value.slice(0, maxLength) + "..."
+        : value;
+    }
+
     // ✅ Colored subscription badge
     if (column === "subscription") {
       const subNum = Number(value);
@@ -524,217 +450,6 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
     if (column === "role") return getRoleLabel(value);
 
     if (column === "churchid") return churches[value] ?? "Unknown";
-
-    if (column === "carouselimages") {
-      if (!value) return <span style={{ color: "#9ca3af" }}>No images</span>;
-
-      try {
-        const images = Array.isArray(value) ? value : JSON.parse(value);
-        return (
-          <div
-            style={{
-              display: "flex",
-              gap: "2px",
-              alignItems: "center",
-            }}
-          >
-            {images.map((img: any, idx: number) => {
-              const imgUrl = typeof img === "string" ? img : img.url || img;
-              return (
-                <a
-                  key={idx}
-                  href={imgUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    borderRadius: "4px",
-                    overflow: "hidden",
-                    border: "1px solid #d1d5db",
-                    cursor: "pointer",
-                    transition: "transform 200ms ease, box-shadow 200ms ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "scale(1.1)";
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 12px rgba(0,0,0,0.15)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "scale(1)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                  title={`View carousel image ${idx + 1}`}
-                >
-                  <img
-                    src={imgUrl || "/placeholder.svg"}
-                    alt={`Carousel file ${idx + 1}`}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
-                    loading="lazy"
-                  />
-                </a>
-              );
-            })}
-          </div>
-        );
-      } catch {
-        // Fallback for single image string
-        if (typeof value === "string" && value.trim()) {
-          return (
-            <a
-              href={value}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                borderRadius: "4px",
-                overflow: "hidden",
-                border: "1px solid #d1d5db",
-                cursor: "pointer",
-              }}
-              title="View carousel image"
-            >
-              <img
-                src={value || "/placeholder.svg"}
-                alt="Carousel file"
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-                loading="lazy"
-              />
-            </a>
-          );
-        }
-        return <span style={{ color: "#9ca3af" }}>—</span>;
-      }
-    }
-
-    if (column === "documentfile") {
-      if (!value)
-        return (
-          <span style={{ color: "#9ca3af" }} title="No document">
-            —
-          </span>
-        );
-
-      const fileName =
-        typeof value === "string"
-          ? value.split("/").pop() || "document"
-          : "document";
-      return (
-        <a
-          href={value}
-          download
-          style={{
-            color: "#2563eb",
-            textDecoration: "none",
-            fontSize: "13px",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "4px",
-            padding: "4px 8px",
-            borderRadius: "3px",
-            transition: "background-color 200ms ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#eff6ff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent";
-          }}
-          title={`Download document: ${fileName}`}
-        >
-          <span>📄</span>
-          <span>{fileName}</span>
-        </a>
-      );
-    }
-
-    if (column === "audiofile") {
-      if (!value)
-        return (
-          <span style={{ color: "#9ca3af" }} title="No audio">
-            —
-          </span>
-        );
-
-      const fileName =
-        typeof value === "string" ? value.split("/").pop() || "audio" : "audio";
-      return (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            minWidth: "0",
-          }}
-        >
-          <audio
-            controls
-            controlsList="nodownload"
-            style={{ height: "24px", maxWidth: "120px", flex: "1 1 auto" }}
-            title={`Play audio: ${fileName}`}
-          >
-            <source src={value} type="audio/mpeg" />
-            <track kind="captions" src="" label="English" />
-            Your browser does not support the audio element.
-          </audio>
-          <span
-            style={{ fontSize: "11px", color: "#6b7280", flex: "0 0 auto" }}
-            title={`Audio file: ${fileName}`}
-          >
-            {fileName}
-          </span>
-        </div>
-      );
-    }
-
-    if (
-      column === "showdownload" ||
-      column === "showcomment" ||
-      column === "showcontribution" ||
-      column === "showdonation"
-    ) {
-      const isEnabled = value === 1 || value === true || value === "true";
-      const labels: Record<string, string> = {
-        showdownload: "Download enabled",
-        showcomment: "Comments enabled",
-        showcontribution: "Contributions enabled",
-        showdonation: "Donations enabled",
-      };
-      const labelText = labels[column] || column.replace("show", "");
-
-      return (
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "24px",
-            height: "24px",
-            borderRadius: "4px",
-            backgroundColor: isEnabled ? "#d1fae5" : "#f3f4f6",
-            border: `2px solid ${isEnabled ? "#10b981" : "#d1d5db"}`,
-            color: isEnabled ? "#059669" : "#9ca3af",
-            fontSize: "14px",
-            fontWeight: "bold",
-            cursor: "default",
-          }}
-          role="status"
-          aria-label={labelText}
-          title={`${labelText}: ${isEnabled ? "Yes" : "No"}`}
-        >
-          {isEnabled ? "✓" : "—"}
-        </span>
-      );
-    }
 
     if ((column === "datecreated" || column === "dateposted") && value) {
       try {
