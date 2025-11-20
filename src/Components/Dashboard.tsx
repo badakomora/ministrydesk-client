@@ -204,7 +204,7 @@ const columnConfigs = {
       "action",
     ],
     headers: [
-      "Full Name",
+      "Name",
       "Ministry Role",
       "Member Since",
       "Account Status",
@@ -219,11 +219,11 @@ const columnConfigs = {
   },
   Sermons: {
     columns: ["dateposted", "title", "description", "action"],
-    headers: ["Date ", "Title", "Description", "Action"],
+    headers: ["Date", "Title", "Description", "Action"],
   },
   "Assembly Programs": {
     columns: ["dateposted", "title", "description", "action"],
-    headers: ["Date ", "Title", "Description", "Action"],
+    headers: ["Date", "Title", "Description", "Action"],
   },
 };
 
