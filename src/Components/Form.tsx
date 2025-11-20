@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import React, { useMemo, useState, useEffect } from "react";
+import type React from "react";
+import { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -46,7 +47,6 @@ const headingStyle = css`
   margin: 0 0 ${tokens.spacing.lg} 0;
   color: ${tokens.text};
 `;
-
 
 const formGrid = css`
   display: grid;
@@ -439,10 +439,10 @@ const removeFileBtn = css`
    ---------------------- */
 
 type ButtonToggles = {
-  offerTithes: boolean;
-  offerDonations: boolean;
-  requestSpecialPrayers: boolean;
-  contributeOffering: boolean;
+  offerTithes: number;
+  offerDonations: number;
+  requestSpecialPrayers: number;
+  contributeOffering: number;
 };
 
 const buttonLabels: Record<keyof ButtonToggles, string> = {
@@ -460,10 +460,10 @@ export const Form: React.FC = () => {
     datePosted: "",
     description: "",
     buttons: {
-      offerTithes: false,
-      offerDonations: false,
-      requestSpecialPrayers: false,
-      contributeOffering: false,
+      offerTithes: 1,
+      offerDonations: 1,
+      requestSpecialPrayers: 1,
+      contributeOffering: 1,
     } as ButtonToggles,
   });
 
@@ -502,7 +502,7 @@ export const Form: React.FC = () => {
     (key: keyof ButtonToggles) => (e: React.ChangeEvent<HTMLInputElement>) => {
       setFormData((prev) => ({
         ...prev,
-        buttons: { ...prev.buttons, [key]: !prev.buttons[key] },
+        buttons: { ...prev.buttons, [key]: e.target.checked ? 1 : 0 },
       }));
     };
 
@@ -576,10 +576,13 @@ export const Form: React.FC = () => {
       form.append("description", formData.description);
 
       Object.entries(formData.buttons).forEach(([k, v]) =>
-        form.append(k, String(v))
+        form.append(k, v ? "1" : "0")
       );
 
-      bibleVerses.forEach((v, i) => form.append(`bibleVerse[${i}]`, v));
+      form.append(
+        "verses",
+        JSON.stringify(bibleVerses.filter((v) => v.trim() !== ""))
+      );
 
       if (documentFile) form.append("documentFile", documentFile);
       if (audioFile) form.append("audioFile", audioFile);
@@ -605,10 +608,10 @@ export const Form: React.FC = () => {
         datePosted: "",
         description: "",
         buttons: {
-          offerTithes: false,
-          offerDonations: false,
-          requestSpecialPrayers: false,
-          contributeOffering: false,
+          offerTithes: 1,
+          offerDonations: 1,
+          requestSpecialPrayers: 1,
+          contributeOffering: 1,
         },
       });
 
@@ -833,7 +836,7 @@ export const Form: React.FC = () => {
               <label key={key} css={checkboxRow}>
                 <input
                   type="checkbox"
-                  checked={value}
+                  checked={value === 1}
                   onChange={handleToggle(key as keyof ButtonToggles)}
                   css={checkboxInput}
                 />

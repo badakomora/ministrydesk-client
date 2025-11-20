@@ -21,7 +21,6 @@ const overlay = {
 } as const;
 const dialog = {
   background: "#fff",
-  borderRadius: "12px",
   width: "100%",
   maxWidth: "1200px",
   display: "flex",
@@ -193,259 +192,7 @@ const pageInfo = {
 
 // (mockDataByCategory omitted for brevity — keep your mock array as before)
 // I leave it in your file above; no changes required for mocks.
-const mockDataByCategory = {
-  all: [
-    // Church Members
-    {
-      id: 1,
-      name: "Alice",
-      type: "User",
-      category: "Church Members",
-      phone: "+1-555-0101",
-      email: "alice@church.com",
-      role: "Admin",
-      status: "approved",
-    },
-    {
-      id: 3,
-      name: "Developers Group",
-      type: "Group",
-      category: "Church Members",
-      phone: "+1-555-0103",
-      email: "devs@church.com",
-      role: "Group",
-      status: "pending",
-    },
-    {
-      id: 4,
-      name: "Bob Smith",
-      type: "User",
-      category: "Church Members",
-      phone: "+1-555-0102",
-      email: "bob@church.com",
-      role: "Member",
-      status: "approved",
-    },
-    {
-      id: 8,
-      name: "Diana Prince",
-      type: "User",
-      category: "Church Members",
-      phone: "+1-555-0104",
-      email: "diana@church.com",
-      role: "Admin",
-      status: "pending",
-    },
-    {
-      id: 10,
-      name: "Finance Group",
-      type: "Group",
-      category: "Church Members",
-      phone: "+1-555-0105",
-      email: "finance@church.com",
-      role: "Group",
-      status: "approved",
-    },
-    {
-      id: 13,
-      name: "HR Department",
-      type: "Group",
-      category: "Church Members",
-      phone: "+1-555-0106",
-      email: "hr@church.com",
-      role: "Group",
-      status: "paused",
-    },
-    {
-      id: 17,
-      name: "Ivan Petrov",
-      type: "User",
-      category: "Church Members",
-      phone: "+1-555-0107",
-      email: "ivan@church.com",
-      role: "Member",
-      status: "pending",
-    },
-    {
-      id: 25,
-      name: "Operations Group",
-      type: "Group",
-      category: "Church Members",
-      phone: "+1-555-0108",
-      email: "ops@church.com",
-      role: "Group",
-      status: "approved",
-    },
-    // News & Events
-    {
-      id: 2,
-      title: "Christmas Food Drive",
-      type: "Event",
-      category: "News & Events",
-      date: "Dec 25, 2025",
-      postedby: "Peter Komora",
-      description: "Annual Christmas food drive for the community",
-      church: "Main Church",
-      status: "approved",
-    },
-    {
-      id: 6,
-      title: "New Year Celebration",
-      type: "Event",
-      category: "News & Events",
-      date: "Jan 1, 2026",
-      postedby: "Sarah Johnson",
-      description: "Join us for our New Year celebration service",
-      church: "Main Church",
-      status: "pending",
-    },
-    {
-      id: 11,
-      title: "Community Outreach",
-      type: "News",
-      category: "News & Events",
-      date: "Nov 15, 2025",
-      postedby: "Frank Miller",
-      description: "Monthly community outreach program",
-      church: "Downtown Branch",
-      status: "approved",
-    },
-    {
-      id: 19,
-      title: "Youth Conference",
-      type: "Event",
-      category: "News & Events",
-      date: "Aug 10, 2025",
-      postedby: "Marketing Team",
-      description: "Annual youth conference and fellowship",
-      church: "Main Church",
-      status: "paused",
-    },
-    {
-      id: 23,
-      title: "Prayer Meeting",
-      type: "News",
-      category: "News & Events",
-      date: "Every Wednesday",
-      postedby: "Karen Davis",
-      description: "Weekly prayer meeting for all members",
-      church: "Prayer Room",
-      status: "approved",
-    },
-    // Sermons
-    {
-      id: 5,
-      title: "Faith and Trust",
-      type: "Sermon",
-      category: "Sermons",
-      date: "Oct 20, 2025",
-      preacher: "Charlie Brown",
-      description: "A powerful message about faith in difficult times",
-      church: "Main Church",
-      status: "approved",
-    },
-    {
-      id: 9,
-      title: "Love Your Neighbor",
-      type: "Sermon",
-      category: "Sermons",
-      date: "Oct 13, 2025",
-      preacher: "Grace Lee",
-      description: "Understanding the greatest commandment",
-      church: "Main Church",
-      status: "pending",
-    },
-    {
-      id: 14,
-      title: "The Power of Prayer",
-      type: "Sermon",
-      category: "Sermons",
-      date: "Oct 6, 2025",
-      preacher: "Grace Lee",
-      description: "How prayer transforms our lives",
-      church: "Downtown Branch",
-      status: "approved",
-    },
-    {
-      id: 18,
-      title: "Forgiveness and Healing",
-      type: "Sermon",
-      category: "Sermons",
-      date: "Sep 29, 2025",
-      preacher: "Charlie Brown",
-      description: "Finding peace through forgiveness",
-      church: "Main Church",
-      status: "paused",
-    },
-    {
-      id: 22,
-      title: "God's Love",
-      type: "Sermon",
-      category: "Sermons",
-      date: "Sep 22, 2025",
-      preacher: "Grace Lee",
-      description: "Exploring the depth of God's unconditional love",
-      church: "Main Church",
-      status: "approved",
-    },
-    // Assembly Programs
-    {
-      id: 7,
-      title: "Sunday School",
-      type: "Program",
-      category: "Assembly Programs",
-      date: "Every Sunday 10am",
-      leader: "Engineering Team",
-      description: "Bible study and fellowship for all ages",
-      church: "Main Church",
-      status: "approved",
-    },
-    {
-      id: 12,
-      title: "Choir Practice",
-      type: "Program",
-      category: "Assembly Programs",
-      date: "Every Friday 7pm",
-      leader: "Gamma Tool",
-      description: "Weekly choir rehearsal and training",
-      church: "Music Hall",
-      status: "pending",
-    },
-    {
-      id: 16,
-      title: "Youth Group",
-      type: "Program",
-      category: "Assembly Programs",
-      date: "Every Saturday 6pm",
-      leader: "IT Support",
-      description: "Fellowship and activities for young adults",
-      church: "Youth Center",
-      status: "approved",
-    },
-    {
-      id: 20,
-      title: "Bible Study",
-      type: "Program",
-      category: "Assembly Programs",
-      date: "Tuesdays & Thursdays",
-      leader: "Jack Wilson",
-      description: "In-depth study of scripture",
-      church: "Main Church",
-      status: "paused",
-    },
-    {
-      id: 24,
-      title: "Missions Committee",
-      type: "Program",
-      category: "Assembly Programs",
-      date: "Monthly meetings",
-      leader: "Kestrel Tool",
-      description: "Planning and coordinating mission activities",
-      church: "Conference Room",
-      status: "approved",
-    },
-  ],
-};
+
 const columnConfigs = {
   "Church Members": {
     columns: [
@@ -467,22 +214,105 @@ const columnConfigs = {
     // optional mobile overrides — safe to omit
   },
   "News & Events": {
-    columns: ["title", "date", "postedby", "church", "status", "action"],
-    headers: ["Title", "Date", "Posted By", "Church", "Status", "Action"],
+    columns: [
+      "title",
+      "dateposted",
+      "userid",
+      "description",
+      "documentfile",
+      "audiofile",
+      "showdownload",
+      "showcomment",
+      "showcontribution",
+      "showdonation",
+      "carouselimages",
+      "action",
+    ],
+    headers: [
+      "Title",
+      "Date Posted",
+      "Posted By",
+      "Description",
+      "Document",
+      "Audio",
+      "Download",
+      "Comment",
+      "Contribution",
+      "Donation",
+      "Images",
+      "Action",
+    ],
   },
   Sermons: {
-    columns: ["title", "date", "preacher", "church", "status", "action"],
-    headers: ["Title", "Date", "Preacher", "Church", "Status", "Action"],
+    columns: [
+      "title",
+      "dateposted",
+      "userid",
+      "department",
+      "description",
+      "documentfile",
+      "audiofile",
+      "showdownload",
+      "showcomment",
+      "showcontribution",
+      "showdonation",
+      "carouselimages",
+      "action",
+    ],
+    headers: [
+      "Title",
+      "Date Posted",
+      "Posted By",
+      "Department",
+      "Description",
+      "Document",
+      "Audio",
+      "Download",
+      "Comment",
+      "Contribution",
+      "Donation",
+      "Images",
+      "Action",
+    ],
   },
   "Assembly Programs": {
-    columns: ["title", "date", "leader", "church", "status", "action"],
-    headers: ["Title", "Date", "Leader", "Church", "Status", "Action"],
+    columns: [
+      "title",
+      "dateposted",
+      "userid",
+      "department",
+      "description",
+      "documentfile",
+      "audiofile",
+      "showdownload",
+      "showcomment",
+      "showcontribution",
+      "showdonation",
+      "carouselimages",
+      "action",
+    ],
+    headers: [
+      "Title",
+      "Date Posted",
+      "Posted By",
+      "Department",
+      "Description",
+      "Document",
+      "Audio",
+      "Download",
+      "Comment",
+      "Contribution",
+      "Donation",
+      "Images",
+      "Action",
+    ],
   },
 };
 
 interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
+
 export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -491,11 +321,14 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
 
   // initialize as array to avoid .map() on undefined
   const [users, setUsers] = useState<any[]>([]);
+  const [items, setItems] = useState<any[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
   // Fetch users
   useEffect(() => {
     let mounted = true;
+
+    // USERS FETCH
     setLoadingUsers(true);
     axios
       .post(`${serverurl}/user/list`, {
@@ -503,14 +336,27 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
       })
       .then((res) => {
         if (!mounted) return;
-        // ensure it's an array
         setUsers(Array.isArray(res.data) ? res.data : []);
       })
       .catch((err) => {
         console.error("Error fetching user list:", err);
-        setUsers([]);
+        if (mounted) setUsers([]);
       })
-      .finally(() => setLoadingUsers(false));
+      .finally(() => {
+        if (mounted) setLoadingUsers(false);
+      });
+
+    axios
+      .get(`${serverurl}/item/list`)
+      .then((res) => {
+        if (!mounted) return;
+        setItems(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching items:", err);
+        if (mounted) setItems([]);
+      });
+
     return () => {
       mounted = false;
     };
@@ -604,14 +450,17 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
       return true;
     });
   };
+  const categoryMap: Record<string, string> = {
+    "News & Events": "1",
+    Sermons: "2",
+    "Assembly Programs": "3",
+    "Church Members": "4",
+  };
 
-  // Use backend users for Church Members, mock for everything else
   const rawCategoryData =
     selectedCategory === "Church Members"
       ? users
-      : mockDataByCategory.all.filter(
-          (item: { category: string }) => item.category === selectedCategory
-        );
+      : items.filter((item) => item.category === categoryMap[selectedCategory]);
 
   const filteredData = filterBySearch(rawCategoryData);
 
@@ -676,7 +525,218 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
 
     if (column === "churchid") return churches[value] ?? "Unknown";
 
-    if (column === "datecreated" && value) {
+    if (column === "carouselimages") {
+      if (!value) return <span style={{ color: "#9ca3af" }}>No images</span>;
+
+      try {
+        const images = Array.isArray(value) ? value : JSON.parse(value);
+        return (
+          <div
+            style={{
+              display: "flex",
+              gap: "2px",
+              alignItems: "center",
+            }}
+          >
+            {images.map((img: any, idx: number) => {
+              const imgUrl = typeof img === "string" ? img : img.url || img;
+              return (
+                <a
+                  key={idx}
+                  href={imgUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-block",
+                    borderRadius: "4px",
+                    overflow: "hidden",
+                    border: "1px solid #d1d5db",
+                    cursor: "pointer",
+                    transition: "transform 200ms ease, box-shadow 200ms ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.1)";
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 12px rgba(0,0,0,0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                  title={`View carousel image ${idx + 1}`}
+                >
+                  <img
+                    src={imgUrl || "/placeholder.svg"}
+                    alt={`Carousel file ${idx + 1}`}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                    loading="lazy"
+                  />
+                </a>
+              );
+            })}
+          </div>
+        );
+      } catch {
+        // Fallback for single image string
+        if (typeof value === "string" && value.trim()) {
+          return (
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                borderRadius: "4px",
+                overflow: "hidden",
+                border: "1px solid #d1d5db",
+                cursor: "pointer",
+              }}
+              title="View carousel image"
+            >
+              <img
+                src={value || "/placeholder.svg"}
+                alt="Carousel file"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+                loading="lazy"
+              />
+            </a>
+          );
+        }
+        return <span style={{ color: "#9ca3af" }}>—</span>;
+      }
+    }
+
+    if (column === "documentfile") {
+      if (!value)
+        return (
+          <span style={{ color: "#9ca3af" }} title="No document">
+            —
+          </span>
+        );
+
+      const fileName =
+        typeof value === "string"
+          ? value.split("/").pop() || "document"
+          : "document";
+      return (
+        <a
+          href={value}
+          download
+          style={{
+            color: "#2563eb",
+            textDecoration: "none",
+            fontSize: "13px",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "4px",
+            padding: "4px 8px",
+            borderRadius: "3px",
+            transition: "background-color 200ms ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#eff6ff";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "transparent";
+          }}
+          title={`Download document: ${fileName}`}
+        >
+          <span>📄</span>
+          <span>{fileName}</span>
+        </a>
+      );
+    }
+
+    if (column === "audiofile") {
+      if (!value)
+        return (
+          <span style={{ color: "#9ca3af" }} title="No audio">
+            —
+          </span>
+        );
+
+      const fileName =
+        typeof value === "string" ? value.split("/").pop() || "audio" : "audio";
+      return (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            minWidth: "0",
+          }}
+        >
+          <audio
+            controls
+            controlsList="nodownload"
+            style={{ height: "24px", maxWidth: "120px", flex: "1 1 auto" }}
+            title={`Play audio: ${fileName}`}
+          >
+            <source src={value} type="audio/mpeg" />
+            <track kind="captions" src="" label="English" />
+            Your browser does not support the audio element.
+          </audio>
+          <span
+            style={{ fontSize: "11px", color: "#6b7280", flex: "0 0 auto" }}
+            title={`Audio file: ${fileName}`}
+          >
+            {fileName}
+          </span>
+        </div>
+      );
+    }
+
+    if (
+      column === "showdownload" ||
+      column === "showcomment" ||
+      column === "showcontribution" ||
+      column === "showdonation"
+    ) {
+      const isEnabled = value === 1 || value === true || value === "true";
+      const labels: Record<string, string> = {
+        showdownload: "Download enabled",
+        showcomment: "Comments enabled",
+        showcontribution: "Contributions enabled",
+        showdonation: "Donations enabled",
+      };
+      const labelText = labels[column] || column.replace("show", "");
+
+      return (
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "24px",
+            height: "24px",
+            borderRadius: "4px",
+            backgroundColor: isEnabled ? "#d1fae5" : "#f3f4f6",
+            border: `2px solid ${isEnabled ? "#10b981" : "#d1d5db"}`,
+            color: isEnabled ? "#059669" : "#9ca3af",
+            fontSize: "14px",
+            fontWeight: "bold",
+            cursor: "default",
+          }}
+          role="status"
+          aria-label={labelText}
+          title={`${labelText}: ${isEnabled ? "Yes" : "No"}`}
+        >
+          {isEnabled ? "✓" : "—"}
+        </span>
+      );
+    }
+
+    if ((column === "datecreated" || column === "dateposted") && value) {
       try {
         return new Date(value).toLocaleDateString("en-US", {
           year: "numeric",
