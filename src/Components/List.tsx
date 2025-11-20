@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { css } from "@emotion/react";
+import axios from "axios";
+import { serverurl } from "./Appconfig";
 
 const listStyles = css`
   max-width: 1200px;
@@ -131,37 +133,106 @@ type componentProps = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
+type Item = {
+  id: number;
+  category: "1" | "2" | "3"; // Server categories
+  title: string;
+  description: string;
+  date: string | null;
+  extraInfo?: string;
+  churchName: string;
+};
+
+export const List: React.FC<componentProps> = ({ activeTab, setActiveTab }) => {
   const [search, setSearch] = useState("");
+  const [items, setItems] = useState<Item[]>([]);
 
-  const announcements = [
-    { title: "Christmas Food Drive", message: "Help families in need.", date: "Dec 10", church: "PAG Nairobi" },
-    { title: "Church Office Holiday Hours", message: "Closed Dec 23-26 and Jan 1.", date: "Dec 5", church: "PAG Westlands" },
-    { title: "New Member Orientation", message: "Jan 7th at 2 PM.", date: "Nov 28", church: "PAG Karen" },
-    { title: "Weekly Newsletter", message: "Subscribe to stay updated.", date: "Nov 25", church: "PAG Nairobi" },
-  ];
+  // Utility to truncate long text
+  const truncate = (text: string, max = 50) =>
+    text.length > max ? text.slice(0, max) + "..." : text;
 
-  const sermons = [
-    { title: "Walking in Faith", speaker: "Pastor Peter", date: "Dec 15", church: "PAG Nairobi" },
-    { title: "Power of Prayer", speaker: "Pastor Everlyne", date: "Dec 8", church: "PAG Westlands" },
-    { title: "God's Grace", speaker: "Pastor Mike", date: "Dec 1", church: "PAG Karen" },
-    { title: "Faith & Patience", speaker: "Pastor John", date: "Nov 24", church: "PAG Nairobi" },
-  ];
+  // Fetch server data
+  useEffect(() => {
+    let mounted = true;
+    axios
+      .get(`${serverurl}/item/list`)
+      .then((res) => {
+        if (!mounted) return;
+        const data: any[] = Array.isArray(res.data) ? res.data : [];
+        const transformed: Item[] = data.map((d) => ({
+          id: d.id,
+          category: d.category.toString() as "1" | "2" | "3",
+          title: truncate(d.title, 25),
+          description: truncate(d.description || d.message || "", 50),
+          date: d.dateposted || null,
+          churchName: d.churchname || "",
+        }));
+        setItems(transformed);
+      })
+      .catch((err) => {
+        console.error("Error fetching items:", err);
+        if (mounted) setItems([]);
+      });
 
-  const programs = [
-    { name: "Women", desc: "Leading in worship", leader: "Sarah Johnson", church: "PAG Nairobi" },
-    { name: "Youth", desc: "Youth programs", leader: "Mike Chen", church: "PAG Westlands" },
-    { name: "Sunday School", desc: "Children ministry", leader: "Mary Rodriguez", church: "PAG Karen" },
-    { name: "CED", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
-    { name: "Development Committee", desc: "Community service", leader: "James Wilson", church: "PAG Nairobi" },
-  ];
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
-  const filterByChurch = (item: { church: string }) =>
-    item.church.toLowerCase().includes(search.toLowerCase());
+  // Filter by church search
+  const filterByChurch = (item: Item) =>
+    item.churchName.toLowerCase().includes(search.toLowerCase());
 
-  const filteredAnnouncements = announcements.filter(filterByChurch);
-  const filteredSermons = sermons.filter(filterByChurch);
-  const filteredPrograms = programs.filter(filterByChurch);
+  const filteredAnnouncements = items.filter(
+    (i) => i.category === "1" && filterByChurch(i)
+  );
+  const filteredSermons = items.filter(
+    (i) => i.category === "2" && filterByChurch(i)
+  );
+  const filteredPrograms = items.filter(
+    (i) => i.category === "3" && filterByChurch(i)
+  );
+
+  // Reusable section renderer
+  const renderSection = (
+    sectionItems: Item[],
+    title: string,
+    description: string,
+    tabName: string
+  ) => (
+    <div className="section">
+      <h2>{title}</h2>
+      <p className="section-desc">{description}</p>
+      <div className="grid" onClick={() => setActiveTab(tabName)}>
+        {sectionItems.length > 0 ? (
+          sectionItems.map((item, idx) => (
+            <div
+              key={item.id}
+              className={`card ${
+                idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
+              }`}
+            >
+              <h3>
+                <span className="title">{item.title}</span>
+                {idx === 0 && <span className="tag pinned">PINNED</span>}
+                {idx > 0 && idx < 4 && (
+                  <span className="tag latest">LATEST</span>
+                )}
+              </h3>
+              <p>{item.description}</p>
+              {item.extraInfo && <small>{item.extraInfo}</small>}
+              <small>
+                ⛪ {item.churchName}{" "}
+                {item.date ? `• ${new Date(item.date).toDateString()}` : ""}
+              </small>
+            </div>
+          ))
+        ) : (
+          <p>No items found.</p>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div css={listStyles}>
@@ -174,101 +245,29 @@ export const List: React.FC<componentProps> = ({ setActiveTab, activeTab }) => {
         />
       </div>
 
-      {activeTab === "NewsList" && (
-        <div className="section">
-          <h2>📰 All News & Events</h2>
-          <p className="section-desc">
-            Stay informed with the latest church news, special events, and
-            community updates happening across all PAG assemblies.
-          </p>
-          <div className="grid" onClick={() => setActiveTab("NewsItem")}>
-            {filteredAnnouncements.length > 0 ? (
-              filteredAnnouncements.map((a, idx) => (
-                <div
-                  key={idx}
-                  className={`card announcement ${
-                    idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
-                  }`}
-                >
-                  <h3>
-                    <span className="title">{a.title}</span>
-                    {idx === 0 && <span className="tag pinned">PINNED</span>}
-                    {idx > 0 && idx < 4 && <span className="tag latest">LATEST</span>}
-                  </h3>
-                  <p>{a.message}</p>
-                  <small>⛪ {a.church} • {a.date}</small>
-                </div>
-              ))
-            ) : (
-              <p>No news found.</p>
-            )}
-          </div>
-        </div>
-      )}
+      {activeTab === "NewsList" &&
+        renderSection(
+          filteredAnnouncements,
+          "📰 All News & Events",
+          "Stay informed with the latest church news, special events, and community updates.",
+          "NewsItem"
+        )}
 
-      {activeTab === "SermonsList" && (
-        <div className="section">
-          <h2>🎙️ All Sermons</h2>
-          <p className="section-desc">
-            Access powerful teachings and messages from our pastors through
-            recorded sermons — available in both video and audio.
-          </p>
-          <div className="grid" onClick={() => setActiveTab("SermonsItem")}>
-            {filteredSermons.length > 0 ? (
-              filteredSermons.map((s, idx) => (
-                <div
-                  key={idx}
-                  className={`card sermon ${
-                    idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
-                  }`}
-                >
-                  <h3>
-                    <span className="title">{s.title}</span>
-                    {idx === 0 && <span className="tag pinned">PINNED</span>}
-                    {idx > 0 && idx < 4 && <span className="tag latest">LATEST</span>}
-                  </h3>
-                  <p>Speaker: {s.speaker}</p>
-                  <small>⛪ {s.church} • {s.date}</small>
-                </div>
-              ))
-            ) : (
-              <p>No sermons found.</p>
-            )}
-          </div>
-        </div>
-      )}
+      {activeTab === "SermonsList" &&
+        renderSection(
+          filteredSermons,
+          "🎙️ All Sermons",
+          "Access powerful teachings and messages from our pastors through recorded sermons.",
+          "SermonsItem"
+        )}
 
-      {activeTab === "AssemblyProgramsList" && (
-        <div className="section">
-          <h2>🌿 All Assembly Programs</h2>
-          <p className="section-desc">
-            Explore our assembly programs that nurture faith, empower youth, and
-            strengthen community bonds through service and worship.
-          </p>
-          <div className="grid" onClick={() => setActiveTab("AssemblyProgramsItem")}>
-            {filteredPrograms.length > 0 ? (
-              filteredPrograms.map((p, idx) => (
-                <div
-                  key={idx}
-                  className={`card program ${
-                    idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
-                  }`}
-                >
-                  <h3>
-                    <span className="title">{p.name}</span>
-                    {idx === 0 && <span className="tag pinned">PINNED</span>}
-                    {idx > 0 && idx < 4 && <span className="tag latest">LATEST</span>}
-                  </h3>
-                  <p>{p.desc}</p>
-                  <small>⛪ {p.church} • Leader: {p.leader}</small>
-                </div>
-              ))
-            ) : (
-              <p>No programs found.</p>
-            )}
-          </div>
-        </div>
-      )}
+      {activeTab === "AssemblyProgramsList" &&
+        renderSection(
+          filteredPrograms,
+          "🌿 All Assembly Programs",
+          "Explore our assembly programs that nurture faith, empower youth, and strengthen community bonds.",
+          "AssemblyProgramsItem"
+        )}
     </div>
   );
 };
