@@ -855,18 +855,33 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
                 <div className="row">
                   <span className="label">Subscription</span>
-                  <span
-                    style={{
-                      padding: "4px 8px",
-                      borderRadius: "6px",
-                      background:
-                        Number(loggedSubscription) === 1 ? "#d1fae5" : "red",
-                      color:
-                        Number(loggedSubscription) === 1 ? "#065f46" : "white",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {loggedSubscription === "1" ? "Active" : "Expired"}
+                  <span style={{ display: "flex", gap: "8px" }}>
+                    <span
+                      style={{
+                        padding: "4px 8px",
+                        background:
+                          Number(loggedSubscription) === 1 ? "#2563eb" : "red",
+                        color: "white",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {loggedSubscription === "1" ? "Active" : "Expired"}
+                    </span>
+                    {loggedSubscription === "1" ? (
+                      ""
+                    ) : (
+                      <span
+                        style={{
+                          padding: "4px 8px",
+                          background:
+                            " linear-gradient(90deg, #2563eb, #fbbf24)",
+                          color: "white",
+                          fontWeight: 500,
+                        }}
+                      >
+                        Renew
+                      </span>
+                    )}
                   </span>
                 </div>
 

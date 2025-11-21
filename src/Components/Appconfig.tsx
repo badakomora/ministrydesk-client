@@ -60,3 +60,30 @@ export const getSubscriptionStyle = (sub: number) => {
       return { color: "white", background: "gray", padding: "4px 6px",  };
   }
 };
+
+
+export const formatSearchableDate = (dateStr: string) => {
+  if (!dateStr) return "";
+
+  const d = new Date(dateStr);
+
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+
+  // Long month name
+  const longMonth = d.toLocaleString("en-US", { month: "long" }).toLowerCase(); // "november"
+  const shortMonth = d.toLocaleString("en-US", { month: "short" }).toLowerCase(); // "nov"
+
+  return [
+    `${year}-${month}-${day}`,     // 2025-11-21
+    `${day}/${month}/${year}`,     // 21/11/2025
+    `${day}-${month}-${year}`,     // 21-11-2025
+    `${longMonth} ${day} ${year}`, // november 21 2025
+    `${shortMonth} ${day}`,        // nov 21
+    `${day} ${shortMonth}`,        // 21 nov
+    `${day}`,                      // 21
+    longMonth,                     // november
+    shortMonth                     // nov
+  ].join(" ");
+};

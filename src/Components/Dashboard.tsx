@@ -2,6 +2,7 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import {
+  formatSearchableDate,
   getRoleLabel,
   getStatusLabel,
   getStatusStyle,
@@ -264,8 +265,10 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
         if (mounted) setLoadingUsers(false);
       });
 
+    const userid = localStorage.getItem("userId");
+
     axios
-      .get(`${serverurl}/item/list`)
+      .get(`${serverurl}/item/itemlist/${userid}`)
       .then((res) => {
         if (!mounted) return;
         setItems(Array.isArray(res.data) ? res.data : []);
@@ -315,62 +318,40 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
     const query = searchQuery.toLowerCase();
 
     return items.filter((item) => {
+      const dateString = formatSearchableDate(
+        item.dateposted || item.date || ""
+      );
+      const title = String(item.title ?? "").toLowerCase();
+      const church = String(item.church ?? "").toLowerCase();
+      const fullname = String(item.fullname ?? "").toLowerCase();
+
       if (selectedCategory === "Church Members") {
-        // search fullname, email, phonenumber
+        return fullname.includes(query);
+      }
+
+      if (selectedCategory === "News & Events") {
+        return title.includes(query) || dateString.includes(query);
+      }
+
+      if (selectedCategory === "Sermons") {
+        return title.includes(query) || dateString.includes(query);
+      }
+
+      if (selectedCategory === "Assembly Programs") {
         return (
-          String(item.fullname ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.email ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.phonenumber ?? "")
-            .toLowerCase()
-            .includes(query)
-        );
-      } else if (selectedCategory === "News & Events") {
-        return (
-          String(item.title ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.date ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.church ?? "")
-            .toLowerCase()
-            .includes(query)
-        );
-      } else if (selectedCategory === "Sermons") {
-        return (
-          String(item.title ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.date ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.church ?? "")
-            .toLowerCase()
-            .includes(query)
-        );
-      } else if (selectedCategory === "Assembly Programs") {
-        return (
-          String(item.title ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.date ?? "")
-            .toLowerCase()
-            .includes(query) ||
-          String(item.church ?? "")
-            .toLowerCase()
-            .includes(query)
+          title.includes(query) ||
+          dateString.includes(query) ||
+          church.includes(query)
         );
       }
+
       return true;
     });
   };
+
   const categoryMap: Record<string, string> = {
     "News & Events": "1",
-    "Sermons": "2",
+    Sermons: "2",
     "Assembly Programs": "3",
     "Church Members": "4",
   };
