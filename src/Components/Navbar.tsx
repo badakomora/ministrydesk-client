@@ -426,7 +426,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [churchEmail, setChurchEmail] = useState("");
   const [loggedFullname, setLoggedFullname] = useState("");
   const [loggedPhone, setLoggedPhone] = useState("");
-  const [loggedRole, setLoggedRole] = useState("");
+  const [loggedNationalRole, setLoggedNationalRole] = useState("");
+  const [loggedExecutiveRole, setLoggedExecutiveRole] = useState("");
+  const [loggedDistrictRole, setLoggedDistrictRole] = useState("");
+  const [loggedAssemblyRole, setLoggedAssemblyRole] = useState("");
   const [loggedEmail, setLoggedEmail] = useState("");
   const [loggedChurchId, setLoggedChurchId] = useState("");
   const [loggedIdNumber, setLoggedIdNumber] = useState("");
@@ -444,7 +447,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   useEffect(() => {
     const storedPhone = localStorage.getItem("userPhone");
     const storedName = localStorage.getItem("userFullname");
-    const storedRole = localStorage.getItem("userRole");
+    const storedNationalRole = localStorage.getItem("nationalRole");
+    const storedExecutiveRole = localStorage.getItem("executiveRole");
+    const storedDistrictRole = localStorage.getItem("districtRole");
+    const storedAssemblyRole = localStorage.getItem("assemblyRole");
     const storedIdNumber = localStorage.getItem("userIdNumber");
     const storedChurchId = localStorage.getItem("userChurchId");
     const storedEmail = localStorage.getItem("userEmail");
@@ -454,7 +460,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     if (
       storedPhone &&
       storedName &&
-      storedRole &&
+      storedNationalRole &&
+      storedExecutiveRole &&
+      storedDistrictRole &&
+      storedAssemblyRole &&
       storedChurchId &&
       storedEmail &&
       storedIdNumber &&
@@ -463,7 +472,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     ) {
       setLoggedPhone(storedPhone);
       setLoggedFullname(storedName);
-      setLoggedRole(storedRole);
+      setLoggedNationalRole(storedNationalRole);
+      setLoggedAssemblyRole(storedAssemblyRole);
+      setLoggedExecutiveRole(storedExecutiveRole);
+      setLoggedDistrictRole(storedDistrictRole);
       setLoggedChurchId(storedChurchId);
       setLoggedEmail(storedEmail);
       setLoggedIdNumber(storedIdNumber);
@@ -507,7 +519,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const LogOut = () => {
     localStorage.removeItem("userPhone");
     localStorage.removeItem("userFullname");
-    localStorage.removeItem("userRole");
+    localStorage.removeItem("nationalRole");
+    localStorage.removeItem("executiveRole");
+    localStorage.removeItem("districtRole");
+    localStorage.removeItem("assemblyRole");
     localStorage.removeItem("userIdNumber");
     localStorage.removeItem("userChurchId");
     localStorage.removeItem("userEmail");
@@ -516,7 +531,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
     setLoggedPhone("");
     setLoggedFullname("");
-    setLoggedRole("");
     setActiveTab("");
 
     toast.success("You have logged out successfully.");
@@ -573,6 +587,12 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userPhone", res.data.phonenumber);
         localStorage.setItem("userEmail", res.data.email);
         localStorage.setItem("userRole", res.data.role);
+
+        localStorage.setItem("nationalRole", String(res.data.nationalrole));
+        localStorage.setItem("executiveRole", String(res.data.executiverole));
+        localStorage.setItem("districtRole", String(res.data.districtrole));
+        localStorage.setItem("assemblyRole", String(res.data.assemblyrole));
+
         localStorage.setItem("userChurchId", res.data.churchid);
         localStorage.setItem("userSubscription", res.data.subscription);
         localStorage.setItem("userDateJoined", res.data.datecreated);
@@ -586,7 +606,22 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userFullname", res.data.user.fullname);
         localStorage.setItem("userPhone", res.data.user.phonenumber);
         localStorage.setItem("userEmail", res.data.user.email);
-        localStorage.setItem("userRole", String(res.data.user.role));
+        localStorage.setItem(
+          "nationalRole",
+          String(res.data.user.nationalrole)
+        );
+        localStorage.setItem(
+          "executiveRole",
+          String(res.data.user.executiverole)
+        );
+        localStorage.setItem(
+          "districtRole",
+          String(res.data.user.districtrole)
+        );
+        localStorage.setItem(
+          "assemblyRole",
+          String(res.data.user.assemblyrole)
+        );
         localStorage.setItem("userChurchId", res.data.user.churchid);
         localStorage.setItem("userSubscription", res.data.user.subscription);
         localStorage.setItem("userDateJoined", res.data.user.datecreated);
@@ -595,7 +630,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         setLoggedFullname(res.data.user.fullname);
         setLoggedPhone(res.data.user.phonenumber);
         setLoggedEmail(res.data.user.email);
-        setLoggedRole(res.data.user.role);
+        setLoggedNationalRole(res.data.user.nationalrole);
+        setLoggedExecutiveRole(res.data.user.executiverole);
+        setLoggedDistrictRole(res.data.user.districtrole);
+        setLoggedAssemblyRole(res.data.user.assemblyrole);
         setLoggedChurchId(res.data.user.churchid);
         setLoggedSubscription(res.data.user.subscription);
         setLoggedDateJoined(res.data.user.datecreated);
@@ -894,7 +932,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             >
               Community
             </a>
-            {loggedRole === "3" ? (
+            {loggedNationalRole ||
+            loggedAssemblyRole ||
+            loggedExecutiveRole ||
+            loggedDistrictRole === "3" ? (
               <a
                 href="."
                 onClick={(e) => {
@@ -989,7 +1030,10 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
           >
             Community
           </a>
-          {loggedRole === "3" ? (
+          {loggedNationalRole ||
+          loggedAssemblyRole ||
+          loggedExecutiveRole ||
+          loggedDistrictRole === "3" ? (
             <a
               href="."
               onClick={(e) => {
@@ -1085,8 +1129,16 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 <div className="row">
                   <span className="label">Ministry Role & Assembly</span>
                   <span className="value">
-                    {roles.find((r) => r.value === loggedRole)?.label},{" "}
-                    {userChurch}
+                    {
+                      roles.find(
+                        (r) =>
+                          r.value === loggedNationalRole ||
+                          loggedAssemblyRole ||
+                          loggedExecutiveRole ||
+                          loggedDistrictRole
+                      )?.label
+                    }
+                    , {userChurch}
                   </span>
                 </div>
 
