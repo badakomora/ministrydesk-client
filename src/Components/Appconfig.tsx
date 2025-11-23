@@ -4,6 +4,10 @@ export const serverurl = "http://localhost:4000";
 export const roles = [
   { value: "1", label: "Senior Pastor", level: 1 },
   { value: "2", label: "Junior Pastor", level: 1 },
+  { value: "0", label: "N/A", level: 1 },
+  { value: "0", label: "N/A", level: 2 },
+  { value: "0", label: "N/A", level: 3 },
+  { value: "0", label: "N/A", level: 4 },
 
   { value: "3", label: "Secretary", level: 1 },
   { value: "3", label: "Secretary", level: 2 },
@@ -42,25 +46,24 @@ export const getSubscriptionLabel = (sub: number) => {
 export const getStatusStyle = (status: number) => {
   switch (status) {
     case 1:
-      return { color: "white", background: "green", padding: "4px 6px",  };
+      return { color: "white", background: "green", padding: "4px 6px" };
     case 0:
-      return { color: "white", background: "#fbbf24", padding: "4px 6px", };
+      return { color: "white", background: "#fbbf24", padding: "4px 6px" };
     default:
-      return { color: "white", background: "gray", padding: "4px 6px",  };
+      return { color: "white", background: "gray", padding: "4px 6px" };
   }
 };
 
 export const getSubscriptionStyle = (sub: number) => {
   switch (sub) {
     case 1:
-      return { color: "white", background: "blue", padding: "4px 6px",  };
+      return { color: "white", background: "blue", padding: "4px 6px" };
     case 0:
-      return { color: "white", background: "red", padding: "4px 6px",  };
+      return { color: "white", background: "red", padding: "4px 6px" };
     default:
-      return { color: "white", background: "gray", padding: "4px 6px",  };
+      return { color: "white", background: "gray", padding: "4px 6px" };
   }
 };
-
 
 export const formatSearchableDate = (dateStr: string) => {
   if (!dateStr) return "";
@@ -73,17 +76,19 @@ export const formatSearchableDate = (dateStr: string) => {
 
   // Long month name
   const longMonth = d.toLocaleString("en-US", { month: "long" }).toLowerCase(); // "november"
-  const shortMonth = d.toLocaleString("en-US", { month: "short" }).toLowerCase(); // "nov"
+  const shortMonth = d
+    .toLocaleString("en-US", { month: "short" })
+    .toLowerCase(); // "nov"
 
   return [
-    `${year}-${month}-${day}`,     // 2025-11-21
-    `${day}/${month}/${year}`,     // 21/11/2025
-    `${day}-${month}-${year}`,     // 21-11-2025
+    `${year}-${month}-${day}`, // 2025-11-21
+    `${day}/${month}/${year}`, // 21/11/2025
+    `${day}-${month}-${year}`, // 21-11-2025
     `${longMonth} ${day} ${year}`, // november 21 2025
-    `${shortMonth} ${day}`,        // nov 21
-    `${day} ${shortMonth}`,        // 21 nov
-    `${day}`,                      // 21
-    longMonth,                     // november
-    shortMonth                     // nov
+    `${shortMonth} ${day}`, // nov 21
+    `${day} ${shortMonth}`, // 21 nov
+    `${day}`, // 21
+    longMonth, // november
+    shortMonth, // nov
   ].join(" ");
 };

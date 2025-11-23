@@ -3,9 +3,47 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getRoleLabel, roles, serverurl } from "./Appconfig";
+import { serverurl } from "./Appconfig";
 
-// -------------------- Header --------------------
+// -------------------- ROLE HIERARCHY --------------------
+const roles = [
+  { value: "1", label: "Senior Pastor", level: 1 },
+  { value: "2", label: "Junior Pastor", level: 1 },
+  { value: "3", label: "Secretary", level: 1 },
+  { value: "3a", label: "Secretary", level: 2 },
+  { value: "3b", label: "Administrator", level: 3 },
+  { value: "3c", label: "National Coordinator", level: 4 },
+  { value: "4", label: "Member", level: 1 },
+  { value: "6", label: "Overseer", level: 2 },
+  { value: "7", label: "Treasurer", level: 1 },
+  { value: "7a", label: "Treasurer", level: 3 },
+  { value: "7b", label: "Finance Director", level: 4 },
+  { value: "9", label: "Choir", level: 1 },
+  { value: "10", label: "Usher", level: 1 },
+  { value: "11", label: "Youth", level: 1 },
+  { value: "12", label: "Women Dept", level: 1 },
+  { value: "13", label: "Men Dept", level: 1 },
+  { value: "14", label: "General Superintendent", level: 3 },
+  { value: "15", label: "Mama Kenya", level: 3 },
+  { value: "16", label: "National CED Director", level: 4 },
+  { value: "0", label: "N/A", level: 1 },
+  { value: "0", label: "N/A", level: 2 },
+  { value: "0", label: "N/A", level: 3 },
+  { value: "0", label: "N/A", level: 4 },
+];
+
+const ROLE_HIERARCHY = {
+  4: "National Level",
+  3: "Executive Level",
+  2: "District Level",
+  1: "Assembly Level",
+} as const;
+
+const getRolesByLevel = (level: number) => {
+  return roles.filter((r) => r.level === level);
+};
+
+// -------------------- Header Styles --------------------
 const headerStyles = css`
   position: sticky;
   top: 0;
@@ -102,61 +140,7 @@ const mobileMenuBtn = (isOpen: boolean) => css`
     cursor: pointer;
     font-weight: 600;
     transition: all 0.25s ease;
-  }
-`;
-
-const profileCard = css`
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  width: 360px;
-  margin: 25px auto;
-  font-family: "Inter", sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 15px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #efefef;
-    color: #444;
-
-    span.label {
-      font-weight: 600;
-      color: #222;
-    }
-
-    span.value {
-      font-weight: 500;
-    }
-  }
-
-  .active {
-    color: #16a34a;
-    font-weight: 700;
-  }
-
-  .expired {
-    color: #dc2626;
-    font-weight: 700;
-  }
-
-  .logout-btn {
-    margin-top: 18px;
-    text-align: center;
-    padding: 10px 0;
-    background: #f59e0b;
     color: white;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.25s ease-in-out;
-
-    &:hover {
-      background: #2563eb;
-    }
   }
 `;
 
@@ -280,6 +264,61 @@ const formStyles = css`
   }
 `;
 
+const profileCard = css`
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #efefef;
+    color: #444;
+
+    span.label {
+      font-weight: 600;
+      color: #222;
+    }
+
+    span.value {
+      font-weight: 500;
+    }
+  }
+
+  .active {
+    color: #16a34a;
+    font-weight: 700;
+  }
+
+  .expired {
+    color: #dc2626;
+    font-weight: 700;
+  }
+
+  .logout-btn {
+    margin-top: 18px;
+    text-align: center;
+    padding: 10px 0;
+    background: #f59e0b;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      background: #2563eb;
+    }
+  }
+`;
+
 const churchDropdownWrapper = css`
   position: relative;
   width: 100%;
@@ -317,6 +356,26 @@ const churchList = css`
 
   div:hover {
     background: #f0f0f0;
+  }
+`;
+
+const roleProgressStyles = css`
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 600;
+`;
+
+const roleSelectedStyles = css`
+  padding: 8px 12px;
+  background: #e0f2fe;
+  border: 1px solid #0284c7;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+
+  strong {
+    color: #0c4a6e;
   }
 `;
 
@@ -374,6 +433,14 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [loggedSubscription, setLoggedSubscription] = useState("");
   const [loggedDateJoined, setLoggedDateJoined] = useState("");
   const [userChurch, setUserChurch] = useState("");
+
+  const [currentRoleLevel, setCurrentRoleLevel] = useState<
+    4 | 3 | 2 | 1 | null
+  >(null);
+  const [selectedRolesByLevel, setSelectedRolesByLevel] = useState<{
+    [key: number]: string;
+  }>({});
+
   useEffect(() => {
     const storedPhone = localStorage.getItem("userPhone");
     const storedName = localStorage.getItem("userFullname");
@@ -404,6 +471,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       setLoggedDateJoined(storedDateJoined);
     }
   }, []);
+
   useEffect(() => {
     const fetchChurches = async () => {
       try {
@@ -420,7 +488,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
           id: loggedChurchId,
         });
 
-        setUserChurch(response.data.church.name); // ✅ response.church not the whole response
+        setUserChurch(response.data.church.name);
       } catch (error) {
         console.error("Error fetching church:", error);
       }
@@ -432,7 +500,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     fetchChurches();
   }, [loggedChurchId]);
 
-  // Filtered list for search
   const filteredChurches = churches.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -455,19 +522,51 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     toast.success("You have logged out successfully.");
   };
 
+  const handleRoleSelection = (roleValue: string, level: number) => {
+    setSelectedRolesByLevel((prev) => ({
+      ...prev,
+      [level]: roleValue,
+    }));
+    setSelectedRole(roleValue);
+
+    // Auto-advance to next level
+    const nextLevel = level - 1;
+    if (nextLevel > 0) {
+      setCurrentRoleLevel(nextLevel as 4 | 3 | 2 | 1);
+    } else {
+      // All levels completed
+      setCurrentRoleLevel(null);
+    }
+  };
+
+  const resetRoleSelection = () => {
+    setCurrentRoleLevel(4);
+    setSelectedRolesByLevel({});
+    setSelectedRole("");
+  };
+
+  const goBackLevel = () => {
+    const levels = [4, 3, 2, 1];
+    const currentIndex = levels.indexOf(currentRoleLevel || 4);
+    if (currentIndex > 0) {
+      setCurrentRoleLevel(levels[currentIndex - 1] as 4 | 3 | 2 | 1);
+      const newRoles = { ...selectedRolesByLevel };
+      delete newRoles[levels[currentIndex]];
+      setSelectedRolesByLevel(newRoles);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       if (!otpSent) {
-        // Step 1: Send phone number only
         const res = await axios.post(`${serverurl}/user/login`, {
           phonenumber: phone,
         });
 
         setOtpSent(true);
         toast.success(`OTP sent to ${res.data.fullname}`);
-        // ✅ Now save logged-in details
         localStorage.setItem("userId", res.data.id);
         localStorage.setItem("userIdNumber", res.data.idnumber);
         localStorage.setItem("userFullname", res.data.fullname);
@@ -478,13 +577,11 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         localStorage.setItem("userSubscription", res.data.subscription);
         localStorage.setItem("userDateJoined", res.data.datecreated);
       } else {
-        // Step 2: Verify OTP and login for real
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
           phonenumber: phone,
           otp,
         });
 
-        // ✅ Now save logged-in details
         localStorage.setItem("userId", res.data.user.id);
         localStorage.setItem("userFullname", res.data.user.fullname);
         localStorage.setItem("userPhone", res.data.user.phonenumber);
@@ -530,10 +627,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
       const registeredChurch = response.data;
 
-      // ✅ Show actual message from backend
       toast.success(response.data.message || "Church registered successfully!");
 
-      // Update state
       setChurches([...churches, registeredChurch]);
       setSelectedChurch(registeredChurch.id);
       setSearch("");
@@ -542,7 +637,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     } catch (error: any) {
       console.error("Error creating church:", error);
 
-      // ✅ Show backend error message if available
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
@@ -565,27 +659,28 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       fullname,
       phonenumber,
       email,
-      role: selectedRole,
+      nationalRole: selectedRolesByLevel[4] || null,
+      executiveRole: selectedRolesByLevel[3] || null,
+      districtRole: selectedRolesByLevel[2] || null,
+      assemblyRole: selectedRolesByLevel[1] || null,
       churchid: selectedChurch,
     };
 
     try {
       const response = await axios.post(`${serverurl}/user/register`, data);
 
-      // ✅ Show message from backend
       toast.success(response.data.message || "User registered successfully!");
 
-      // Reset form
       setIdnumber("");
       setFullname("");
       setPhonenumber("");
       setEmail("");
       setSelectedRole("");
       setSelectedChurch(null);
+      resetRoleSelection();
     } catch (error: any) {
       console.error("Registration error:", error);
 
-      // ✅ Show backend error message
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
@@ -594,8 +689,150 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     }
   };
 
+  const renderCascadingRoleSelector = () => {
+    if (currentRoleLevel === null && !selectedRole) {
+      return (
+        <div style={{ marginBottom: "14px" }}>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "8px",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+            }}
+          >
+            {ROLE_HIERARCHY[4]} (Select one to continue)
+          </label>
+          <select
+            required
+            onChange={(e) => {
+              if (e.target.value) {
+                handleRoleSelection(e.target.value, 4);
+              }
+            }}
+            style={{
+              width: "100%",
+              padding: "12px 14px",
+              border: "#2563eb 1px solid",
+              outline: "none",
+              fontSize: "0.95rem",
+              background: "white",
+              boxSizing: "border-box",
+            }}
+          >
+            <option value="">Select National Level Role</option>
+            {getRolesByLevel(4).map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      );
+    }
+
+    const levels = [4, 3, 2, 1];
+    const currentIndex = levels.indexOf(currentRoleLevel || 4);
+
+    return (
+      <div style={{ marginBottom: "14px" }}>
+        <div css={roleProgressStyles}>
+          Progress: {Object.keys(selectedRolesByLevel).length} of 4 levels
+        </div>
+
+        {Object.entries(selectedRolesByLevel).map(([level, roleValue]) => {
+          const role = roles.find((r) => r.value === roleValue);
+          const lvlKey = Number.parseInt(level) as keyof typeof ROLE_HIERARCHY;
+          return (
+            <div key={level} css={roleSelectedStyles}>
+              <strong>{ROLE_HIERARCHY[lvlKey]}</strong>: {role?.label}
+            </div>
+          );
+        })}
+
+        {currentRoleLevel && (
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+              }}
+            >
+              {ROLE_HIERARCHY[currentRoleLevel]}
+            </label>
+            <select
+              onChange={(e) => {
+                if (e.target.value) {
+                  handleRoleSelection(e.target.value, currentRoleLevel);
+                }
+              }}
+              style={{
+                width: "100%",
+                padding: "12px 14px",
+                border: "#2563eb 1px solid",
+                outline: "none",
+                fontSize: "0.95rem",
+                background: "white",
+                boxSizing: "border-box",
+                marginBottom: "8px",
+              }}
+            >
+              <option value="">
+                Select {ROLE_HIERARCHY[currentRoleLevel]}
+              </option>
+              {getRolesByLevel(currentRoleLevel).map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+
+            {currentIndex > 0 && (
+              <button
+                type="button"
+                onClick={goBackLevel}
+                style={{
+                  width: "100%",
+                  padding: "8px 14px",
+                  background: "#f0f0f0",
+                  border: "1px solid #ccc",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  marginBottom: "12px",
+                }}
+              >
+                ← Back to Previous Level
+              </button>
+            )}
+          </div>
+        )}
+
+        {selectedRole && (
+          <button
+            type="button"
+            onClick={resetRoleSelection}
+            style={{
+              width: "100%",
+              padding: "8px 14px",
+              background: "#fee2e2",
+              border: "1px solid #fca5a5",
+              cursor: "pointer",
+              fontWeight: 600,
+              color: "#991b1b",
+            }}
+          >
+            Reset Role Selection
+          </button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <>
+      {/* ==================== HEADER & NAV ==================== */}
       <header css={headerStyles} aria-label="Site header">
         <div css={headerContentStyles}>
           {/* Logo */}
@@ -690,7 +927,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               aria-expanded={isMobileMenuOpen}
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
               onClick={() => setIsMobileMenuOpen((s) => !s)}
-              style={{ color: "white", background: "#2563eb" }}
             >
               {isMobileMenuOpen ? "✕" : "☰"}
             </button>
@@ -781,7 +1017,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         </nav>
       </header>
 
-      {/* Modal */}
+      {/* ==================== MODAL ==================== */}
       {isModalOpen && (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
@@ -792,7 +1028,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 marginBottom: "2px",
               }}
             >
-              {/* Logo */}
               <div css={logoStyles}>
                 <div className="mark" aria-hidden>
                   ⛪
@@ -802,7 +1037,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   <p>Connecting churches & people</p>
                 </div>
               </div>
-              {/* Tabs */}
               {loggedFullname ? (
                 ""
               ) : (
@@ -822,6 +1056,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </div>
               )}
             </div>
+
             {loggedFullname ? (
               <div css={profileCard}>
                 <div className="row">
@@ -849,7 +1084,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 <div className="row">
                   <span className="label">Ministry Role & Assembly</span>
                   <span className="value">
-                    {getRoleLabel(loggedRole)}, {userChurch}
+                    {roles.find((r) => r.value === loggedRole)?.label},{" "}
+                    {userChurch}
                   </span>
                 </div>
 
@@ -965,43 +1201,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <select
-                  required
-                  value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
-                >
-                  <option value="0">Select Role</option>
 
-                  <optgroup label="Assembly Level">
-                    {roles
-                      .filter((r) => r.level === 1)
-                      .map((r) => (
-                        <option key={r.label + r.level} value={r.value}>
-                          {r.label}
-                        </option>
-                      ))}
-                  </optgroup>
-
-                  <optgroup label="District Level">
-                    {roles
-                      .filter((r) => r.level === 2)
-                      .map((r) => (
-                        <option key={r.label + r.level} value={r.value}>
-                          {r.label}
-                        </option>
-                      ))}
-                  </optgroup>
-
-                  <optgroup label="Executive committee">
-                    {roles
-                      .filter((r) => r.level === 3)
-                      .map((r) => (
-                        <option key={r.label + r.level} value={r.value}>
-                          {r.label}
-                        </option>
-                      ))}
-                  </optgroup>
-                </select>
+                {renderCascadingRoleSelector()}
 
                 <div css={churchDropdownWrapper}>
                   <input
@@ -1027,8 +1228,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                           <div
                             key={church.id}
                             onClick={() => {
-                              setSelectedChurch(church.id); // store ID (number only)
-                              setSearch(""); // clear search
+                              setSelectedChurch(church.id);
+                              setSearch("");
                             }}
                           >
                             {church.name}
@@ -1056,8 +1257,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   )}
                 </div>
 
-                <button type="submit">
-                  {loading ? "Loading..." : "Register Church"}
+                <button type="submit" disabled={loading}>
+                  {loading ? "Loading..." : "Register"}
                 </button>
               </form>
             )}
@@ -1091,7 +1292,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                     Register My Church
                   </h2>
                   <form onSubmit={handleNewChurch}>
-                    {/* Church Name */}
                     <input
                       type="text"
                       placeholder="Church Name"
@@ -1107,7 +1307,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       }}
                     />
 
-                    {/* Description */}
                     <textarea
                       placeholder="Description (optional)"
                       value={description}
@@ -1123,7 +1322,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       }}
                     />
 
-                    {/* Category */}
                     <select
                       required
                       value={selectedCategory}
@@ -1144,7 +1342,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       <option value="5">Presbyterian</option>
                     </select>
 
-                    {/* Location */}
                     <input
                       type="text"
                       placeholder="Location"
@@ -1159,7 +1356,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       }}
                     />
 
-                    {/* Phone */}
                     <input
                       type="tel"
                       placeholder="Phone"
@@ -1174,7 +1370,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       }}
                     />
 
-                    {/* Email */}
                     <input
                       type="email"
                       placeholder="Email"
@@ -1189,7 +1384,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                       }}
                     />
 
-                    {/* Buttons */}
                     <div style={{ display: "flex", gap: "12px" }}>
                       <button
                         type="submit"
@@ -1214,7 +1408,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                           setSelectedCategory("");
                           setLocation("");
                           setPhone("");
-                          setEmail("");
+                          setChurchEmail("");
                         }}
                         style={{
                           flex: 1,
