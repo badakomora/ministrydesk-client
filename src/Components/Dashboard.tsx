@@ -351,7 +351,7 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
 
   const categoryMap: Record<string, string> = {
     "News & Events": "1",
-    "Sermons": "2",
+    Sermons: "2",
     "Assembly Programs": "3",
     "Church Members": "4",
   };
