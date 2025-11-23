@@ -7,17 +7,17 @@ import { serverurl } from "./Appconfig";
 
 // -------------------- ROLE HIERARCHY --------------------
 const roles = [
-  { value: "1", label: "Senior Pastor", level: 1 },
-  { value: "2", label: "Junior Pastor", level: 1 },
+  { value: "1", label: "Reverend", level: 1 },
+  { value: "2", label: "Pastor", level: 1 },
   { value: "3", label: "Secretary", level: 1 },
-  { value: "3a", label: "Secretary", level: 2 },
-  { value: "3b", label: "Administrator", level: 3 },
-  { value: "3c", label: "National Coordinator", level: 4 },
+  { value: "3", label: "Secretary", level: 2 },
+  { value: "3", label: "Administrator", level: 3 },
+  { value: "3", label: "National Coordinator", level: 4 },
   { value: "4", label: "Member", level: 1 },
   { value: "6", label: "Overseer", level: 2 },
   { value: "7", label: "Treasurer", level: 1 },
-  { value: "7a", label: "Treasurer", level: 3 },
-  { value: "7b", label: "Finance Director", level: 4 },
+  { value: "7", label: "Treasurer", level: 3 },
+  { value: "7", label: "Finance Director", level: 4 },
   { value: "9", label: "Choir", level: 1 },
   { value: "10", label: "Usher", level: 1 },
   { value: "11", label: "Youth", level: 1 },
@@ -737,7 +737,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
     return (
       <div style={{ marginBottom: "14px" }}>
         <div css={roleProgressStyles}>
-          Progress: {Object.keys(selectedRolesByLevel).length} of 4 levels
+          Select Ministry Role: {Object.keys(selectedRolesByLevel).length} of 4
+          levels
         </div>
 
         {Object.entries(selectedRolesByLevel).map(([level, roleValue]) => {
