@@ -1,19 +1,29 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from "react";
-import { css, keyframes } from "@emotion/react";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { css, keyframes } from "@emotion/react"
+import { serverurl } from "./Appconfig"
 
-// Floating animation for carousel
 const float = keyframes`
   0% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
   100% { transform: translateY(0px); }
-`;
+`
+
+const blink = keyframes`
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+`
 
 const styles = {
-  container: css({
+  pageContainer: css({
+    minHeight: "100vh",
+    backgroundColor: "#f8fafc",
+  }),
+  contentContainer: css({
     maxWidth: "1200px",
-    margin: "50px auto",
-    padding: "8px 14px",
+    margin: "0 auto",
+    padding: "32px 16px",
     display: "grid",
     gridTemplateColumns: "1fr 420px",
     gap: "40px",
@@ -23,9 +33,8 @@ const styles = {
     },
   }),
   hero: css({
-    padding: "8px 14px",
-    background:
-      "linear-gradient(145deg, rgba(250,250,255,0.9), rgba(226,232,240,0.9))",
+    padding: "32px 16px",
+    background: "linear-gradient(145deg, rgba(250,250,255,0.9), rgba(226,232,240,0.9))",
     boxShadow: "0 20px 50px rgba(0,0,0,0.06)",
   }),
   kicker: css({
@@ -77,6 +86,7 @@ const styles = {
     cursor: "pointer",
     border: "none",
     transition: "all 0.25s ease",
+    borderRadius: "6px",
   }),
   btnPrimary: css({
     background: "linear-gradient(90deg, #2563eb, #fbbf24)",
@@ -87,16 +97,8 @@ const styles = {
       boxShadow: "0 10px 26px rgba(37,99,235,0.3)",
     },
   }),
-  btnGhost: css({
-    background: "white",
-    border: "1px solid #e2e8f0",
-    color: "#1e293b",
-    "&:hover": {
-      background: "#f8fafc",
-    },
-  }),
   aside: css({
-    padding: "8px 14px",
+    padding: "32px 16px",
     background: "#ffffff",
     border: "1px solid #e2e8f0",
     boxShadow: "0 12px 36px rgba(0,0,0,0.04)",
@@ -104,18 +106,13 @@ const styles = {
   }),
   mediaWrapper: css({
     position: "relative",
-    padding: "8px 14px",
+    padding: "16px",
     overflow: "hidden",
     marginBottom: "20px",
     boxShadow: "0 10px 28px rgba(0,0,0,0.1)",
     animation: `${float} 8s ease-in-out infinite`,
   }),
   img: css({
-    width: "100%",
-    height: "auto",
-    display: "block",
-  }),
-  video: css({
     width: "100%",
     height: "auto",
     display: "block",
@@ -130,6 +127,9 @@ const styles = {
     padding: "8px 14px",
     boxShadow: "0 3px 8px rgba(0,0,0,0.1)",
     fontWeight: 700,
+    "&:hover": {
+      background: "rgba(255,255,255,1)",
+    },
   }),
   dots: css({
     display: "flex",
@@ -143,6 +143,11 @@ const styles = {
       height: "10px",
       background: active ? "#2563eb" : "#cbd5e1",
       cursor: "pointer",
+      borderRadius: "50%",
+      transition: "all 0.25s ease",
+      "&:hover": {
+        background: active ? "#2563eb" : "#94a3b8",
+      },
     }),
   audioPlayer: css({
     width: "100%",
@@ -156,7 +161,7 @@ const styles = {
     background: "linear-gradient(145deg, #f9fafb, #ffffff)",
     border: "1px solid #e2e8f0",
     marginBottom: "18px",
-    padding: "5px",
+    padding: "16px",
     boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
   }),
   eventsTitle: css({
@@ -181,6 +186,7 @@ const styles = {
     fontSize: "15px",
     outline: "none",
     background: "#f8fafc",
+    borderRadius: "6px",
     "&:focus": {
       borderColor: "#2563eb",
       boxShadow: "0 0 0 3px rgba(37,99,235,0.15)",
@@ -196,6 +202,7 @@ const styles = {
     color: "white",
     boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
     transition: "all 0.25s ease",
+    borderRadius: "6px",
     "&:hover": {
       transform: "translateY(-2px)",
       boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
@@ -209,6 +216,7 @@ const styles = {
     border: "1px solid #e2e8f0",
     padding: "8px 14px",
     boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
+    borderRadius: "6px",
   }),
   commentItem: css({
     padding: "10px 12px",
@@ -226,12 +234,13 @@ const styles = {
     color: "#475569",
     lineHeight: 1.4,
   }),
-};
-
-const blink = keyframes`
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0; }
-`;
+  emptyContainer: css({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+  }),
+}
 
 const statsHighlight = css`
   font-size: 17px;
@@ -265,218 +274,320 @@ const statsHighlight = css`
   > small:nth-of-type(4)::before {
     color: #22c55e;
   }
-`;
+`
 
-type Comment = {
-  author: string;
-  text: string;
-};
-
-interface componentProps {
-  activeTab: string;
+interface ItemData {
+  id: number
+  churchid: number
+  userid: number
+  category: string
+  department: string | null
+  title: string
+  dateposted: string
+  description: string
+  documentfile?: string
+  audiofile?: string | null
+  created_at: string
+  offertithes: number
+  offerdonations: number
+  requestspecialprayers: number
+  contributeoffering: number
+  verses?: string[]
+  postedby?: string | null
+  churchname?: string
+  carouselimages?: string[]
 }
 
-export const Item: React.FC<componentProps> = ({ activeTab }) => {
-  const carouselItems = [
-    {
-      type: "image",
-      src: "https://img.freepik.com/premium-photo/workers-forming-human-pyramid-symbolizing-support-teamwork-labor-day_875755-23315.jpg",
-    },
-    { type: "video", src: "https://www.w3schools.com/html/mov_bbb.mp4" },
-    {
-      type: "image",
-      src: "https://images.stockcake.com/public/d/0/a/d0a3eee8-7063-4dad-aa0b-e9b46c94cd94_large/unity-in-diversity-stockcake.jpg",
-    },
-  ];
+interface Comment {
+  author: string
+  text: string
+}
 
-  const audioSrc = "https://www.w3schools.com/html/horse.mp3";
-  const documentUrl =
-    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+type Idprops = {
+  itemId: number | null
+}
 
-  const [index, setIndex] = useState(0);
-  const [commentText, setCommentText] = useState("");
+export const Item: React.FC<Idprops> = ({ itemId }) => {
+  const [posteditems, setpostedItems] = useState<ItemData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null)
+  const [index, setIndex] = useState(0)
+  const [commentText, setCommentText] = useState("")
   const [comments, setComments] = useState<Comment[]>([
     {
       author: "Staff John",
       text: "Welcome everyone! Share your prayer requests here.",
     },
-  ]);
+  ])
 
-  const next = () => setIndex((index + 1) % carouselItems.length);
-  const prev = () =>
-    setIndex((index - 1 + carouselItems.length) % carouselItems.length);
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setLoading(true)
+        const response = await axios.get(`${serverurl}/item/list/${itemId}`)
+        const items = Array.isArray(response.data) ? response.data : [response.data]
+        setpostedItems(items)
+        if (items.length > 0) {
+          setSelectedItemId(items[0].id)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch items")
+        console.error("Error fetching items:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (itemId) {
+      fetchItems()
+    }
+  }, [itemId])
+
+  const parseVerses = (versesData?: string[]): string[] => {
+    if (!versesData || versesData.length === 0) return []
+    try {
+      return versesData.flatMap((verse) => {
+        const parsed = JSON.parse(verse)
+        return Array.isArray(parsed) ? parsed : [parsed]
+      })
+    } catch {
+      return []
+    }
+  }
+
+  const next = () => {
+    const currentItem = posteditems.find((item) => item.id === selectedItemId)
+    const images = currentItem?.carouselimages || []
+    if (images.length === 0) return
+    setIndex((index + 1) % images.length)
+  }
+
+  const prev = () => {
+    const currentItem = posteditems.find((item) => item.id === selectedItemId)
+    const images = currentItem?.carouselimages || []
+    if (images.length === 0) return
+    setIndex((index - 1 + images.length) % images.length)
+  }
 
   const addComment = () => {
-    if (!commentText.trim()) return;
-    setComments([...comments, { author: "Member", text: commentText }]);
-    setCommentText("");
-  };
+    if (!commentText.trim()) return
+    setComments([...comments, { author: "Member", text: commentText }])
+    setCommentText("")
+  }
 
-  const currentItem = carouselItems[index];
+  if (loading) {
+    return (
+      <div css={styles.emptyContainer}>
+        <div css={css({ textAlign: "center" })}>
+          <p css={css({ color: "#64748b" })}>Loading items...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div css={styles.emptyContainer}>
+        <div css={css({ textAlign: "center" })}>
+          <p css={css({ color: "#ef4444", marginBottom: "16px" })}>Error: {error}</p>
+          <p css={css({ color: "#64748b" })}>Failed to load items from the server.</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (posteditems.length === 0) {
+    return (
+      <div css={styles.emptyContainer}>
+        <div css={css({ textAlign: "center" })}>
+          <p css={css({ color: "#64748b" })}>No items found.</p>
+        </div>
+      </div>
+    )
+  }
+
+  const currentItem = posteditems.find((item) => item.id === selectedItemId)
+  if (!currentItem) return null
+
+  const carouselImages = currentItem.carouselimages || []
+  const currentImage = carouselImages[index]
+  const versesArray = parseVerses(currentItem.verses)
 
   return (
-    <main css={styles.container}>
-      <section css={styles.hero}>
-        <div css={styles.kicker}>PAG Diani</div>
-        {activeTab === "AssemblyProgramsItem" && (
+    <div css={styles.pageContainer}>
+      {/* Content Area */}
+      <div css={styles.contentContainer}>
+        {/* Main Content */}
+        <section css={styles.hero}>
+          <div css={styles.kicker}>{currentItem.churchname || "Church"}</div>
           <div css={statsHighlight}>
-            <small>Youth Program</small>
+            <small>News & Updates</small>
           </div>
-        )}
 
-        <br />
-        <h1 css={styles.headline}>A Special Update for the PAG Family</h1>
-        <small>
-          {activeTab === "NewsItem" ? "Read by : Secretary" : "Sermon by : Pst"}{" "}
-          Peter Komora Andrew
-        </small>
-        <br />
-        <small>Date: Sunday 14th, Jan 2025</small>
-        <br />
-        <br />
-        <p css={styles.lead}>
-          We are blessed to share this comprehensive update with our beloved PAG
-          family. As one body in Christ, we continue to walk together in prayer,
-          worship, and fellowship.
-        </p>
-        {/* Document Section (available for all tabs) */}
+          <br />
+          <h1 css={styles.headline}>{currentItem.title}</h1>
+          <small>Posted by: {currentItem.postedby || "N/A"}</small>
+          <br /> 
+          <small>
+            Date:{" "}
+            {new Date(currentItem.dateposted).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </small>
+          <br />
+          <br />
+          <p css={styles.lead}>{currentItem.description}</p>
 
-        <a
-          href={documentUrl}
-          download
-          css={css({
-            display: "inline-block",
-            padding: "8px 14px",
-            background: "#fbbf24",
-            color: "white",
-            fontWeight: 600,
-            textDecoration: "none",
-            boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
-            transition: "all 0.25s ease",
-            "&:hover": {
-              transform: "translateY(-2px)",
-              boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
-            },
-          })}
-        >
-          ⬇ Download Document
-        </a>
-        <br />
-        <br />
-        {activeTab === "AssemblyProgramsItem" && (
+          {/* Document Section */}
+          {currentItem.documentfile && (
+            <>
+              <a
+                href={currentItem.documentfile}
+                download
+                css={css({
+                  display: "inline-block",
+                  padding: "8px 14px",
+                  background: "#fbbf24",
+                  color: "white",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
+                  borderRadius: "6px",
+                  transition: "all 0.25s ease",
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 6px 16px rgba(37,99,235,0.35)",
+                  },
+                })}
+              >
+                ⬇ Download Document
+              </a>
+              <br />
+              <br />
+            </>
+          )}
+
           <div css={styles.eventsBox}>
             <h5 css={styles.eventsTitle}>🕊️ Order of Events</h5>
             <ul css={styles.eventsList}>
               <li>1️⃣ Opening Prayer & Praise Session</li>
               <li>2️⃣ Scripture Reading</li>
               <li>3️⃣ Choir Presentation</li>
-              <li>4️⃣ Sermon by Pst Peter Komora Andrew</li>
+              <li>4️⃣ Sermon</li>
               <li>5️⃣ Tithes & Offering</li>
               <li>6️⃣ Announcements</li>
               <li>7️⃣ Closing Prayer & Fellowship</li>
             </ul>
           </div>
-        )}
 
-        {(activeTab === "SermonsItem" ||
-          activeTab === "AssemblyProgramsItem") && (
-          <>
+          {/* Display verses from API data */}
+          {versesArray.length > 0 && (
             <div css={styles.features}>
-              <div css={styles.chip}>🙏 John 3:13</div>
-              <div css={styles.chip}>📖 2nd Corinthians 6:35</div>
-              <div css={styles.chip}>🤝 Psalms 18:24</div>
-              <div css={styles.chip}>🌍 Revelation 7:2</div>
+              {versesArray.map((verse, idx) => (
+                <div key={idx} css={styles.chip}>
+                  📖 {verse}
+                </div>
+              ))}
             </div>
-            <div css={styles.ctaRow}>
-              <button css={[styles.btn, styles.btnPrimary]}>
-                Offer tithes
-              </button>
-              <button css={[styles.btn, styles.btnPrimary]}>
-                Offer donations
-              </button>
-              <button css={[styles.btn, styles.btnPrimary]}>
-                Request Special prayers
-              </button>
-              <button css={[styles.btn, styles.btnPrimary]}>
-                Contribute Offering
-              </button>
-            </div>
-          </>
-        )}
-      </section>
-
-      <aside css={styles.aside}>
-        <div css={styles.mediaWrapper}>
-          {currentItem.type === "image" ? (
-            <img css={styles.img} src={currentItem.src} alt="Slide" />
-          ) : (
-            <video css={styles.video} controls>
-              <source src={currentItem.src} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
           )}
-          <button css={[styles.navBtn, { left: "10px" }]} onClick={prev}>
-            ‹
-          </button>
-          <button css={[styles.navBtn, { right: "10px" }]} onClick={next}>
-            ›
-          </button>
-        </div>
 
-        <div css={styles.dots}>
-          {carouselItems.map((_, i) => (
-            <div
-              key={i}
-              css={styles.dot(i === index)}
-              onClick={() => setIndex(i)}
-            />
-          ))}
-        </div>
-        <div
-          css={css({
-            margin: "20px auto",
-            padding: "8px 14px",
-            border: "1px solid #e2e8f0",
-            background: "linear-gradient(145deg, #f9fafb, #ffffff)",
-            boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
-            textAlign: "left",
-          })}
-        >
-          {/* Audio player below carousel */}
-          <audio css={styles.audioPlayer} controls>
-            <source src={audioSrc} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-        </div>
-
-        {/* Comment Section */}
-        <div css={styles.commentArea}>
-          <h4>
-            {activeTab === "AssemblyProgramsItem"
-              ? "Community Updates"
-              : "Continue the Discussion & Engagement Forum"}
-          </h4>
-          <input
-            css={styles.commentInput}
-            type="text"
-            placeholder="Write a comment..."
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-          />
-          <button css={styles.commentBtn} onClick={addComment}>
-            Post Comment
-          </button>
-
-          <div css={styles.commentList}>
-            {comments.map((c, i) => (
-              <div key={i} css={styles.commentItem}>
-                <div css={styles.commentAuthor}>{c.author}</div>
-                <div css={styles.commentText}>{c.text}</div>
-              </div>
-            ))}
+          <div css={styles.ctaRow}>
+            {currentItem.offertithes === 1 && <button css={[styles.btn, styles.btnPrimary]}>Offer tithes</button>}
+            {currentItem.offerdonations === 1 && <button css={[styles.btn, styles.btnPrimary]}>Offer donations</button>}
+            {currentItem.requestspecialprayers === 1 && (
+              <button css={[styles.btn, styles.btnPrimary]}>Request Special prayers</button>
+            )}
+            {currentItem.contributeoffering === 1 && (
+              <button css={[styles.btn, styles.btnPrimary]}>Contribute Offering</button>
+            )}
           </div>
-        </div>
-      </aside>
-    </main>
-  );
-};
+        </section>
+
+        {/* Sidebar with Media & Comments */}
+        <aside css={styles.aside}>
+          {/* Carousel with images from API */}
+          {carouselImages.length > 0 && (
+            <>
+              <div css={styles.mediaWrapper}>
+                <img
+                  css={styles.img}
+                  src={currentImage || "/placeholder.svg"}
+                  alt={`Slide ${index + 1}`}
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"
+                  }}
+                />
+                <button css={[styles.navBtn, { left: "10px" }]} onClick={prev}>
+                  ‹
+                </button>
+                <button css={[styles.navBtn, { right: "10px" }]} onClick={next}>
+                  ›
+                </button>
+              </div>
+
+              {/* Carousel Indicators */}
+              <div css={styles.dots}>
+                {carouselImages.map((_, i) => (
+                  <div key={i} css={styles.dot(i === index)} onClick={() => setIndex(i)} />
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Audio Player - only show if audiofile exists */}
+          {currentItem.audiofile && (
+            <div
+              css={css({
+                margin: "20px auto",
+                padding: "16px",
+                border: "1px solid #e2e8f0",
+                background: "linear-gradient(145deg, #f9fafb, #ffffff)",
+                boxShadow: "inset 0 2px 6px rgba(0,0,0,0.04)",
+                textAlign: "left",
+                borderRadius: "6px",
+              })}
+            >
+              <audio css={styles.audioPlayer} controls>
+                <source src={currentItem.audiofile} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          )}
+
+          {/* Comment Section */}
+          <div css={styles.commentArea}>
+            <h4>Continue the Discussion & Engagement Forum</h4>
+            <input
+              css={styles.commentInput}
+              type="text"
+              placeholder="Write a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  addComment()
+                }
+              }}
+            />
+            <button css={styles.commentBtn} onClick={addComment}>
+              Post Comment
+            </button>
+
+            <div css={styles.commentList}>
+              {comments.map((c, i) => (
+                <div key={i} css={styles.commentItem}>
+                  <div css={styles.commentAuthor}>{c.author}</div>
+                  <div css={styles.commentText}>{c.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  )
+}

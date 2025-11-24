@@ -3,34 +3,10 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { serverurl } from "./Appconfig";
+import { roles, serverurl } from "./Appconfig";
 
 // -------------------- ROLE HIERARCHY --------------------
-const roles = [
-  { value: "1", label: "Reverend", level: 1 },
-  { value: "2", label: "Pastor", level: 1 },
-  { value: "3", label: "Secretary", level: 1 },
-  { value: "3", label: "Secretary", level: 2 },
-  { value: "3", label: "Administrator", level: 3 },
-  { value: "3", label: "National Coordinator", level: 4 },
-  { value: "4", label: "Member", level: 1 },
-  { value: "6", label: "Overseer", level: 2 },
-  { value: "7", label: "Treasurer", level: 1 },
-  { value: "7", label: "Treasurer", level: 3 },
-  { value: "7", label: "Finance Director", level: 4 },
-  { value: "9", label: "Choir", level: 1 },
-  { value: "10", label: "Usher", level: 1 },
-  { value: "11", label: "Youth", level: 1 },
-  { value: "12", label: "Women Dept", level: 1 },
-  { value: "13", label: "Men Dept", level: 1 },
-  { value: "14", label: "General Superintendent", level: 3 },
-  { value: "15", label: "Mama Kenya", level: 3 },
-  { value: "16", label: "National CED Director", level: 4 },
-  { value: "0", label: "N/A", level: 1 },
-  { value: "0", label: "N/A", level: 2 },
-  { value: "0", label: "N/A", level: 3 },
-  { value: "0", label: "N/A", level: 4 },
-];
+
 
 const ROLE_HIERARCHY = {
   4: "National Level",
@@ -268,7 +244,7 @@ const profileCard = css`
   background: #fff;
   padding: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  width: 100%;
+  width: 90%;
   font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
@@ -1129,15 +1105,44 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 <div className="row">
                   <span className="label">Ministry Role & Assembly</span>
                   <span className="value">
-                    {
-                      roles.find(
-                        (r) =>
-                          r.value === loggedNationalRole ||
-                          loggedAssemblyRole ||
-                          loggedExecutiveRole ||
-                          loggedDistrictRole
-                      )?.label
-                    }
+                    {(() => {
+                      const selected: string[] = [];
+
+                      // Check national
+                      if (loggedNationalRole && loggedNationalRole !== "0") {
+                        const role = roles.find(
+                          (r) => r.value === loggedNationalRole
+                        );
+                        if (role) selected.push(role.label);
+                      }
+
+                      // Check assembly
+                      if (loggedAssemblyRole && loggedAssemblyRole !== "0") {
+                        const role = roles.find(
+                          (r) => r.value === loggedAssemblyRole
+                        );
+                        if (role) selected.push(role.label);
+                      }
+
+                      // Check executive
+                      if (loggedExecutiveRole && loggedExecutiveRole !== "0") {
+                        const role = roles.find(
+                          (r) => r.value === loggedExecutiveRole
+                        );
+                        if (role) selected.push(role.label);
+                      }
+
+                      // Check district
+                      if (loggedDistrictRole && loggedDistrictRole !== "0") {
+                        const role = roles.find(
+                          (r) => r.value === loggedDistrictRole
+                        );
+                        if (role) selected.push(role.label);
+                      }
+
+                      // If none found, show nothing
+                      return selected.length ? selected.join(", ") : "";
+                    })()}
                     , {userChurch}
                   </span>
                 </div>

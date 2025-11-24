@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
   const [activeTab, setActiveTab] = useState("Home");
+  const [itemId, setItemId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -25,11 +26,11 @@ function App() {
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
       activeTab === "AssemblyProgramsItem" ? (
-        <Item activeTab={activeTab} />
+        <Item  itemId={itemId} />
       ) : activeTab === "NewsList" ||
         activeTab === "SermonsList" ||
         activeTab === "AssemblyProgramsList" ? (
-        <List activeTab={activeTab} setActiveTab={setActiveTab} />
+        <List activeTab={activeTab} setActiveTab={setActiveTab} setItemId={setItemId} />
       ) : activeTab === "Dashboard" ? (
         <Dashboard setActiveTab={setActiveTab} />
       ) : activeTab === "UserForm" ? (

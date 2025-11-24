@@ -191,14 +191,11 @@ const pageInfo = {
   textAlign: "center",
 } as const;
 
-// (mockDataByCategory omitted for brevity — keep your mock array as before)
-// I leave it in your file above; no changes required for mocks.
-
 const columnConfigs = {
   "Church Members": {
     columns: [
       "fullname",
-      "role",
+      "assemblyrole",
       "datecreated",
       "status",
       "subscription",
@@ -212,7 +209,6 @@ const columnConfigs = {
       "Subscription",
       "Action",
     ],
-    // optional mobile overrides — safe to omit
   },
   "News & Events": {
     columns: ["dateposted", "title", "description", "action"],
@@ -428,7 +424,16 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
       );
     }
 
-    if (column === "role") return getRoleLabel(value);
+    if (
+      [
+        "nationalrole",
+        "executiverole",
+        "districtrole",
+        "assemblyrole",
+      ].includes(column)
+    ) {
+      return getRoleLabel(value);
+    }
 
     if (column === "churchid") return churches[value] ?? "Unknown";
 

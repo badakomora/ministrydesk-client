@@ -133,6 +133,10 @@ type componentProps = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 };
 
+type Idprops = {
+  setItemId: React.Dispatch<React.SetStateAction<number | null>>;
+};
+
 type Item = {
   id: number;
   category: "1" | "2" | "3"; // Server categories
@@ -143,7 +147,7 @@ type Item = {
   churchName: string;
 };
 
-export const List: React.FC<componentProps> = ({ activeTab, setActiveTab }) => {
+export const List: React.FC<componentProps & Idprops> = ({ activeTab, setActiveTab, setItemId }) => {
   const [search, setSearch] = useState("");
   const [items, setItems] = useState<Item[]>([]);
 
@@ -203,11 +207,15 @@ export const List: React.FC<componentProps> = ({ activeTab, setActiveTab }) => {
     <div className="section">
       <h2>{title}</h2>
       <p className="section-desc">{description}</p>
-      <div className="grid" onClick={() => setActiveTab(tabName)}>
+      <div className="grid">
         {sectionItems.length > 0 ? (
           sectionItems.map((item, idx) => (
             <div
               key={item.id}
+              onClick={() => {
+                setActiveTab(tabName);
+                setItemId(item.id);
+              }}
               className={`card ${
                 idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
               }`}
