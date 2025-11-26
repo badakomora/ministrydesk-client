@@ -197,6 +197,23 @@ const thumb = css`
   display: block;
 `;
 
+const thumbVideo = css`
+  ${thumb};
+  background: #f1f5f9;
+`;
+
+const thumbLabel = css`
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 0.6rem;
+  padding: 2px 4px;
+  font-weight: 600;
+  border-radius: 2px;
+`;
+
 const removeThumbBtn = css`
   position: absolute;
   top: -8px;
@@ -526,6 +543,9 @@ export const Form: React.FC = () => {
 
   const removeImageAt = (index: number) =>
     setCarouselImages((prev) => prev.filter((_, i) => i !== index));
+
+  const isVideoFile = (file: File) => file.type.startsWith("video/");
+
   const removeDocument = () => setDocumentFile(null);
   const removeAudio = () => setAudioFile(null);
 
@@ -659,11 +679,11 @@ export const Form: React.FC = () => {
               css={selectStyle}
             >
               <option value="">Select a department</option>
-              <option value="youth">Youth</option>
-              <option value="men">Men</option>
-              <option value="women">Women</option>
-              <option value="children">Children</option>
-              <option value="seniors">Seniors</option>
+              <option value="Youth">Youth</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="CED">CED</option>
+              <option value="Sunday School">Sunday School</option>
             </select>
             {errors.department && (
               <div css={errorText}>{errors.department}</div>
@@ -747,12 +767,12 @@ export const Form: React.FC = () => {
         </div>
 
         <div css={fieldStyle}>
-          <label css={labelStyle}>Videos/Photos (If any)</label>
+          <label css={labelStyle}>Videos & Photos (If any)</label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,video/*"
                 multiple
                 style={{ display: "none" }}
                 onChange={onCarouselChange}
@@ -761,30 +781,38 @@ export const Form: React.FC = () => {
             </label>
             <div css={filenameBox}>
               {carouselImages.length ? (
-                <span>{carouselImages.length} image(s)</span>
+                <span>{carouselImages.length} file(s)</span>
               ) : (
-                <span css={helpText}>No images selected</span>
+                <span css={helpText}>No files selected</span>
               )}
             </div>
           </div>
           {imagePreviews.length > 0 && (
             <div css={thumbsWrap}>
-              {imagePreviews.map((p, idx) => (
-                <div key={idx} css={thumbContainer}>
-                  <img
-                    src={p.url || "/placeholder.svg"}
-                    alt={`Thumbnail ${idx}`}
-                    css={thumb}
-                  />
-                  <button
-                    onClick={() => removeImageAt(idx)}
-                    css={removeThumbBtn}
-                    aria-label="Remove image"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
+              {imagePreviews.map((p, idx) => {
+                const isVideo = isVideoFile(p.file);
+                return (
+                  <div key={idx} css={thumbContainer}>
+                    {isVideo ? (
+                      <video src={p.url} css={thumbVideo} controls />
+                    ) : (
+                      <img
+                        src={p.url || "/placeholder.svg"}
+                        alt={`Thumbnail ${idx}`}
+                        css={thumb}
+                      />
+                    )}
+                    {isVideo && <div css={thumbLabel}>VIDEO</div>}
+                    <button
+                      onClick={() => removeImageAt(idx)}
+                      css={removeThumbBtn}
+                      aria-label="Remove file"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           )}
           {errors.carouselImages && (

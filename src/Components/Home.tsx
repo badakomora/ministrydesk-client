@@ -42,11 +42,9 @@ const slideRightLeft = keyframes`
 `;
 
 const blink = keyframes`
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
 `;
-
 // -------------------- Global Styles --------------------
 const globalStyles = css`
   * {

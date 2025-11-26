@@ -55,6 +55,7 @@ const listStyles = css`
 
   .card {
     padding: 8px 14px;
+    width: 100%;
     border: 1px solid #e2e8f0;
     background: #ffffff;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
@@ -147,7 +148,11 @@ type Item = {
   churchName: string;
 };
 
-export const List: React.FC<componentProps & Idprops> = ({ activeTab, setActiveTab, setItemId }) => {
+export const List: React.FC<componentProps & Idprops> = ({
+  activeTab,
+  setActiveTab,
+  setItemId,
+}) => {
   const [search, setSearch] = useState("");
   const [items, setItems] = useState<Item[]>([]);
 

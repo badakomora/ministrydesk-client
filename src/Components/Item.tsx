@@ -1,19 +1,16 @@
 /** @jsxImportSource @emotion/react */
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { css, keyframes } from "@emotion/react"
-import { serverurl } from "./Appconfig"
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { css, keyframes } from "@emotion/react";
+import { serverurl } from "./Appconfig";
 
 const float = keyframes`
   0% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
   100% { transform: translateY(0px); }
-`
+`;
 
-const blink = keyframes`
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0; }
-`
+
 
 const styles = {
   pageContainer: css({
@@ -34,7 +31,8 @@ const styles = {
   }),
   hero: css({
     padding: "32px 16px",
-    background: "linear-gradient(145deg, rgba(250,250,255,0.9), rgba(226,232,240,0.9))",
+    background:
+      "linear-gradient(145deg, rgba(250,250,255,0.9), rgba(226,232,240,0.9))",
     boxShadow: "0 20px 50px rgba(0,0,0,0.06)",
   }),
   kicker: css({
@@ -116,6 +114,23 @@ const styles = {
     width: "100%",
     height: "auto",
     display: "block",
+  }),
+  video: css({
+    width: "100%",
+    height: "auto",
+    display: "block",
+    backgroundColor: "#000",
+  }),
+  mediaLabel: css({
+    position: "absolute",
+    top: "20px",
+    right: "20px",
+    background: "rgba(0,0,0,0.7)",
+    color: "#ffffff",
+    padding: "4px 10px",
+    borderRadius: "4px",
+    fontSize: "12px",
+    fontWeight: 600,
   }),
   navBtn: css({
     position: "absolute",
@@ -240,141 +255,117 @@ const styles = {
     justifyContent: "center",
     minHeight: "100vh",
   }),
-}
+};
 
-const statsHighlight = css`
-  font-size: 17px;
-  font-weight: 600;
-  color: #1e293b;
-  backdrop-filter: blur(12px);
-  display: flex;
-  transition: all 0.25s ease;
-  &:hover {
-    transform: translateY(-3px);
-  }
-  > small {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    &::before {
-      content: "•";
-      font-size: 22px;
-      animation: ${blink} 1.4s infinite;
-    }
-  }
-  > small:nth-of-type(1)::before {
-    color: #2563eb;
-  }
-  > small:nth-of-type(2)::before {
-    color: #fbbf24;
-  }
-  > small:nth-of-type(3)::before {
-    color: #ef4444;
-  }
-  > small:nth-of-type(4)::before {
-    color: #22c55e;
-  }
-`
+
 
 interface ItemData {
-  id: number
-  churchid: number
-  userid: number
-  category: string
-  department: string | null
-  title: string
-  dateposted: string
-  description: string
-  documentfile?: string
-  audiofile?: string | null
-  created_at: string
-  offertithes: number
-  offerdonations: number
-  requestspecialprayers: number
-  contributeoffering: number
-  verses?: string[]
-  postedby?: string | null
-  churchname?: string
-  carouselimages?: string[]
+  id: number;
+  churchid: number;
+  userid: number;
+  category: string;
+  department: string | null;
+  title: string;
+  dateposted: string;
+  description: string;
+  documentfile?: string;
+  audiofile?: string | null;
+  created_at: string;
+  offertithes: number;
+  offerdonations: number;
+  requestspecialprayers: number;
+  contributeoffering: number;
+  verses?: string[];
+  postedby?: string | null;
+  churchname?: string;
+  carouselimages?: string[];
 }
 
 interface Comment {
-  author: string
-  text: string
+  author: string;
+  text: string;
 }
 
 type Idprops = {
-  itemId: number | null
-}
+  itemId: number | null;
+};
+
+const isVideoFile = (url: string): boolean => {
+  const videoExtensions = [".mp4", ".webm", ".mov", ".ogg", ".mkv"];
+  const extension = url.toLowerCase().split("?")[0].split(".").pop() || "";
+  return videoExtensions.includes(`.${extension}`);
+};
 
 export const Item: React.FC<Idprops> = ({ itemId }) => {
-  const [posteditems, setpostedItems] = useState<ItemData[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null)
-  const [index, setIndex] = useState(0)
-  const [commentText, setCommentText] = useState("")
+  const [posteditems, setpostedItems] = useState<ItemData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [index, setIndex] = useState(0);
+  const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([
     {
       author: "Staff John",
       text: "Welcome everyone! Share your prayer requests here.",
     },
-  ])
+  ]);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        setLoading(true)
-        const response = await axios.get(`${serverurl}/item/list/${itemId}`)
-        const items = Array.isArray(response.data) ? response.data : [response.data]
-        setpostedItems(items)
+        setLoading(true);
+        const response = await axios.get(`${serverurl}/item/list/${itemId}`);
+        const items = Array.isArray(response.data)
+          ? response.data
+          : [response.data];
+        setpostedItems(items);
         if (items.length > 0) {
-          setSelectedItemId(items[0].id)
+          setSelectedItemId(items[0].id);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch items")
-        console.error("Error fetching items:", err)
+        setError(err instanceof Error ? err.message : "Failed to fetch items");
+        console.error("Error fetching items:", err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     if (itemId) {
-      fetchItems()
+      fetchItems();
     }
-  }, [itemId])
+  }, [itemId]);
 
   const parseVerses = (versesData?: string[]): string[] => {
-    if (!versesData || versesData.length === 0) return []
+    if (!versesData || versesData.length === 0) return [];
     try {
       return versesData.flatMap((verse) => {
-        const parsed = JSON.parse(verse)
-        return Array.isArray(parsed) ? parsed : [parsed]
-      })
+        const parsed = JSON.parse(verse);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      });
     } catch {
-      return []
+      return [];
     }
-  }
+  };
 
   const next = () => {
-    const currentItem = posteditems.find((item) => item.id === selectedItemId)
-    const images = currentItem?.carouselimages || []
-    if (images.length === 0) return
-    setIndex((index + 1) % images.length)
-  }
+    const currentItem = posteditems.find((item) => item.id === selectedItemId);
+    const media = currentItem?.carouselimages || [];
+    if (media.length === 0) return;
+    setIndex((index + 1) % media.length);
+  };
 
   const prev = () => {
-    const currentItem = posteditems.find((item) => item.id === selectedItemId)
-    const images = currentItem?.carouselimages || []
-    if (images.length === 0) return
-    setIndex((index - 1 + images.length) % images.length)
-  }
+    const currentItem = posteditems.find((item) => item.id === selectedItemId);
+    const media = currentItem?.carouselimages || [];
+    if (media.length === 0) return;
+    setIndex((index - 1 + media.length) % media.length);
+  };
 
   const addComment = () => {
-    if (!commentText.trim()) return
-    setComments([...comments, { author: "Member", text: commentText }])
-    setCommentText("")
-  }
+    if (!commentText.trim()) return;
+    setComments([...comments, { author: "Member", text: commentText }]);
+    setCommentText("");
+  };
 
   if (loading) {
     return (
@@ -383,18 +374,22 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
           <p css={css({ color: "#64748b" })}>Loading items...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
     return (
       <div css={styles.emptyContainer}>
         <div css={css({ textAlign: "center" })}>
-          <p css={css({ color: "#ef4444", marginBottom: "16px" })}>Error: {error}</p>
-          <p css={css({ color: "#64748b" })}>Failed to load items from the server.</p>
+          <p css={css({ color: "#ef4444", marginBottom: "16px" })}>
+            Error: {error}
+          </p>
+          <p css={css({ color: "#64748b" })}>
+            Failed to load items from the server.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   if (posteditems.length === 0) {
@@ -404,15 +399,16 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
           <p css={css({ color: "#64748b" })}>No items found.</p>
         </div>
       </div>
-    )
+    );
   }
 
-  const currentItem = posteditems.find((item) => item.id === selectedItemId)
-  if (!currentItem) return null
+  const currentItem = posteditems.find((item) => item.id === selectedItemId);
+  if (!currentItem) return null;
 
-  const carouselImages = currentItem.carouselimages || []
-  const currentImage = carouselImages[index]
-  const versesArray = parseVerses(currentItem.verses)
+  const carouselMedia = currentItem.carouselimages || [];
+  const currentMedia = carouselMedia[index];
+  const isVideo = isVideoFile(currentMedia || "");
+  const versesArray = parseVerses(currentItem.verses);
 
   return (
     <div css={styles.pageContainer}>
@@ -420,15 +416,15 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
       <div css={styles.contentContainer}>
         {/* Main Content */}
         <section css={styles.hero}>
-          <div css={styles.kicker}>{currentItem.churchname || "Church"}</div>
-          <div css={statsHighlight}>
-            <small>News & Updates</small>
-          </div>
-
-          <br />
+          <div css={styles.kicker}>{currentItem.churchname}</div>
           <h1 css={styles.headline}>{currentItem.title}</h1>
+          <small>
+            {" "}
+            {currentItem.department ? currentItem.department + " Program" : ""}
+          </small>
+          <br />
           <small>Posted by: {currentItem.postedby || "N/A"}</small>
-          <br /> 
+          <br />
           <small>
             Date:{" "}
             {new Date(currentItem.dateposted).toLocaleDateString("en-US", {
@@ -471,19 +467,6 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
             </>
           )}
 
-          <div css={styles.eventsBox}>
-            <h5 css={styles.eventsTitle}>🕊️ Order of Events</h5>
-            <ul css={styles.eventsList}>
-              <li>1️⃣ Opening Prayer & Praise Session</li>
-              <li>2️⃣ Scripture Reading</li>
-              <li>3️⃣ Choir Presentation</li>
-              <li>4️⃣ Sermon</li>
-              <li>5️⃣ Tithes & Offering</li>
-              <li>6️⃣ Announcements</li>
-              <li>7️⃣ Closing Prayer & Fellowship</li>
-            </ul>
-          </div>
-
           {/* Display verses from API data */}
           {versesArray.length > 0 && (
             <div css={styles.features}>
@@ -496,31 +479,57 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
           )}
 
           <div css={styles.ctaRow}>
-            {currentItem.offertithes === 1 && <button css={[styles.btn, styles.btnPrimary]}>Offer tithes</button>}
-            {currentItem.offerdonations === 1 && <button css={[styles.btn, styles.btnPrimary]}>Offer donations</button>}
+            {currentItem.offertithes === 1 && (
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Offer tithes
+              </button>
+            )}
+            {currentItem.offerdonations === 1 && (
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Offer donations
+              </button>
+            )}
             {currentItem.requestspecialprayers === 1 && (
-              <button css={[styles.btn, styles.btnPrimary]}>Request Special prayers</button>
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Request Special prayers
+              </button>
             )}
             {currentItem.contributeoffering === 1 && (
-              <button css={[styles.btn, styles.btnPrimary]}>Contribute Offering</button>
+              <button css={[styles.btn, styles.btnPrimary]}>
+                Contribute Offering
+              </button>
             )}
           </div>
         </section>
 
         {/* Sidebar with Media & Comments */}
         <aside css={styles.aside}>
-          {/* Carousel with images from API */}
-          {carouselImages.length > 0 && (
+          {/* Carousel with images and videos from API */}
+          {carouselMedia.length > 0 && (
             <>
               <div css={styles.mediaWrapper}>
-                <img
-                  css={styles.img}
-                  src={currentImage || "/placeholder.svg"}
-                  alt={`Slide ${index + 1}`}
-                  onError={(e) => {
-                    e.currentTarget.src = "/placeholder.svg"
-                  }}
-                />
+                {isVideo ? (
+                  <video
+                    css={styles.video}
+                    controls
+                    onError={(e) => {
+                      e.currentTarget.poster = "/placeholder.svg";
+                    }}
+                  >
+                    <source src={currentMedia} type="video/mp4" />
+                    Your browser does not support the video element.
+                  </video>
+                ) : (
+                  <img
+                    css={styles.img}
+                    src={currentMedia || "/placeholder.svg"}
+                    alt={`Slide ${index + 1}`}
+                    onError={(e) => {
+                      e.currentTarget.src = "/placeholder.svg";
+                    }}
+                  />
+                )}
+                {isVideo && <div css={styles.mediaLabel}>🎥 VIDEO</div>}
                 <button css={[styles.navBtn, { left: "10px" }]} onClick={prev}>
                   ‹
                 </button>
@@ -531,8 +540,12 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
 
               {/* Carousel Indicators */}
               <div css={styles.dots}>
-                {carouselImages.map((_, i) => (
-                  <div key={i} css={styles.dot(i === index)} onClick={() => setIndex(i)} />
+                {carouselMedia.map((_, i) => (
+                  <div
+                    key={i}
+                    css={styles.dot(i === index)}
+                    onClick={() => setIndex(i)}
+                  />
                 ))}
               </div>
             </>
@@ -569,7 +582,7 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
               onChange={(e) => setCommentText(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  addComment()
+                  addComment();
                 }
               }}
             />
@@ -589,5 +602,5 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
         </aside>
       </div>
     </div>
-  )
-}
+  );
+};
