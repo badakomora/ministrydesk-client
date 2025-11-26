@@ -4,7 +4,29 @@ import { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { serverurl } from "./Appconfig";
+import { roles, serverurl } from "./Appconfig";
+
+/* ----------------------
+   Utility: Get User Role Level
+   ---------------------- */
+const getUserRoleLevel = (): number => {
+  if (localStorage.getItem("nationalRole") === "3") return 4;
+  if (localStorage.getItem("executiveRole") === "3") return 3;
+  if (localStorage.getItem("districtRole") === "3") return 2;
+  return 0;
+};
+
+const getVisibilityOptions = (userLevel: number) => {
+  const uniqueLabels = new Set<string>();
+  return roles
+    .filter((role) => role.level >= userLevel)
+    .filter((role) => {
+      if (uniqueLabels.has(role.label)) return false;
+      uniqueLabels.add(role.label);
+      return true;
+    })
+    .map((role) => role.label);
+};
 
 /* ----------------------
    Design tokens
@@ -184,7 +206,6 @@ const thumbsWrap = css`
 
 const thumbContainer = css`
   position: relative;
-
   overflow: hidden;
 `;
 
@@ -193,7 +214,6 @@ const thumb = css`
   height: 72px;
   object-fit: cover;
   border: 1px solid ${tokens.border};
-
   display: block;
 `;
 
@@ -274,39 +294,8 @@ const primaryButton = (disabled = false) => css`
   }
 `;
 
-const secondaryButton = css`
-  padding: ${tokens.spacing.md} ${tokens.spacing.lg};
-  font-weight: 600;
-  font-size: 0.9rem;
-  background: white;
-  border: 1px solid ${tokens.border};
-
-  color: ${tokens.muted};
-  cursor: pointer;
-  transition: all 0.15s ease;
-
-  &:hover {
-    border-color: ${tokens.primary};
-    color: ${tokens.primary};
-    background: #f8fafc;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${tokens.primary};
-    outline-offset: 2px;
-  }
-`;
-
-const toggleWrapper = css`
-  display: flex;
-  gap: ${tokens.spacing.lg};
-  flex-wrap: wrap;
-`;
-
 const checkboxRow = css`
   display: flex;
-  align-items: center;
-  gap: ${tokens.spacing.md};
   cursor: pointer;
   padding: ${tokens.spacing.sm} 0;
 `;
@@ -471,6 +460,7 @@ const buttonLabels: Record<keyof ButtonToggles, string> = {
 
 export const Form: React.FC = () => {
   const [formData, setFormData] = useState({
+    visibility: "",
     category: "",
     department: "",
     title: "",
@@ -491,6 +481,11 @@ export const Form: React.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+
+  const visibilityOptions = useMemo(() => {
+    const userLevel = getUserRoleLevel();
+    return getVisibilityOptions(userLevel);
+  }, []);
 
   const imagePreviews = useMemo(() => {
     return carouselImages.map((f) => ({
@@ -557,11 +552,10 @@ export const Form: React.FC = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
+    if (!formData.visibility.trim())
+      newErrors.visibility = "Visibility is required";
     if (!formData.category.trim()) newErrors.category = "Category is required";
-    if (
-      formData.category === "assembly programs" &&
-      !formData.department.trim()
-    )
+    if (formData.category === "3" && !formData.department.trim())
       newErrors.department = "Department is required";
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.datePosted.trim()) newErrors.datePosted = "Date is required";
@@ -582,12 +576,13 @@ export const Form: React.FC = () => {
     try {
       const form = new FormData();
 
-      // ⭐ Safely get churchid & userid
       const churchId = localStorage.getItem("userChurchId") || "";
       const userId = localStorage.getItem("userId") || "";
 
       form.append("churchid", churchId);
       form.append("userid", userId);
+
+      form.append("visibility", formData.visibility);
 
       form.append("category", formData.category);
       if (formData.department) form.append("department", formData.department);
@@ -622,6 +617,7 @@ export const Form: React.FC = () => {
       toast.success("Submitted successfully!");
 
       setFormData({
+        visibility: "",
         category: "",
         department: "",
         title: "",
@@ -653,6 +649,30 @@ export const Form: React.FC = () => {
       <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
       <div css={formGrid}>
+        {localStorage.getItem("assemblyRole") === "3" ? (
+          ""
+        ) : (
+          <div css={[fieldStyle, fullWidth]}>
+            <label css={labelStyle}>Who can see this post? *</label>
+            <select
+              name="visibility"
+              value={formData.visibility}
+              onChange={handleInput}
+              css={selectStyle}
+            >
+              <option value="">Select visibility</option>
+              {visibilityOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            {errors.visibility && (
+              <div css={errorText}>{errors.visibility}</div>
+            )}
+          </div>
+        )}
+
         <div css={fieldStyle}>
           <label css={labelStyle}>Category *</label>
           <select
@@ -731,9 +751,10 @@ export const Form: React.FC = () => {
             )}
           </div>
         </div>
-
+        <label css={labelStyle}>Attach files</label>
+        <br />
         <div css={fieldStyle}>
-          <label css={labelStyle}>Document File (If any)</label>
+          <label css={labelStyle}>Document File (only pdf, doc, docx)</label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
@@ -767,7 +788,7 @@ export const Form: React.FC = () => {
         </div>
 
         <div css={fieldStyle}>
-          <label css={labelStyle}>Videos & Photos (If any)</label>
+          <label css={labelStyle}>Videos & Photos</label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
@@ -787,41 +808,44 @@ export const Form: React.FC = () => {
               )}
             </div>
           </div>
-          {imagePreviews.length > 0 && (
-            <div css={thumbsWrap}>
-              {imagePreviews.map((p, idx) => {
-                const isVideo = isVideoFile(p.file);
-                return (
-                  <div key={idx} css={thumbContainer}>
-                    {isVideo ? (
-                      <video src={p.url} css={thumbVideo} controls />
-                    ) : (
-                      <img
-                        src={p.url || "/placeholder.svg"}
-                        alt={`Thumbnail ${idx}`}
-                        css={thumb}
-                      />
-                    )}
-                    {isVideo && <div css={thumbLabel}>VIDEO</div>}
-                    <button
-                      onClick={() => removeImageAt(idx)}
-                      css={removeThumbBtn}
-                      aria-label="Remove file"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
           {errors.carouselImages && (
             <div css={errorText}>{errors.carouselImages}</div>
           )}
         </div>
 
+        {carouselImages.length > 0 && (
+          <div css={[fieldStyle, fullWidth]}>
+            <div css={thumbsWrap}>
+              {imagePreviews.map((preview, idx) => (
+                <div key={idx} css={thumbContainer}>
+                  {isVideoFile(preview.file) ? (
+                    <video css={thumbVideo} src={preview.url} muted />
+                  ) : (
+                    <img
+                      css={thumb}
+                      src={preview.url || "/placeholder.svg"}
+                      alt={`Preview ${idx}`}
+                    />
+                  )}
+                  {isVideoFile(preview.file) && (
+                    <span css={thumbLabel}>VIDEO</span>
+                  )}
+                  <button
+                    css={removeThumbBtn}
+                    onClick={() => removeImageAt(idx)}
+                    type="button"
+                    aria-label={`Remove file ${idx + 1}`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div css={fieldStyle}>
-          <label css={labelStyle}>Audio File (If any)</label>
+          <label css={labelStyle}>Audio File </label>
           <div css={fileInputWrapper}>
             <label css={fileButton} aria-hidden>
               <input
@@ -849,49 +873,36 @@ export const Form: React.FC = () => {
               )}
             </div>
           </div>
-          {audioFile && (
+        </div>
+
+        {audioFile && (
+          <div css={fieldStyle}>
             <audio
+              css={audioPlayer}
               controls
               src={URL.createObjectURL(audioFile)}
-              css={audioPlayer}
             />
-          )}
-        </div>
-
-        <div css={fullWidth}>
-          <div css={toggleWrapper}>
-            {Object.entries(formData.buttons).map(([key, value]) => (
-              <label key={key} css={checkboxRow}>
-                <input
-                  type="checkbox"
-                  checked={value === 1}
-                  onChange={handleToggle(key as keyof ButtonToggles)}
-                  css={checkboxInput}
-                />
-                <span css={checkboxLabel}>
-                  {buttonLabels[key as keyof ButtonToggles]}
-                </span>
-              </label>
-            ))}
           </div>
-        </div>
+        )}
 
-        <div css={bibleVersesSection}>
+        <div css={[fieldStyle, bibleVersesSection]}>
+          <label css={labelStyle}>Bible Verses (If any)</label>
           <div css={versesList}>
             {bibleVerses.map((verse, idx) => (
               <div key={idx} css={verseRow}>
                 <input
+                  type="text"
                   value={verse}
                   onChange={(e) => handleVerseChange(idx, e.target.value)}
                   css={verseInput}
-                  placeholder={`Verse ${idx + 1}`}
+                  placeholder="e.g., John 3:16"
                 />
                 {bibleVerses.length > 1 && (
                   <button
                     type="button"
-                    css={removeVerseBtn}
                     onClick={() => removeVerse(idx)}
-                    aria-label="Remove verse"
+                    css={removeVerseBtn}
+                    aria-label={`Remove verse ${idx + 1}`}
                   >
                     ✕
                   </button>
@@ -899,27 +910,34 @@ export const Form: React.FC = () => {
               </div>
             ))}
           </div>
-          <button type="button" css={addVerseBtn} onClick={addVerse}>
+          <button type="button" onClick={addVerse} css={addVerseBtn}>
             + Add Verse
           </button>
         </div>
 
+        <div css={fieldStyle}>
+          <label css={labelStyle}>Enable Feature / Disable Feature</label>
+          {Object.entries(buttonLabels).map(([key, label]) => (
+            <label key={key} css={checkboxRow}>
+              <input
+                type="checkbox"
+                checked={formData.buttons[key as keyof ButtonToggles] === 1}
+                onChange={handleToggle(key as keyof ButtonToggles)}
+                css={checkboxInput}
+              />
+              <span css={checkboxLabel}>{label}</span>
+            </label>
+          ))}
+        </div>
+
         <div css={actionsRow}>
           <button
-            css={secondaryButton}
-            type="button"
-            onClick={() => window.location.reload()}
-            disabled={submitting}
-          >
-            Reset
-          </button>
-          <button
-            css={primaryButton(submitting)}
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
+            css={primaryButton(submitting)}
           >
-            {submitting ? "Submitting..." : "Submit"}
+            {submitting ? "Submitting..." : "Submit Post"}
           </button>
         </div>
       </div>

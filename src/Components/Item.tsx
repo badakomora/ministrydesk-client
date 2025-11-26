@@ -10,8 +10,6 @@ const float = keyframes`
   100% { transform: translateY(0px); }
 `;
 
-
-
 const styles = {
   pageContainer: css({
     minHeight: "100vh",
@@ -256,8 +254,6 @@ const styles = {
     minHeight: "100vh",
   }),
 };
-
-
 
 interface ItemData {
   id: number;
