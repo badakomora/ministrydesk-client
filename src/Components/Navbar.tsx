@@ -7,7 +7,6 @@ import { roles, serverurl } from "./Appconfig";
 
 // -------------------- ROLE HIERARCHY --------------------
 
-
 const ROLE_HIERARCHY = {
   4: "National Level",
   3: "Executive Level",
@@ -110,7 +109,7 @@ const mobileMenuBtn = (isOpen: boolean) => css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: ${isOpen ? "#2563eb" : "transparent"};
+    background: #2563eb;
     border: 2px solid #2563eb;
     padding: 8px 14px;
     cursor: pointer;
