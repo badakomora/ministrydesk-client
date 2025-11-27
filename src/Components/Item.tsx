@@ -281,6 +281,8 @@ interface ItemData {
 interface Comment {
   fullname: string;
   comment: string;
+  churchname: string;
+  role: string;
 }
 
 type Idprops = {
@@ -626,6 +628,7 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
                 <div key={i} css={styles.commentItem}>
                   <div css={styles.commentAuthor}>{c.fullname}</div>
                   <div css={styles.commentText}>{c.comment}</div>
+                  <div>{c.churchname}</div>
                 </div>
               ))}
             </div>

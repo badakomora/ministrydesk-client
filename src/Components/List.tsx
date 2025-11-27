@@ -56,6 +56,7 @@ const listStyles = css`
   .card {
     padding: 8px 14px;
     width: 100%;
+    height: 100%;
     border: 1px solid #e2e8f0;
     background: #ffffff;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
