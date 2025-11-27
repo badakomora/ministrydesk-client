@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { css, keyframes } from "@emotion/react";
 import { serverurl } from "./Appconfig";
+import { toast } from "react-toastify";
 
 const float = keyframes`
   0% { transform: translateY(0px); }
@@ -278,8 +279,8 @@ interface ItemData {
 }
 
 interface Comment {
-  author: string;
-  text: string;
+  fullname: string;
+  comment: string;
 }
 
 type Idprops = {
@@ -299,12 +300,7 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const [index, setIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      author: "Staff John",
-      text: "Welcome everyone! Share your prayer requests here.",
-    },
-  ]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -357,10 +353,40 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
     setIndex((index - 1 + media.length) % media.length);
   };
 
-  const addComment = () => {
+  const fetchComments = useCallback(async () => {
+    try {
+      const res = await axios.get(`${serverurl}/comment/list/${itemId}`);
+      setComments(res.data); // must be an array
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  }, [itemId]); // <-- only depends on itemId
+
+  useEffect(() => {
+    if (itemId) {
+      fetchComments();
+    }
+  }, [fetchComments, itemId]);
+
+  const addComment = async () => {
     if (!commentText.trim()) return;
-    setComments([...comments, { author: "Member", text: commentText }]);
-    setCommentText("");
+
+    try {
+      const res = await axios.post(`${serverurl}/comment/add`, {
+        itemid: itemId,
+        userid: localStorage.getItem("userId"),
+        comment: commentText,
+      });
+
+      toast.success(res.data.message);
+      setCommentText("");
+
+      // Reload comments immediately
+      await fetchComments();
+    } catch (err) {
+      toast.error("Error posting comment");
+      console.error(err);
+    }
   };
 
   if (loading) {
@@ -570,27 +596,36 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
           {/* Comment Section */}
           <div css={styles.commentArea}>
             <h4>Continue the Discussion & Engagement Forum</h4>
-            <input
-              css={styles.commentInput}
-              type="text"
-              placeholder="Write a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  addComment();
-                }
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // prevent page reload
+                addComment(); // send axios data
               }}
-            />
-            <button css={styles.commentBtn} onClick={addComment}>
-              Post Comment
-            </button>
+            >
+              <input
+                css={styles.commentInput}
+                type="text"
+                placeholder="Write a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addComment();
+                  }
+                }}
+              />
+
+              <button css={styles.commentBtn} type="submit">
+                Post Comment
+              </button>
+            </form>
 
             <div css={styles.commentList}>
               {comments.map((c, i) => (
                 <div key={i} css={styles.commentItem}>
-                  <div css={styles.commentAuthor}>{c.author}</div>
-                  <div css={styles.commentText}>{c.text}</div>
+                  <div css={styles.commentAuthor}>{c.fullname}</div>
+                  <div css={styles.commentText}>{c.comment}</div>
                 </div>
               ))}
             </div>
