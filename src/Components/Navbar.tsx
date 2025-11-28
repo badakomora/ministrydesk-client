@@ -3,7 +3,7 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { roles, serverurl } from "./Appconfig";
+import { getUserRoles, roles, serverurl } from "./Appconfig";
 
 // -------------------- ROLE HIERARCHY --------------------
 
@@ -1104,45 +1104,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 <div className="row">
                   <span className="label">Ministry Role & Assembly</span>
                   <span className="value">
-                    {(() => {
-                      const selected: string[] = [];
-
-                      // Check national
-                      if (loggedNationalRole && loggedNationalRole !== "0") {
-                        const role = roles.find(
-                          (r) => r.value === loggedNationalRole
-                        );
-                        if (role) selected.push(role.label);
-                      }
-
-                      // Check assembly
-                      if (loggedAssemblyRole && loggedAssemblyRole !== "0") {
-                        const role = roles.find(
-                          (r) => r.value === loggedAssemblyRole
-                        );
-                        if (role) selected.push(role.label);
-                      }
-
-                      // Check executive
-                      if (loggedExecutiveRole && loggedExecutiveRole !== "0") {
-                        const role = roles.find(
-                          (r) => r.value === loggedExecutiveRole
-                        );
-                        if (role) selected.push(role.label);
-                      }
-
-                      // Check district
-                      if (loggedDistrictRole && loggedDistrictRole !== "0") {
-                        const role = roles.find(
-                          (r) => r.value === loggedDistrictRole
-                        );
-                        if (role) selected.push(role.label);
-                      }
-
-                      // If none found, show nothing
-                      return selected.length ? selected.join(", ") : "";
-                    })()}
-                    , {userChurch}
+                    {getUserRoles(roles)}, {userChurch}
                   </span>
                 </div>
 

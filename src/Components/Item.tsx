@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { css, keyframes } from "@emotion/react";
-import { serverurl } from "./Appconfig";
+import { getCombinedRoles, serverurl } from "./Appconfig";
 import { toast } from "react-toastify";
 
 const float = keyframes`
@@ -282,7 +282,10 @@ interface Comment {
   fullname: string;
   comment: string;
   churchname: string;
-  role: string;
+  nationalrole: string;
+  executiverole: string;
+  districtrole: string;
+  assemblyrole: string;
 }
 
 type Idprops = {
@@ -597,11 +600,23 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
 
           {/* Comment Section */}
           <div css={styles.commentArea}>
-            <h4>Continue the Discussion & Engagement Forum</h4>
+            <h4
+              css={css({
+                fontSize: "16px",
+                color: "#1e293b",
+                fontWeight: 700,
+                marginBottom: "14px",
+                borderBottom: "1px solid #e2e8f0",
+                paddingBottom: "6px",
+              })}
+            >
+              Continue the Discussion & Engagement Forum
+            </h4>
+
             <form
               onSubmit={(e) => {
-                e.preventDefault(); // prevent page reload
-                addComment(); // send axios data
+                e.preventDefault();
+                addComment();
               }}
             >
               <input
@@ -611,26 +626,51 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     addComment();
                   }
                 }}
               />
 
-              <button css={styles.commentBtn} type="submit">
+              <button type="submit" css={styles.commentBtn}>
                 Post Comment
               </button>
             </form>
 
+            {/* Comments List */}
             <div css={styles.commentList}>
-              {comments.map((c, i) => (
-                <div key={i} css={styles.commentItem}>
-                  <div css={styles.commentAuthor}>{c.fullname}</div>
-                  <div css={styles.commentText}>{c.comment}</div>
-                  <div>{c.churchname}</div>
+              {comments.length === 0 ? (
+                <div
+                  css={css({
+                    textAlign: "center",
+                    color: "#94a3b8",
+                    padding: "12px 0",
+                    fontStyle: "italic",
+                  })}
+                >
+                  No comments yet. Be the first to comment!
                 </div>
-              ))}
+              ) : (
+                comments.map((c, idx) => (
+                  <div key={idx} css={styles.commentItem}>
+                    <div css={styles.commentAuthor}>{c.fullname}</div>
+                    <div
+                      css={css({
+                        marginTop: "4px",
+                        fontSize: "11px",
+                        color: "#94a3b8",
+                        display: "flex",
+                      })}
+                    >
+                      <span>{getCombinedRoles(c)}</span>
+                      <span>, {c.churchname}</span>
+                    </div>
+
+                    <div css={styles.commentText}>{c.comment}</div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </aside>

@@ -28,10 +28,60 @@ export const roles = [
 ];
 
 export const getRoleLabel = (roleNumber: string | number) => {
-  return (
-    roles.find((r) => r.value === String(roleNumber))?.label || "Unknown Role"
-  );
+  // If roleNumber is 0, return empty string
+  if (String(roleNumber) === "0") return "";
+
+  return roles.find((r) => r.value === String(roleNumber))?.label || "";
 };
+
+
+// Appconfig.ts or a helpers file
+export const getCombinedRoles = (item: any) => {
+  const roles = [
+    item.nationalrole,
+    item.executiverole,
+    item.districtrole,
+    item.assemblyrole,
+  ];
+
+  return roles
+    .map((r) => getRoleLabel(r)) // convert role numbers to labels
+    .filter((r) => r !== "") // skip empty or 0 roles
+    .join(", "); // join as a string
+};
+
+// Save all logged roles in one object
+const rolesData = {
+  national: localStorage.getItem("nationalRole"),
+  assembly: localStorage.getItem("executiveRole"),
+  executive: localStorage.getItem("districtRole"),
+  district: localStorage.getItem("assemblyRole"),
+};
+
+localStorage.setItem("loggedRoles", JSON.stringify(rolesData));
+
+export function getUserRoles(roles: { value: string; label: string }[]) {
+  const stored = localStorage.getItem("loggedRoles");
+  if (!stored) return "";
+
+  const { national, assembly, executive, district } = JSON.parse(stored);
+
+  const selected: string[] = [];
+
+  const checkAndPush = (roleValue: string) => {
+    if (roleValue && roleValue !== "0") {
+      const role = roles.find((r) => r.value === roleValue);
+      if (role) selected.push(role.label);
+    }
+  };
+
+  checkAndPush(national);
+  checkAndPush(assembly);
+  checkAndPush(executive);
+  checkAndPush(district);
+
+  return selected.length ? selected.join(", ") : "";
+}
 
 export const getStatusLabel = (status: number) => {
   return status === 1 ? "Approved" : "Pending";

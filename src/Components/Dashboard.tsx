@@ -3,7 +3,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import {
   formatSearchableDate,
-  getRoleLabel,
+  getCombinedRoles,
   getStatusLabel,
   getStatusStyle,
   getSubscriptionLabel,
@@ -407,7 +407,7 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
     }
 
     if (column === "description" || column === "title") {
-      const maxLength = 50; // change this to whatever length you want
+      const maxLength = 50;
       if (!value) return "—";
       return value.length > maxLength
         ? value.slice(0, maxLength) + "..."
@@ -424,6 +424,7 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
       );
     }
 
+    // ✅ Church Member roles
     if (
       [
         "nationalrole",
@@ -432,7 +433,8 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
         "assemblyrole",
       ].includes(column)
     ) {
-      return getRoleLabel(value);
+      // Combine all 4 roles, skip 0
+      return getCombinedRoles(item);
     }
 
     if (column === "churchid") return churches[value] ?? "Unknown";
