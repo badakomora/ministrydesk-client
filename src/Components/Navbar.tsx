@@ -412,6 +412,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [loggedDateJoined, setLoggedDateJoined] = useState("");
   const [userChurch, setUserChurch] = useState("");
 
+  const [dashboardShow, setDashboardShow] = useState(false);
+
   const [currentRoleLevel, setCurrentRoleLevel] = useState<
     4 | 3 | 2 | 1 | null
   >(null);
@@ -456,8 +458,22 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       setLoggedIdNumber(storedIdNumber);
       setLoggedSubscription(storedSubscription);
       setLoggedDateJoined(storedDateJoined);
+
+      if (
+        loggedNationalRole === "3" ||
+        loggedAssemblyRole === "3" ||
+        loggedExecutiveRole === "3" ||
+        loggedDistrictRole === "3"
+      ) {
+        setDashboardShow(true);
+      }
     }
-  }, []);
+  }, [
+    loggedAssemblyRole,
+    loggedDistrictRole,
+    loggedExecutiveRole,
+    loggedNationalRole,
+  ]);
 
   useEffect(() => {
     const fetchChurches = async () => {
@@ -506,7 +522,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
 
     setLoggedPhone("");
     setLoggedFullname("");
-    setActiveTab("");
+    setDashboardShow(false);
 
     toast.success("You have logged out successfully.");
   };
@@ -614,9 +630,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         setLoggedDateJoined(res.data.user.datecreated);
 
         toast.success("Login successful!");
-        if (res.data.user.role === 3) {
-          setActiveTab("Dashboard");
-        }
       }
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Something went wrong");
@@ -907,10 +920,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             >
               Community
             </a>
-            {loggedNationalRole ||
-            loggedAssemblyRole ||
-            loggedExecutiveRole ||
-            loggedDistrictRole === "3" ? (
+            {dashboardShow ? (
               <a
                 href="."
                 onClick={(e) => {
@@ -1005,10 +1015,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
           >
             Community
           </a>
-          {loggedNationalRole ||
-          loggedAssemblyRole ||
-          loggedExecutiveRole ||
-          loggedDistrictRole === "3" ? (
+          {dashboardShow ? (
             <a
               href="."
               onClick={(e) => {

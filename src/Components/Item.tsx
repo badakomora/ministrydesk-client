@@ -266,6 +266,7 @@ interface ItemData {
   dateposted: string;
   description: string;
   documentfile?: string;
+  documentFileName?: string | null;
   audiofile?: string | null;
   created_at: string;
   offertithes: number;
@@ -487,7 +488,7 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
                   },
                 })}
               >
-                ⬇ Download Document
+                📄 {currentItem.documentFileName || "View Document"}
               </a>
               <br />
               <br />
