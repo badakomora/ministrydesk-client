@@ -12,6 +12,7 @@ function App() {
   const [activeTab, setActiveTab] = useState("Home");
   const [itemId, setItemId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState("");
   const [loading, setLoading] = useState(false);
 
   return (
@@ -19,6 +20,8 @@ function App() {
       <Navbar
         setActiveTab={setActiveTab}
         setIsModalOpen={setIsModalOpen}
+        setModalContent={setModalContent}
+        modalContent={modalContent}
         isModalOpen={isModalOpen}
         setLoading={setLoading}
         loading={loading}
@@ -26,17 +29,25 @@ function App() {
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
       activeTab === "AssemblyProgramsItem" ? (
-        <Item  itemId={itemId} />
+        <Item itemId={itemId} />
       ) : activeTab === "NewsList" ||
         activeTab === "SermonsList" ||
         activeTab === "AssemblyProgramsList" ? (
-        <List activeTab={activeTab} setActiveTab={setActiveTab} setItemId={setItemId} />
+        <List
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          setItemId={setItemId}
+        />
       ) : activeTab === "Dashboard" ? (
         <Dashboard setActiveTab={setActiveTab} />
       ) : activeTab === "UserForm" ? (
         <Form />
       ) : (
-        <Home setActiveTab={setActiveTab} setIsModalOpen={setIsModalOpen} />
+        <Home
+          setActiveTab={setActiveTab}
+          setIsModalOpen={setIsModalOpen}
+          setModalContent={setModalContent}
+        />
       )}
       <ToastContainer position="top-right" />
       <Footer />

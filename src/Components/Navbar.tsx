@@ -169,7 +169,7 @@ const modalOverlay = css`
   animation: ${fadeIn} 0.25s ease-out;
 `;
 
-const modalContent = css`
+const modal = css`
   background: white;
   padding: 8px 14px;
   width: 100%;
@@ -360,7 +360,9 @@ interface componentProps {
 
 interface ModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalContent: React.Dispatch<React.SetStateAction<string>>;
   isModalOpen: boolean;
+  modalContent: string;
 }
 
 interface LoadingProps {
@@ -372,8 +374,9 @@ interface LoadingProps {
 export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   setActiveTab,
   setIsModalOpen,
+  setModalContent,
+  modalContent,
   isModalOpen,
-  setLoading,
   loading,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -398,6 +401,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
+  const [amount, setAmount] = useState(""); // Amount input
   const [churchEmail, setChurchEmail] = useState("");
   const [loggedFullname, setLoggedFullname] = useState("");
   const [loggedPhone, setLoggedPhone] = useState("");
@@ -940,6 +944,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               onClick={(e) => {
                 e.preventDefault();
                 setIsModalOpen(true);
+                setModalContent("Membership");
               }}
               style={{ color: "white" }}
             >
@@ -1036,6 +1041,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
             onClick={(e) => {
               e.preventDefault();
               setIsModalOpen(true);
+              setModalContent("Membership");
             }}
             style={{ color: "white" }}
           >
@@ -1047,7 +1053,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       {/* ==================== MODAL ==================== */}
       {isModalOpen && (
         <div css={modalOverlay} onClick={() => setIsModalOpen(false)}>
-          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
+          <div css={modal} onClick={(e) => e.stopPropagation()}>
             <div
               style={{
                 display: "flex",
@@ -1084,7 +1090,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               )}
             </div>
 
-            {loggedFullname ? (
+            {loggedFullname && modalContent === "Membership" ? (
               <div css={profileCard}>
                 <div className="row">
                   <span className="label">Name</span>
@@ -1121,9 +1127,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                     <span
                       style={{
                         padding: "4px 8px",
-                        background:
+                        color:
                           Number(loggedSubscription) === 1 ? "#2563eb" : "red",
-                        color: "white",
                         fontWeight: 500,
                       }}
                     >
@@ -1132,17 +1137,23 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                     {loggedSubscription === "1" ? (
                       ""
                     ) : (
-                      <span
+                      <button
                         style={{
-                          padding: "4px 8px",
+                          padding: "6px 14px",
+                          border: "none",
+                          cursor: "pointer",
                           background:
                             " linear-gradient(90deg, #2563eb, #fbbf24)",
                           color: "white",
                           fontWeight: 500,
                         }}
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setModalContent("Subscription");
+                        }}
                       >
                         Renew
-                      </span>
+                      </button>
                     )}
                   </span>
                 </div>
@@ -1165,6 +1176,49 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   Logout
                 </a>
               </div>
+            ) : modalContent === "Subscription" ? (
+              <form css={formStyles} onSubmit={handleLogin}>
+               
+                <input
+                  type="text"
+                  placeholder="Enter your ID"
+                  value={idnumber}
+                  onChange={(e) => setIdnumber(e.target.value)}
+                  required
+                />
+
+                <input
+                  type="tel"
+                  placeholder="Phone Number (0700000000)"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  disabled={!phone} // only enabled after ID is entered
+                />
+
+                <input
+                  type="number"
+                  placeholder="Enter Amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                  disabled={!phone} // only enabled after phone is entered
+                />
+
+                <p
+                  style={{
+                    fontSize: "13px",
+                    color: "#1c6069",
+                    marginTop: "-5px",
+                  }}
+                >
+                  ℹ️ Transactions are processed securely and instantly.
+                </p>
+
+                <button type="submit" disabled={loading || !amount}>
+                  {loading ? "Processing..." : "Pay Now"}
+                </button>
+              </form>
             ) : tab === "login" ? (
               <form css={formStyles} onSubmit={handleLogin}>
                 <input

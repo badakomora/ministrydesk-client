@@ -705,11 +705,13 @@ interface componentProps {
 }
 interface ModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalContent: React.Dispatch<React.SetStateAction<string>>;
 }
 // -------------------- Home Component --------------------
 export const Home: React.FC<componentProps & ModalProps> = ({
   setActiveTab,
   setIsModalOpen,
+  setModalContent,
 }) => {
   return (
     <div css={globalStyles}>
@@ -884,6 +886,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
                 className="cta-button"
                 onClick={() => {
                   setIsModalOpen(true);
+                  setModalContent("Subscription");
                 }}
               >
                 Subscribe Now
