@@ -1178,7 +1178,6 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               </div>
             ) : modalContent === "Subscription" ? (
               <form css={formStyles} onSubmit={handleLogin}>
-               
                 <input
                   type="text"
                   placeholder="Enter your ID"

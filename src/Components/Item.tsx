@@ -292,6 +292,10 @@ interface Comment {
 type Idprops = {
   itemId: number | null;
 };
+interface ModalProps {
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalContent: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const isVideoFile = (url: string): boolean => {
   const videoExtensions = [".mp4", ".webm", ".mov", ".ogg", ".mkv"];
@@ -299,7 +303,11 @@ const isVideoFile = (url: string): boolean => {
   return videoExtensions.includes(`.${extension}`);
 };
 
-export const Item: React.FC<Idprops> = ({ itemId }) => {
+export const Item: React.FC<Idprops & ModalProps> = ({
+  itemId,
+  setIsModalOpen,
+  setModalContent,
+}) => {
   const [posteditems, setpostedItems] = useState<ItemData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -508,12 +516,24 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
 
           <div css={styles.ctaRow}>
             {currentItem.offertithes === 1 && (
-              <button css={[styles.btn, styles.btnPrimary]}>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setModalContent("Subscription");
+                }}
+                css={[styles.btn, styles.btnPrimary]}
+              >
                 Offer tithes
               </button>
             )}
             {currentItem.offerdonations === 1 && (
-              <button css={[styles.btn, styles.btnPrimary]}>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setModalContent("Subscription");
+                }}
+                css={[styles.btn, styles.btnPrimary]}
+              >
                 Offer donations
               </button>
             )}
@@ -523,7 +543,13 @@ export const Item: React.FC<Idprops> = ({ itemId }) => {
               </button>
             )}
             {currentItem.contributeoffering === 1 && (
-              <button css={[styles.btn, styles.btnPrimary]}>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setModalContent("Subscription");
+                }}
+                css={[styles.btn, styles.btnPrimary]}
+              >
                 Contribute Offering
               </button>
             )}

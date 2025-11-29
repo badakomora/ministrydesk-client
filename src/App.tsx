@@ -29,7 +29,11 @@ function App() {
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
       activeTab === "AssemblyProgramsItem" ? (
-        <Item itemId={itemId} />
+        <Item
+          itemId={itemId}
+          setIsModalOpen={setIsModalOpen}
+          setModalContent={setModalContent}
+        />
       ) : activeTab === "NewsList" ||
         activeTab === "SermonsList" ||
         activeTab === "AssemblyProgramsList" ? (
