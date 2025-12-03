@@ -519,7 +519,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               <button
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Subscription");
+                  setModalContent("Tithe");
                 }}
                 css={[styles.btn, styles.btnPrimary]}
               >
@@ -530,7 +530,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               <button
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Subscription");
+                  setModalContent("Donation");
                 }}
                 css={[styles.btn, styles.btnPrimary]}
               >
@@ -546,7 +546,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               <button
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Subscription");
+                  setModalContent("Offering");
                 }}
                 css={[styles.btn, styles.btnPrimary]}
               >

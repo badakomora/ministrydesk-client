@@ -1070,9 +1070,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   <p>Connecting churches & people</p>
                 </div>
               </div>
-              {loggedFullname ? (
-                ""
-              ) : (
+              {!loggedFullname && modalContent === "Membership" ? (
                 <div css={tabs}>
                   <button
                     className={tab === "login" ? "active" : "inactive"}
@@ -1087,7 +1085,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                     Register
                   </button>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {loggedFullname && modalContent === "Membership" ? (
@@ -1176,15 +1174,20 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   Logout
                 </a>
               </div>
-            ) : modalContent === "Subscription" ? (
+            ) : modalContent === "Subscription" ||
+              modalContent === "Tithe" ||
+              modalContent === "Donation" ||
+              modalContent === "Offering" ? (
               <form css={formStyles} onSubmit={handleLogin}>
-                <input
-                  type="text"
-                  placeholder="Enter your ID"
-                  value={idnumber}
-                  onChange={(e) => setIdnumber(e.target.value)}
-                  required
-                />
+                {!loggedFullname ? (
+                  <input
+                    type="text"
+                    placeholder="Enter your ID"
+                    value={idnumber}
+                    onChange={(e) => setIdnumber(e.target.value)}
+                    required
+                  />
+                ) : null}
 
                 <input
                   type="tel"
@@ -1192,18 +1195,18 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
-                  disabled={!phone} // only enabled after ID is entered
                 />
-
-                <input
-                  type="number"
-                  placeholder="Enter Amount"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  required
-                  disabled={!phone} // only enabled after phone is entered
-                />
-
+                {modalContent === "Tithe" ||
+                modalContent === "Donation" ||
+                modalContent === "Offering" ? (
+                  <input
+                    type="number"
+                    placeholder="Enter Amount"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    required
+                  />
+                ) : null}
                 <p
                   style={{
                     fontSize: "13px",
@@ -1215,7 +1218,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                 </p>
 
                 <button type="submit" disabled={loading || !amount}>
-                  {loading ? "Processing..." : "Pay Now"}
+                  {loading ? "Processing..." : "Pay For " + modalContent}
                 </button>
               </form>
             ) : tab === "login" ? (
