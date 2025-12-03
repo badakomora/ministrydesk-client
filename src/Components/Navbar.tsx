@@ -828,6 +828,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   width: "100%",
                   padding: "8px 14px",
                   background: "#f0f0f0",
+                  color: "#1e293b",
                   border: "1px solid #ccc",
                   cursor: "pointer",
                   fontWeight: 600,
