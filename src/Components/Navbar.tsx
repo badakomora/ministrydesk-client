@@ -370,8 +370,14 @@ interface LoadingProps {
   loading: boolean;
 }
 
+type Idprops = {
+  itemId: number | null;
+};
+
 // -------------------- Component --------------------
-export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
+export const Navbar: React.FC<
+  componentProps & ModalProps & LoadingProps & Idprops
+> = ({
   setActiveTab,
   setIsModalOpen,
   setModalContent,
@@ -379,6 +385,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   isModalOpen,
   setLoading,
   loading,
+  itemId,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -651,6 +658,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
         phone: phone,
         amount: amount ? amount : 149,
         activity: modalContent,
+        itemid: itemId ? itemId : null,
       };
 
       const res = await axios.post(

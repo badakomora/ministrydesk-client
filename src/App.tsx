@@ -25,6 +25,7 @@ function App() {
         isModalOpen={isModalOpen}
         setLoading={setLoading}
         loading={loading}
+        itemId={itemId}
       />
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
