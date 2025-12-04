@@ -377,6 +377,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
   setModalContent,
   modalContent,
   isModalOpen,
+  setLoading,
   loading,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -637,6 +638,33 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
       }
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Something went wrong");
+    }
+  };
+
+  const handleTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true); // ✅ start loading
+
+    try {
+      const transactionData = {
+        idnumber: idnumber ? idnumber : loggedIdNumber,
+        phone: phone,
+        amount: amount ? amount : 149,
+        activity: modalContent,
+      };
+
+      const res = await axios.post(
+        `${serverurl}/transaction/deposit`,
+        transactionData
+      );
+
+      console.log("Response:", res.data);
+      toast.success("Transaction successful!");
+    } catch (err: any) {
+      console.error("Error:", err);
+      toast.error(err.response?.data?.error || "Something went wrong");
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
@@ -1179,7 +1207,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
               modalContent === "Tithe" ||
               modalContent === "Donation" ||
               modalContent === "Offering" ? (
-              <form css={formStyles} onSubmit={handleLogin}>
+              <form css={formStyles} onSubmit={handleTransaction}>
                 {!loggedFullname ? (
                   <input
                     type="text"
@@ -1218,7 +1246,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps> = ({
                   ℹ️ Transactions are processed securely and instantly.
                 </p>
 
-                <button type="submit" disabled={loading || !amount}>
+                <button type="submit" disabled={loading}>
                   {loading ? "Processing..." : "Pay For " + modalContent}
                 </button>
               </form>
