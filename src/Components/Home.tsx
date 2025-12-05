@@ -1,6 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import type React from "react";
 import { css, keyframes } from "@emotion/react";
+import { useState } from "react";
+import axios from "axios";
+import { serverurl } from "./Appconfig";
+import { toast } from "react-toastify";
 
 // -------------------- Animations --------------------
 const float = keyframes`
@@ -713,6 +717,27 @@ export const Home: React.FC<componentProps & ModalProps> = ({
   setIsModalOpen,
   setModalContent,
 }) => {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(`${serverurl}/message/new`, {
+        name,
+        phone,
+        message,
+      });
+      toast.success(response.data.message);
+      setName("");
+      setPhone("");
+      setMessage("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div css={globalStyles}>
       <main css={mainStyles}>
@@ -957,7 +982,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
 
               <div css={contactItemStyles}>
                 <div className="label">📞 Phone</div>
-                <p className="value">+254 (0) 123 456 789</p>
+                <p className="value">+254 759 621 394</p>
                 <p className="detail">Mon - Fri, 9am - 5pm</p>
               </div>
 
@@ -970,10 +995,27 @@ export const Home: React.FC<componentProps & ModalProps> = ({
 
             <div css={contactFormStyles}>
               <h3>Send us a Message</h3>
-              <form onSubmit={(e) => e.preventDefault()}>
-                <input type="text" placeholder="Your Name" required />
-                <input type="text" placeholder="Your Phone" required />
-                <textarea placeholder="Your Message" required />
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Your Phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
+                <textarea
+                  placeholder="Your Message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  required
+                />
                 <button type="submit">Send Message</button>
               </form>
             </div>
