@@ -535,6 +535,7 @@ export const Navbar: React.FC<
     setLoggedPhone("");
     setLoggedFullname("");
     setDashboardShow(false);
+    setLoggedSubscription("");
 
     toast.success("You have logged out successfully.");
   };
@@ -676,6 +677,27 @@ export const Navbar: React.FC<
     }
   };
 
+  const handleSpecialPrayer = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${serverurl}/prayerrequest/new`, {
+        idnumber: loggedIdNumber,
+        description,
+      });
+
+      toast.success(
+        response.data.message || "Prayer request sent successfully!"
+      );
+    } catch (error: any) {
+      console.error("Error creating church:", error);
+
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An error occurred while creating the church.");
+      }
+    }
+  };
   const handleNewChurch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!newChurchName.trim())
@@ -1256,6 +1278,18 @@ export const Navbar: React.FC<
 
                 <button type="submit" disabled={loading}>
                   {loading ? "Processing..." : "Pay For " + modalContent}
+                </button>
+              </form>
+            ) : modalContent === "SpecialPrayer" ? (
+              <form css={formStyles} onSubmit={handleSpecialPrayer}>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  maxLength={100}
+                  placeholder="say something..."
+                />
+                <button type="submit" disabled={loading}>
+                  {loading ? "Loading..." : "Send"}
                 </button>
               </form>
             ) : tab === "login" ? (

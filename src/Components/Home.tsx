@@ -576,7 +576,7 @@ const pricingHeaderStyles = css`
     color: #475569;
     margin: 0;
   }
-`;
+`; 
 
 const pricingCardContainerStyles = css`
   display: flex;
@@ -798,6 +798,11 @@ export const Home: React.FC<componentProps & ModalProps> = ({
 
         {/* ---------- WHY THESE MATTER ---------- */}
         <section id="why-important" css={sectionStyles}>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
           <div css={sectionHeader}>
             <h2>Why Join Us?</h2>
             <div className="sub">
@@ -977,7 +982,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
               <div css={contactItemStyles}>
                 <div className="label">📍 Location</div>
                 <p className="value">Head Office</p>
-                <p className="detail">Nairobi, Kenya</p>
+                <p className="detail">Kilifi, Kenya</p>
               </div>
 
               <div css={contactItemStyles}>

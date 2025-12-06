@@ -538,7 +538,10 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               </button>
             )}
             {currentItem.requestspecialprayers === 1 && (
-              <button css={[styles.btn, styles.btnPrimary]}>
+              <button onClick={() => {
+                  setIsModalOpen(true);
+                  setModalContent("SpecialPrayer");
+                }} css={[styles.btn, styles.btnPrimary]}>
                 Request Special prayers
               </button>
             )}

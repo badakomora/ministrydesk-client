@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { css } from "@emotion/react";
 import axios from "axios";
 import { serverurl } from "./Appconfig";
+import { toast } from "react-toastify";
 
 const listStyles = css`
   max-width: 1200px;
@@ -219,8 +220,23 @@ export const List: React.FC<componentProps & Idprops> = ({
             <div
               key={item.id}
               onClick={() => {
-                setActiveTab(tabName);
-                setItemId(item.id);
+                if (
+                  !localStorage.getItem("userSubscription") ||
+                  !localStorage.getItem("userFullname")
+                ) {
+                  toast.error(
+                    "Kindly sign in to your account to access the content!"
+                  );
+                } else {
+                  if (localStorage.getItem("userSubscription") === "1") {
+                    setActiveTab(tabName);
+                    setItemId(item.id);
+                  } else {
+                    toast.error(
+                      "Kindly renew your subscription to access the content!"
+                    );
+                  }
+                }
               }}
               className={`card ${
                 idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
