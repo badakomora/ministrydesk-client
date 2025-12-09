@@ -294,7 +294,7 @@ type Idprops = {
 };
 interface ModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalContent: React.Dispatch<React.SetStateAction<string>>;
+  setPageContent: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const isVideoFile = (url: string): boolean => {
@@ -306,7 +306,7 @@ const isVideoFile = (url: string): boolean => {
 export const Item: React.FC<Idprops & ModalProps> = ({
   itemId,
   setIsModalOpen,
-  setModalContent,
+  setPageContent,
 }) => {
   const [posteditems, setpostedItems] = useState<ItemData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -519,7 +519,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               <button
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Tithe");
+                  setPageContent("Tithe");
                 }}
                 css={[styles.btn, styles.btnPrimary]}
               >
@@ -530,7 +530,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               <button
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Donation");
+                  setPageContent("Donation");
                 }}
                 css={[styles.btn, styles.btnPrimary]}
               >
@@ -540,7 +540,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
             {currentItem.requestspecialprayers === 1 && (
               <button onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("SpecialPrayer");
+                  setPageContent("SpecialPrayer");
                 }} css={[styles.btn, styles.btnPrimary]}>
                 Request Special prayers
               </button>
@@ -549,7 +549,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               <button
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Offering");
+                  setPageContent("Offering");
                 }}
                 css={[styles.btn, styles.btnPrimary]}
               >

@@ -709,13 +709,13 @@ interface componentProps {
 }
 interface ModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalContent: React.Dispatch<React.SetStateAction<string>>;
+  setPageContent: React.Dispatch<React.SetStateAction<string>>;
 }
 // -------------------- Home Component --------------------
 export const Home: React.FC<componentProps & ModalProps> = ({
   setActiveTab,
   setIsModalOpen,
-  setModalContent,
+  setPageContent,
 }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -916,7 +916,7 @@ export const Home: React.FC<componentProps & ModalProps> = ({
                 className="cta-button"
                 onClick={() => {
                   setIsModalOpen(true);
-                  setModalContent("Subscription");
+                  setPageContent("Subscription");
                 }}
               >
                 Subscribe Now

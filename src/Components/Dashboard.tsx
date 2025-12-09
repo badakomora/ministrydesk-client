@@ -47,11 +47,15 @@ const footer = {
 } as const;
 const input = {
   padding: "8px 14px",
+  width: "100%",
   border: "1px solid #d1d5db",
   flex: 1,
   fontSize: "14px",
   transition: "all 200ms ease",
   background: "#fff",
+  "@media (max-width: 480px)": {
+    width: "100%",
+  },
 } as const;
 const select = {
   padding: "8px 14px",
@@ -82,7 +86,11 @@ const primaryBtn = {
 const searchRow = {
   display: "flex",
   gap: "12px",
+  width: "100%",
   alignItems: "center",
+  "@media (max-width: 480px)": {
+    width: "100%",
+  },
 } as const;
 const cols = { display: "flex", gap: "24px" } as const;
 const left = {
@@ -228,7 +236,14 @@ interface componentProps {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
+interface ModalProps {
+  setPageContent: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const Dashboard: React.FC<componentProps & ModalProps> = ({
+  setActiveTab,
+  setPageContent,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedCategory, setSelectedCategory] = useState("Church Members");
@@ -464,7 +479,7 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
               placeholder={
                 selectedCategory === "Church Members"
                   ? "Search by name..."
-                  : "Search by title, date, or church..."
+                  : "Search by title or date..."
               }
               value={searchQuery}
               onChange={(e) => {
@@ -473,10 +488,17 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
               }}
             />
             <div
-              style={{
+              css={{
                 display: "flex",
+                padding: "8px 14px",
                 justifyContent: "space-between",
                 gap: "12px",
+
+                "@media (max-width: 480px)": {
+                  flexDirection: "column",
+                  width: "100%",
+                  gap: "8px",
+                },
               }}
             >
               <select style={select} onChange={handleCategoryChange}>
@@ -499,10 +521,7 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
               </select>
 
               <div style={dropdownContainer}>
-                <button
-                  style={primaryBtn}
-                  onClick={() => setActiveTab("UserForm")}
-                >
+                <button style={primaryBtn} onClick={() => setActiveTab("Form")}>
                   📝 Create New
                 </button>
               </div>
@@ -583,8 +602,17 @@ export const Dashboard: React.FC<componentProps> = ({ setActiveTab }) => {
                                     }
                                   >
                                     {column === "action" ? (
-                                      <div style={{ cursor: "pointer" }}>
-                                        {/* ensure we pass number for status if available; fallback to -1 */}
+                                      <div
+                                        style={{
+                                          cursor: "pointer",
+                                          margin: "auto",
+                                        }}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          setActiveTab("Form");
+                                          setPageContent(selectedCategory);
+                                        }}
+                                      >
                                         •••
                                       </div>
                                     ) : (

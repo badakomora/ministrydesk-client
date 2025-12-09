@@ -360,9 +360,9 @@ interface componentProps {
 
 interface ModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalContent: React.Dispatch<React.SetStateAction<string>>;
+  setPageContent: React.Dispatch<React.SetStateAction<string>>;
   isModalOpen: boolean;
-  modalContent: string;
+  pageContent: string;
 }
 
 interface LoadingProps {
@@ -380,8 +380,8 @@ export const Navbar: React.FC<
 > = ({
   setActiveTab,
   setIsModalOpen,
-  setModalContent,
-  modalContent,
+  setPageContent,
+  pageContent,
   isModalOpen,
   setLoading,
   loading,
@@ -536,6 +536,7 @@ export const Navbar: React.FC<
     setLoggedFullname("");
     setDashboardShow(false);
     setLoggedSubscription("");
+    setActiveTab("Home");
 
     toast.success("You have logged out successfully.");
   };
@@ -658,7 +659,7 @@ export const Navbar: React.FC<
         idnumber: idnumber ? idnumber : loggedIdNumber,
         phone: phone,
         amount: amount ? amount : 149,
-        activity: modalContent,
+        activity: pageContent,
         itemid: itemId ? itemId : null,
       };
 
@@ -1003,7 +1004,7 @@ export const Navbar: React.FC<
               onClick={(e) => {
                 e.preventDefault();
                 setIsModalOpen(true);
-                setModalContent("Membership");
+                setPageContent("Membership");
               }}
               style={{ color: "white" }}
             >
@@ -1100,7 +1101,7 @@ export const Navbar: React.FC<
             onClick={(e) => {
               e.preventDefault();
               setIsModalOpen(true);
-              setModalContent("Membership");
+              setPageContent("Membership");
             }}
             style={{ color: "white" }}
           >
@@ -1129,7 +1130,7 @@ export const Navbar: React.FC<
                   <p>Connecting churches & people</p>
                 </div>
               </div>
-              {!loggedFullname && modalContent === "Membership" ? (
+              {!loggedFullname && pageContent === "Membership" ? (
                 <div css={tabs}>
                   <button
                     className={tab === "login" ? "active" : "inactive"}
@@ -1147,7 +1148,7 @@ export const Navbar: React.FC<
               ) : null}
             </div>
 
-            {loggedFullname && modalContent === "Membership" ? (
+            {loggedFullname && pageContent === "Membership" ? (
               <div css={profileCard}>
                 <div className="row">
                   <span className="label">Name</span>
@@ -1206,7 +1207,7 @@ export const Navbar: React.FC<
                         }}
                         onClick={() => {
                           setIsModalOpen(true);
-                          setModalContent("Subscription");
+                          setPageContent("Subscription");
                         }}
                       >
                         Renew
@@ -1233,10 +1234,10 @@ export const Navbar: React.FC<
                   Logout
                 </a>
               </div>
-            ) : modalContent === "Subscription" ||
-              modalContent === "Tithe" ||
-              modalContent === "Donation" ||
-              modalContent === "Offering" ? (
+            ) : pageContent === "Subscription" ||
+              pageContent === "Tithe" ||
+              pageContent === "Donation" ||
+              pageContent === "Offering" ? (
               <form css={formStyles} onSubmit={handleTransaction}>
                 {!loggedFullname ? (
                   <input
@@ -1255,9 +1256,9 @@ export const Navbar: React.FC<
                   onChange={(e) => setPhone(e.target.value)}
                   required
                 />
-                {modalContent === "Tithe" ||
-                modalContent === "Donation" ||
-                modalContent === "Offering" ? (
+                {pageContent === "Tithe" ||
+                pageContent === "Donation" ||
+                pageContent === "Offering" ? (
                   <input
                     type="number"
                     placeholder="Enter Amount"
@@ -1277,10 +1278,10 @@ export const Navbar: React.FC<
                 </p>
 
                 <button type="submit" disabled={loading}>
-                  {loading ? "Processing..." : "Pay For " + modalContent}
+                  {loading ? "Processing..." : "Pay For " + pageContent}
                 </button>
               </form>
-            ) : modalContent === "SpecialPrayer" ? (
+            ) : pageContent === "SpecialPrayer" ? (
               <form css={formStyles} onSubmit={handleSpecialPrayer}>
                 <textarea
                   value={description}
