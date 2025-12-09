@@ -503,10 +503,10 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
             >
               <select style={select} onChange={handleCategoryChange}>
                 <option>Reports</option>
-                <option>Church Members</option>
+                {/* <option>Church Members</option>
                 <option>News & Events</option>
                 <option>Sermons</option>
-                <option>Assembly Programs</option>
+                <option>Assembly Programs</option> */}
               </select>
 
               <select
@@ -515,9 +515,11 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
                 onChange={handleCategoryChange}
               >
                 <option>Church Members</option>
+                <option>Message Inquiries</option>
                 <option>News & Events</option>
                 <option>Sermons</option>
                 <option>Assembly Programs</option>
+                <option>Comments</option>
               </select>
 
               <div style={dropdownContainer}>
