@@ -218,6 +218,15 @@ const columnConfigs = {
       "Action",
     ],
   },
+
+  "Prayer Requests": {
+    columns: ["created_at", "fullname", "description", "status", "action"],
+    headers: ["Date", "Name", "Prayer Request", "Status", "Action"],
+  },
+  "Message Inquiries": {
+    columns: ["created_at", "name", "message", "status", "action"],
+    headers: ["Date", "Name", "Message", "Status", "Action"],
+  },
   "News & Events": {
     columns: ["dateposted", "title", "description", "action"],
     headers: ["Date", "Title", "Description", "Action"],
@@ -252,6 +261,8 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
   // initialize as array to avoid .map() on undefined
   const [users, setUsers] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [requests, setRequests] = useState<any[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
   // Fetch users
@@ -289,6 +300,27 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
         if (mounted) setItems([]);
       });
 
+    axios
+      .get(`${serverurl}/message/messages`)
+      .then((res) => {
+        if (!mounted) return;
+        setMessages(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching items:", err);
+        if (mounted) setItems([]);
+      });
+
+    axios
+      .get(`${serverurl}/prayerrequest/prayerrequests`)
+      .then((res) => {
+        if (!mounted) return;
+        setRequests(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching prayer requests:", err);
+        if (mounted) setRequests([]);
+      });
     return () => {
       mounted = false;
     };
@@ -318,10 +350,6 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
   const handlePreviousPage = () => {
     setCurrentPage((p) => Math.max(1, p - 1));
   };
-
-  // const handleNextPage = () => {
-  //   setCurrentPage((p) => Math.min(totalPages, p + 1));
-  // };
 
   const filterBySearch = (items: any[]) => {
     if (!searchQuery.trim()) return items;
@@ -370,6 +398,10 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
   const rawCategoryData =
     selectedCategory === "Church Members"
       ? users
+      : selectedCategory === "Message Inquiries"
+      ? messages
+      : selectedCategory === "Prayer Requests"
+      ? requests
       : items.filter((item) => item.category === categoryMap[selectedCategory]);
 
   const filteredData = filterBySearch(rawCategoryData);
@@ -454,7 +486,12 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
 
     if (column === "churchid") return churches[value] ?? "Unknown";
 
-    if ((column === "datecreated" || column === "dateposted") && value) {
+    if (
+      (column === "datecreated" ||
+        column === "dateposted" ||
+        column === "created_at") &&
+      value
+    ) {
       try {
         return new Date(value).toLocaleDateString("en-US", {
           year: "numeric",
@@ -515,11 +552,11 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
                 onChange={handleCategoryChange}
               >
                 <option>Church Members</option>
+                <option>Prayer Requests</option>
                 <option>Message Inquiries</option>
                 <option>News & Events</option>
                 <option>Sermons</option>
                 <option>Assembly Programs</option>
-                <option>Comments</option>
               </select>
 
               <div style={dropdownContainer}>
