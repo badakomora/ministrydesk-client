@@ -684,6 +684,7 @@ export const Navbar: React.FC<
       const response = await axios.post(`${serverurl}/prayerrequest/new`, {
         idnumber: loggedIdNumber,
         description,
+        churchid: itemId,
       });
 
       toast.success(

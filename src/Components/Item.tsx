@@ -291,6 +291,7 @@ interface Comment {
 
 type Idprops = {
   itemId: number | null;
+  setItemId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 interface ModalProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -305,6 +306,7 @@ const isVideoFile = (url: string): boolean => {
 
 export const Item: React.FC<Idprops & ModalProps> = ({
   itemId,
+  setItemId,
   setIsModalOpen,
   setPageContent,
 }) => {
@@ -538,10 +540,14 @@ export const Item: React.FC<Idprops & ModalProps> = ({
               </button>
             )}
             {currentItem.requestspecialprayers === 1 && (
-              <button onClick={() => {
+              <button
+                onClick={() => {
                   setIsModalOpen(true);
                   setPageContent("SpecialPrayer");
-                }} css={[styles.btn, styles.btnPrimary]}>
+                  setItemId(currentItem.churchid);
+                }}
+                css={[styles.btn, styles.btnPrimary]}
+              >
                 Request Special prayers
               </button>
             )}

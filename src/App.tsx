@@ -32,6 +32,7 @@ function App() {
       activeTab === "AssemblyProgramsItem" ? (
         <Item
           itemId={itemId}
+          setItemId={setItemId}
           setIsModalOpen={setIsModalOpen}
           setPageContent={setPageContent}
         />

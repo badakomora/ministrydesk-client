@@ -576,7 +576,7 @@ const pricingHeaderStyles = css`
     color: #475569;
     margin: 0;
   }
-`; 
+`;
 
 const pricingCardContainerStyles = css`
   display: flex;
@@ -734,8 +734,9 @@ export const Home: React.FC<componentProps & ModalProps> = ({
       setName("");
       setPhone("");
       setMessage("");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast.error(error.response?.data?.error || "Failed to send message");
     }
   };
   return (

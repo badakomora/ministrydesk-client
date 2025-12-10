@@ -268,12 +268,14 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
   // Fetch users
   useEffect(() => {
     let mounted = true;
+    const userid = localStorage.getItem("userId");
+    const churchid = localStorage.getItem("userChurchId");
 
     // USERS FETCH
     setLoadingUsers(true);
     axios
       .post(`${serverurl}/user/list`, {
-        churchid: localStorage.getItem("userChurchId"),
+        churchid: churchid,
       })
       .then((res) => {
         if (!mounted) return;
@@ -287,8 +289,6 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
         if (mounted) setLoadingUsers(false);
       });
 
-    const userid = localStorage.getItem("userId");
-
     axios
       .get(`${serverurl}/item/itemlist/${userid}`)
       .then((res) => {
@@ -301,7 +301,9 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
       });
 
     axios
-      .get(`${serverurl}/message/messages`)
+      .post(`${serverurl}/message/messages`, {
+        churchid: churchid,
+      })
       .then((res) => {
         if (!mounted) return;
         setMessages(Array.isArray(res.data) ? res.data : []);
@@ -312,7 +314,9 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
       });
 
     axios
-      .get(`${serverurl}/prayerrequest/prayerrequests`)
+      .post(`${serverurl}/prayerrequest/prayerrequests`, {
+        churchid: churchid,
+      })
       .then((res) => {
         if (!mounted) return;
         setRequests(Array.isArray(res.data) ? res.data : []);
