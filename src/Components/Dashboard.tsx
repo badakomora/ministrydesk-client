@@ -148,14 +148,6 @@ const tableCell = {
   wordBreak: "break-word",
   position: "relative",
 } as const;
-const tableCellAction = {
-  textAlign: "right",
-  maxWidth: "none",
-  whiteSpace: "normal",
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-} as const;
 const dropdownContainer = {
   position: "relative",
   display: "inline-block",
@@ -249,9 +241,14 @@ interface ModalProps {
   setPageContent: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const Dashboard: React.FC<componentProps & ModalProps> = ({
+type Idprops = {
+  itemId: number | null;
+  setItemId: React.Dispatch<React.SetStateAction<number | null>>;
+};
+export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
   setActiveTab,
   setPageContent,
+  setItemId,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -588,15 +585,7 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
                       {Array.isArray(displayHeaders) &&
                         displayHeaders.map(
                           (header: any, idx: React.Key | null | undefined) => (
-                            <th
-                              key={idx}
-                              style={{
-                                ...tableHeaderCell,
-                                ...(idx === displayHeaders.length - 1
-                                  ? tableCellAction
-                                  : {}),
-                              }}
-                            >
+                            <th key={idx} style={tableHeaderCell}>
                               {header}
                             </th>
                           )
@@ -636,27 +625,20 @@ export const Dashboard: React.FC<componentProps & ModalProps> = ({
                                   column: string,
                                   cidx: React.Key | null | undefined
                                 ) => (
-                                  <td
-                                    key={String(cidx)}
-                                    style={
-                                      column === "action"
-                                        ? tableCellAction
-                                        : tableCell
-                                    }
-                                  >
+                                  <td key={String(cidx)} style={tableCell}>
                                     {column === "action" ? (
                                       <div
                                         style={{
                                           cursor: "pointer",
-                                          margin: "auto",
                                         }}
                                         onClick={(e) => {
                                           e.preventDefault();
                                           setActiveTab("Form");
+                                          setItemId(item.id);
                                           setPageContent(selectedCategory);
                                         }}
                                       >
-                                        •••
+                                        Action &raquo;
                                       </div>
                                     ) : (
                                       getCellValue(item, column)

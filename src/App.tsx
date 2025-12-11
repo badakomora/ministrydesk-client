@@ -48,9 +48,11 @@ function App() {
         <Dashboard
           setActiveTab={setActiveTab}
           setPageContent={setPageContent}
+          itemId={itemId}
+          setItemId={setItemId}
         />
       ) : activeTab === "Form" ? (
-        <Form />
+        <Form itemId={itemId} />
       ) : (
         <Home
           setActiveTab={setActiveTab}
