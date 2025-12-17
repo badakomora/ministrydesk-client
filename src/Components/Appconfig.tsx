@@ -2,29 +2,45 @@ export const serverurl = "http://localhost:4000";
 
 //1 = assembly, 2 = district, 3 = executive
 export const roles = [
-  { value: "1", label: "Reverend", level: 1 },
-  { value: "2", label: "Pastor", level: 1 },
-  { value: "3", label: "Secretary", level: 1 },
-  { value: "3", label: "Secretary", level: 2 },
-  { value: "3", label: "Administrator", level: 3 },
-  { value: "3", label: "National Coordinator", level: 4 },
-  { value: "4", label: "Member", level: 1 },
-  { value: "6", label: "Overseer", level: 2 },
-  { value: "7", label: "Treasurer", level: 1 },
-  { value: "7", label: "Treasurer", level: 3 },
-  { value: "7", label: "Finance Director", level: 4 },
-  { value: "9", label: "Choir", level: 1 },
-  { value: "10", label: "Usher", level: 1 },
-  { value: "11", label: "Youth", level: 1 },
-  { value: "12", label: "Women Dept", level: 1 },
-  { value: "13", label: "Men Dept", level: 1 },
-  { value: "14", label: "General Superintendent", level: 3 },
-  { value: "15", label: "Mama Kenya", level: 3 },
-  { value: "16", label: "National CED Director", level: 4 },
-  { value: "0", label: "N/A", level: 1 },
-  { value: "0", label: "N/A", level: 2 },
+  /* =========================
+     NATIONAL LEVEL (3)
+  ========================== */
+  { value: "N1", label: "General Superintendent", level: 3 },
+  { value: "N2", label: "Mama Kenya", level: 3 },
+  { value: "N3", label: "General Treasurer", level: 3 },
+  { value: "N4", label: "National CED Director", level: 3 },
+  { value: "N5", label: "General Secretary / Administrator", level: 3 },
+  { value: "N6", label: "Border Director", level: 3 },
   { value: "0", label: "N/A", level: 3 },
-  { value: "0", label: "N/A", level: 4 },
+
+  /* =========================
+     DISTRICT LEVEL (2)
+  ========================== */
+  { value: "D1", label: "Overseer / Bishop", level: 2 },
+  { value: "D2", label: "District Secretary", level: 2 },
+  { value: "D3", label: "District Treasurer", level: 2 },
+  { value: "D4", label: "District Clerk", level: 2 },
+  { value: "D5", label: "Mama District", level: 2 },
+  { value: "D6", label: "District CED Director", level: 2 },
+  { value: "D7", label: "Auditing Pastor 1", level: 2 },
+  { value: "D8", label: "Auditing Pastor 2", level: 2 },
+  { value: "0", label: "N/A", level: 2 },
+
+  /* =========================
+     ASSEMBLY LEVEL (1)
+  ========================== */
+  { value: "A1", label: "Reverend", level: 1 },
+  { value: "A2", label: "Secretary", level: 1 },
+  { value: "A3", label: "Treasurer", level: 1 },
+  { value: "A4", label: "Deacon (Men Department)", level: 1 },
+  { value: "A5", label: "Deaconess (Women Department)", level: 1 },
+  { value: "A6", label: "Sunday School Superintendent", level: 1 },
+  { value: "A7", label: "CED – Christian Education Department", level: 1 },
+  { value: "0", label: "N/A", level: 1 },
+
+  /* =========================
+     N/A
+  ========================== */
 ];
 
 export const getRoleLabel = (roleNumber: string | number) => {
@@ -33,7 +49,6 @@ export const getRoleLabel = (roleNumber: string | number) => {
 
   return roles.find((r) => r.value === String(roleNumber))?.label || "";
 };
-
 
 // Appconfig.ts or a helpers file
 export const getCombinedRoles = (item: any) => {

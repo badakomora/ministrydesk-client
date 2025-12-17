@@ -8,8 +8,7 @@ import { getUserRoles, roles, serverurl } from "./Appconfig";
 // -------------------- ROLE HIERARCHY --------------------
 
 const ROLE_HIERARCHY = {
-  4: "National Level",
-  3: "Executive Level",
+  3: "National Level",
   2: "District Level",
   1: "Assembly Level",
 } as const;
@@ -414,7 +413,6 @@ export const Navbar: React.FC<
   const [loggedFullname, setLoggedFullname] = useState("");
   const [loggedPhone, setLoggedPhone] = useState("");
   const [loggedNationalRole, setLoggedNationalRole] = useState("");
-  const [loggedExecutiveRole, setLoggedExecutiveRole] = useState("");
   const [loggedDistrictRole, setLoggedDistrictRole] = useState("");
   const [loggedAssemblyRole, setLoggedAssemblyRole] = useState("");
   const [loggedEmail, setLoggedEmail] = useState("");
@@ -426,9 +424,9 @@ export const Navbar: React.FC<
 
   const [dashboardShow, setDashboardShow] = useState(false);
 
-  const [currentRoleLevel, setCurrentRoleLevel] = useState<
-    4 | 3 | 2 | 1 | null
-  >(null);
+  const [currentRoleLevel, setCurrentRoleLevel] = useState<3 | 2 | 1 | null>(
+    null
+  );
   const [selectedRolesByLevel, setSelectedRolesByLevel] = useState<{
     [key: number]: string;
   }>({});
@@ -437,7 +435,6 @@ export const Navbar: React.FC<
     const storedPhone = localStorage.getItem("userPhone");
     const storedName = localStorage.getItem("userFullname");
     const storedNationalRole = localStorage.getItem("nationalRole");
-    const storedExecutiveRole = localStorage.getItem("executiveRole");
     const storedDistrictRole = localStorage.getItem("districtRole");
     const storedAssemblyRole = localStorage.getItem("assemblyRole");
     const storedIdNumber = localStorage.getItem("userIdNumber");
@@ -450,7 +447,6 @@ export const Navbar: React.FC<
       storedPhone &&
       storedName &&
       storedNationalRole &&
-      storedExecutiveRole &&
       storedDistrictRole &&
       storedAssemblyRole &&
       storedChurchId &&
@@ -463,7 +459,6 @@ export const Navbar: React.FC<
       setLoggedFullname(storedName);
       setLoggedNationalRole(storedNationalRole);
       setLoggedAssemblyRole(storedAssemblyRole);
-      setLoggedExecutiveRole(storedExecutiveRole);
       setLoggedDistrictRole(storedDistrictRole);
       setLoggedChurchId(storedChurchId);
       setLoggedEmail(storedEmail);
@@ -473,19 +468,13 @@ export const Navbar: React.FC<
 
       if (
         loggedNationalRole === "3" ||
-        loggedAssemblyRole === "3" ||
-        loggedExecutiveRole === "3" ||
-        loggedDistrictRole === "3"
+        loggedDistrictRole === "2" ||
+        loggedAssemblyRole === "1"
       ) {
         setDashboardShow(true);
       }
     }
-  }, [
-    loggedAssemblyRole,
-    loggedDistrictRole,
-    loggedExecutiveRole,
-    loggedNationalRole,
-  ]);
+  }, [loggedAssemblyRole, loggedDistrictRole, loggedNationalRole]);
 
   useEffect(() => {
     const fetchChurches = async () => {
@@ -523,7 +512,6 @@ export const Navbar: React.FC<
     localStorage.removeItem("userPhone");
     localStorage.removeItem("userFullname");
     localStorage.removeItem("nationalRole");
-    localStorage.removeItem("executiveRole");
     localStorage.removeItem("districtRole");
     localStorage.removeItem("assemblyRole");
     localStorage.removeItem("userIdNumber");
@@ -548,10 +536,12 @@ export const Navbar: React.FC<
     }));
     setSelectedRole(roleValue);
 
-    // Auto-advance to next level
-    const nextLevel = level - 1;
+    let nextLevel = level - 1;
+    if (nextLevel === 3) {
+      nextLevel = 2; //
+    }
     if (nextLevel > 0) {
-      setCurrentRoleLevel(nextLevel as 4 | 3 | 2 | 1);
+      setCurrentRoleLevel(nextLevel as 3 | 2 | 1);
     } else {
       // All levels completed
       setCurrentRoleLevel(null);
@@ -559,16 +549,16 @@ export const Navbar: React.FC<
   };
 
   const resetRoleSelection = () => {
-    setCurrentRoleLevel(4);
+    setCurrentRoleLevel(3);
     setSelectedRolesByLevel({});
     setSelectedRole("");
   };
 
   const goBackLevel = () => {
-    const levels = [4, 3, 2, 1];
-    const currentIndex = levels.indexOf(currentRoleLevel || 4);
+    const levels = [3, 2, 1];
+    const currentIndex = levels.indexOf(currentRoleLevel || 3);
     if (currentIndex > 0) {
-      setCurrentRoleLevel(levels[currentIndex - 1] as 4 | 3 | 2 | 1);
+      setCurrentRoleLevel(levels[currentIndex - 1] as 3 | 2 | 1);
       const newRoles = { ...selectedRolesByLevel };
       delete newRoles[levels[currentIndex]];
       setSelectedRolesByLevel(newRoles);
@@ -594,7 +584,6 @@ export const Navbar: React.FC<
         localStorage.setItem("userRole", res.data.role);
 
         localStorage.setItem("nationalRole", String(res.data.nationalrole));
-        localStorage.setItem("executiveRole", String(res.data.executiverole));
         localStorage.setItem("districtRole", String(res.data.districtrole));
         localStorage.setItem("assemblyRole", String(res.data.assemblyrole));
 
@@ -616,10 +605,6 @@ export const Navbar: React.FC<
           String(res.data.user.nationalrole)
         );
         localStorage.setItem(
-          "executiveRole",
-          String(res.data.user.executiverole)
-        );
-        localStorage.setItem(
           "districtRole",
           String(res.data.user.districtrole)
         );
@@ -636,7 +621,6 @@ export const Navbar: React.FC<
         setLoggedPhone(res.data.user.phonenumber);
         setLoggedEmail(res.data.user.email);
         setLoggedNationalRole(res.data.user.nationalrole);
-        setLoggedExecutiveRole(res.data.user.executiverole);
         setLoggedDistrictRole(res.data.user.districtrole);
         setLoggedAssemblyRole(res.data.user.assemblyrole);
         setLoggedChurchId(res.data.user.churchid);
@@ -749,8 +733,7 @@ export const Navbar: React.FC<
       fullname,
       phonenumber,
       email,
-      nationalRole: selectedRolesByLevel[4] || null,
-      executiveRole: selectedRolesByLevel[3] || null,
+      nationalRole: selectedRolesByLevel[3] || null, // This will always be null now
       districtRole: selectedRolesByLevel[2] || null,
       assemblyRole: selectedRolesByLevel[1] || null,
       churchid: selectedChurch,
@@ -791,7 +774,7 @@ export const Navbar: React.FC<
               fontSize: "0.9rem",
             }}
           >
-            {ROLE_HIERARCHY[4]} (Select one to continue)
+            {ROLE_HIERARCHY[3]} (Select one to continue)
           </label>
           <select
             required
@@ -811,7 +794,7 @@ export const Navbar: React.FC<
             }}
           >
             <option value="">Select National Level Role</option>
-            {getRolesByLevel(4).map((r) => (
+            {getRolesByLevel(3).map((r) => (
               <option key={r.value} value={r.value}>
                 {r.label}
               </option>
@@ -821,13 +804,13 @@ export const Navbar: React.FC<
       );
     }
 
-    const levels = [4, 3, 2, 1];
-    const currentIndex = levels.indexOf(currentRoleLevel || 4);
+    const levels = [3, 2, 1];
+    const currentIndex = levels.indexOf(currentRoleLevel || 3);
 
     return (
       <div style={{ marginBottom: "14px" }}>
         <div css={roleProgressStyles}>
-          Select Ministry Role: {Object.keys(selectedRolesByLevel).length} of 4
+          Select Ministry Role: {Object.keys(selectedRolesByLevel).length} of 3
           levels
         </div>
 
@@ -1392,20 +1375,17 @@ export const Navbar: React.FC<
                         ))
                       ) : (
                         <>
-                          {selectedRole === "1" ? (
-                            <div
-                              onClick={() => setIsCreatingChurch(true)}
-                              style={{
-                                color: "#2563eb",
-                                fontWeight: "600",
-                                cursor: "pointer",
-                              }}
-                            >
-                              + Register "{search}"
-                            </div>
-                          ) : (
-                            <div style={{ color: "#999" }}>No church found</div>
-                          )}
+                          {/* Removed condition for selectedRole === "1" for registering new church */}
+                          <div
+                            onClick={() => setIsCreatingChurch(true)}
+                            style={{
+                              color: "#2563eb",
+                              fontWeight: "600",
+                              cursor: "pointer",
+                            }}
+                          >
+                            + Register "{search}"
+                          </div>
                         </>
                       )}
                     </div>
