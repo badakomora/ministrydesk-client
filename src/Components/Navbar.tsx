@@ -166,6 +166,7 @@ const modalOverlay = css`
   justify-content: center;
   z-index: 100;
   animation: ${fadeIn} 0.25s ease-out;
+  overflow-y: auto;
 `;
 
 const modal = css`
@@ -431,6 +432,10 @@ export const Navbar: React.FC<
     [key: number]: string;
   }>({});
 
+  const [regions, setRegions] = useState<{ id: number; name: string }[]>([]);
+  const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
+  const [regionSearch, setRegionSearch] = useState("");
+
   useEffect(() => {
     const storedPhone = localStorage.getItem("userPhone");
     const storedName = localStorage.getItem("userFullname");
@@ -498,14 +503,28 @@ export const Navbar: React.FC<
       }
     };
 
+    const fetchRegions = async () => {
+      try {
+        const response = await axios.get(`${serverurl}/region/list`);
+        setRegions(response.data);
+      } catch (error) {
+        console.error("Error fetching regions:", error);
+      }
+    };
+
     if (loggedChurchId) {
       fetchChurch();
     }
     fetchChurches();
+    fetchRegions();
   }, [loggedChurchId]);
 
   const filteredChurches = churches.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const filteredRegions = regions.filter((r) =>
+    r.name.toLowerCase().includes(regionSearch.toLowerCase())
   );
 
   const LogOut = () => {
@@ -722,9 +741,13 @@ export const Navbar: React.FC<
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!selectedChurch) {
+    if (selectedRolesByLevel[2] && !selectedRegion) {
+      return toast.warning("Please select a region for your district role.");
+    }
+
+    if (selectedRolesByLevel[1] && !selectedChurch) {
       return toast.warning(
-        "Please select or register your church if you are a senior pastor."
+        "Please select or register your church for your assembly role."
       );
     }
 
@@ -737,6 +760,7 @@ export const Navbar: React.FC<
       districtRole: selectedRolesByLevel[2] || null,
       assemblyRole: selectedRolesByLevel[1] || null,
       churchid: selectedChurch,
+      regionid: selectedRegion,
     };
 
     try {
@@ -750,6 +774,7 @@ export const Navbar: React.FC<
       setEmail("");
       setSelectedRole("");
       setSelectedChurch(null);
+      setSelectedRegion(null);
       resetRoleSelection();
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -757,7 +782,7 @@ export const Navbar: React.FC<
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("An error occurred during registration.");
+        toast.error("An occurred during registration.");
       }
     }
   };
@@ -824,7 +849,8 @@ export const Navbar: React.FC<
           );
         })}
 
-        {currentRoleLevel && (
+        {/* Show District Level selector only if currentRoleLevel is 2 */}
+        {currentRoleLevel === 2 && (
           <div>
             <label
               style={{
@@ -834,12 +860,12 @@ export const Navbar: React.FC<
                 fontSize: "0.9rem",
               }}
             >
-              {ROLE_HIERARCHY[currentRoleLevel]}
+              {ROLE_HIERARCHY[2]}
             </label>
             <select
               onChange={(e) => {
                 if (e.target.value) {
-                  handleRoleSelection(e.target.value, currentRoleLevel);
+                  handleRoleSelection(e.target.value, 2);
                 }
               }}
               style={{
@@ -853,35 +879,180 @@ export const Navbar: React.FC<
                 marginBottom: "8px",
               }}
             >
-              <option value="">
-                Select {ROLE_HIERARCHY[currentRoleLevel]}
-              </option>
-              {getRolesByLevel(currentRoleLevel).map((r) => (
+              <option value="">Select {ROLE_HIERARCHY[2]}</option>
+              {getRolesByLevel(2).map((r) => (
                 <option key={r.value} value={r.value}>
                   {r.label}
                 </option>
               ))}
             </select>
+          </div>
+        )}
 
-            {currentIndex > 0 && (
-              <button
-                type="button"
-                onClick={goBackLevel}
-                style={{
-                  width: "100%",
-                  padding: "8px 14px",
-                  background: "#f0f0f0",
-                  color: "#1e293b",
-                  border: "1px solid #ccc",
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  marginBottom: "12px",
-                }}
-              >
-                ← Back to Previous Level
-              </button>
+        {/* Show region search AFTER District Level role is selected */}
+        {selectedRolesByLevel[2] && (
+          <div css={churchDropdownWrapper} style={{ marginBottom: "12px" }}>
+            <input
+              type="text"
+              placeholder="Search and select your region"
+              value={
+                selectedRegion != null
+                  ? regions.find((r) => r.id === selectedRegion)?.name ?? ""
+                  : regionSearch ?? ""
+              }
+              onChange={(e) => {
+                setRegionSearch(e.target.value);
+                setSelectedRegion(null);
+              }}
+              required
+            />
+
+            {regionSearch && !selectedRegion && (
+              <div css={churchList}>
+                {filteredRegions.length > 0 ? (
+                  filteredRegions.map((region) => (
+                    <div
+                      key={region.id}
+                      onClick={() => {
+                        setSelectedRegion(region.id);
+                        setRegionSearch("");
+                      }}
+                    >
+                      {region.name}
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      color: "#666",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    No regions found
+                  </div>
+                )}
+              </div>
             )}
           </div>
+        )}
+
+        {/* Show Assembly Level selector only if currentRoleLevel is 1 */}
+        {(currentRoleLevel === 1 ||
+          (selectedRolesByLevel[2] && !selectedRegion)) && (
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+              }}
+            >
+              {ROLE_HIERARCHY[1]}
+            </label>
+            <select
+              onChange={(e) => {
+                if (selectedRolesByLevel[2] && !selectedRegion) {
+                  toast.error(
+                    "Please select a region first before choosing an Assembly Level role"
+                  );
+                  e.target.value = "";
+                  return;
+                }
+                if (e.target.value) {
+                  handleRoleSelection(e.target.value, 1);
+                }
+              }}
+              style={{
+                width: "100%",
+                padding: "12px 14px",
+                border: "#2563eb 1px solid",
+                outline: "none",
+                fontSize: "0.95rem",
+                background: "white",
+                boxSizing: "border-box",
+                marginBottom: "8px",
+              }}
+            >
+              <option value="">Select {ROLE_HIERARCHY[1]}</option>
+              {getRolesByLevel(1).map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Show church search AFTER Assembly Level role is selected */}
+        {selectedRolesByLevel[1] && (
+          <div css={churchDropdownWrapper} style={{ marginBottom: "12px" }}>
+            <input
+              type="text"
+              placeholder="Search and select your church"
+              value={
+                selectedChurch != null
+                  ? churches.find((c) => c.id === selectedChurch)?.name ?? ""
+                  : search ?? ""
+              }
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setSelectedChurch(null);
+              }}
+              required
+            />
+
+            {search && !selectedChurch && (
+              <div css={churchList}>
+                {filteredChurches.length > 0 ? (
+                  filteredChurches.map((church) => (
+                    <div
+                      key={church.id}
+                      onClick={() => {
+                        setSelectedChurch(church.id);
+                        setSearch("");
+                      }}
+                    >
+                      {church.name}
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <div
+                      onClick={() => setIsCreatingChurch(true)}
+                      style={{
+                        color: "#2563eb",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                    >
+                      + Register "{search}"
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Back and Reset buttons now appear AFTER all inputs */}
+        {currentIndex > 0 && (
+          <button
+            type="button"
+            onClick={goBackLevel}
+            style={{
+              width: "100%",
+              padding: "8px 14px",
+              background: "#f0f0f0",
+              color: "#1e293b",
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              fontWeight: 600,
+              marginBottom: "12px",
+            }}
+          >
+            ← Back to Previous Level
+          </button>
         )}
 
         {selectedRole && (
@@ -1341,56 +1512,6 @@ export const Navbar: React.FC<
                 />
 
                 {renderCascadingRoleSelector()}
-
-                <div css={churchDropdownWrapper}>
-                  <input
-                    type="text"
-                    placeholder="Search and select your church"
-                    value={
-                      selectedChurch != null
-                        ? churches.find((c) => c.id === selectedChurch)?.name ??
-                          ""
-                        : search ?? ""
-                    }
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      setSelectedChurch(null);
-                    }}
-                    required
-                  />
-
-                  {search && !selectedChurch && (
-                    <div css={churchList}>
-                      {filteredChurches.length > 0 ? (
-                        filteredChurches.map((church) => (
-                          <div
-                            key={church.id}
-                            onClick={() => {
-                              setSelectedChurch(church.id);
-                              setSearch("");
-                            }}
-                          >
-                            {church.name}
-                          </div>
-                        ))
-                      ) : (
-                        <>
-                          {/* Removed condition for selectedRole === "1" for registering new church */}
-                          <div
-                            onClick={() => setIsCreatingChurch(true)}
-                            style={{
-                              color: "#2563eb",
-                              fontWeight: "600",
-                              cursor: "pointer",
-                            }}
-                          >
-                            + Register "{search}"
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  )}
-                </div>
 
                 <button type="submit" disabled={loading}>
                   {loading ? "Loading..." : "Register"}
