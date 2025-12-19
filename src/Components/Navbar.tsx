@@ -434,7 +434,6 @@ export const Navbar: React.FC<
 
   const [regions, setRegions] = useState<{ id: number; name: string }[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
-  const [regionSearch, setRegionSearch] = useState("");
 
   useEffect(() => {
     const storedPhone = localStorage.getItem("userPhone");
@@ -521,10 +520,6 @@ export const Navbar: React.FC<
 
   const filteredChurches = churches.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const filteredRegions = regions.filter((r) =>
-    r.name.toLowerCase().includes(regionSearch.toLowerCase())
   );
 
   const LogOut = () => {
@@ -856,18 +851,20 @@ export const Navbar: React.FC<
               style={{
                 display: "block",
                 marginBottom: "8px",
-                fontWeight: 600,
-                fontSize: "0.9rem",
+                fontWeight: "600",
               }}
             >
-              {ROLE_HIERARCHY[2]}
+              Select Your Region:
             </label>
+
             <select
-              onChange={(e) => {
-                if (e.target.value) {
-                  handleRoleSelection(e.target.value, 2);
-                }
-              }}
+              value={selectedRegion || ""}
+              onChange={(e) =>
+                setSelectedRegion(
+                  e.target.value ? Number(e.target.value) : null
+                )
+              }
+              required
               style={{
                 width: "100%",
                 padding: "12px 14px",
@@ -879,13 +876,52 @@ export const Navbar: React.FC<
                 marginBottom: "8px",
               }}
             >
-              <option value="">Select {ROLE_HIERARCHY[2]}</option>
-              {getRolesByLevel(2).map((r) => (
-                <option key={r.value} value={r.value}>
-                  {r.label}
+              <option value="">-- Select a Region --</option>
+
+              {/* Coast */}
+              <option value="1">North Coast</option>
+              <option value="2">South Coast</option>
+
+              {/* Nairobi */}
+              <option value="3">Nairobi Central</option>
+              <option value="4">Nairobi East</option>
+              <option value="5">Nairobi West</option>
+              <option value="6">Nairobi North</option>
+              <option value="7">Nairobi South</option>
+
+              {/* Central */}
+              <option value="8">Central Region</option>
+              <option value="9">Kiambu Region</option>
+              <option value="10">Murang’a Region</option>
+              <option value="11">Nyeri Region</option>
+
+              {/* Rift Valley */}
+              <option value="12">North Rift</option>
+              <option value="13">Central Rift</option>
+              <option value="14">South Rift</option>
+
+              {/* Eastern */}
+              <option value="15">Upper Eastern</option>
+              <option value="16">Lower Eastern</option>
+
+              {/* Western */}
+              <option value="17">Western Region</option>
+
+              {/* Nyanza */}
+              <option value="18">North Nyanza</option>
+              <option value="19">South Nyanza</option>
+
+              {/* North Eastern */}
+              <option value="20">North Eastern Region</option>
+            </select>
+
+            {/* <select>
+              {regions.map((region) => (
+                <option key={region.id} value={region.id}>
+                  {region.name}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
         )}
 
@@ -898,41 +934,16 @@ export const Navbar: React.FC<
               value={
                 selectedRegion != null
                   ? regions.find((r) => r.id === selectedRegion)?.name ?? ""
-                  : regionSearch ?? ""
+                  : "" // changed from regionSearch
               }
               onChange={(e) => {
-                setRegionSearch(e.target.value);
-                setSelectedRegion(null);
+                // setRegionSearch(e.target.value); // Removed
+                setSelectedRegion(null); // Reset selected region when typing
               }}
               required
             />
 
-            {regionSearch && !selectedRegion && (
-              <div css={churchList}>
-                {filteredRegions.length > 0 ? (
-                  filteredRegions.map((region) => (
-                    <div
-                      key={region.id}
-                      onClick={() => {
-                        setSelectedRegion(region.id);
-                        setRegionSearch("");
-                      }}
-                    >
-                      {region.name}
-                    </div>
-                  ))
-                ) : (
-                  <div
-                    style={{
-                      color: "#666",
-                      fontStyle: "italic",
-                    }}
-                  >
-                    No regions found
-                  </div>
-                )}
-              </div>
-            )}
+            {/* Removed the search results dropdown for regions */}
           </div>
         )}
 
