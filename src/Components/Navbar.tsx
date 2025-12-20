@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { css, keyframes } from "@emotion/react"
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import { getUserRoles, roles, serverurl } from "./Appconfig"
+import { css, keyframes } from "@emotion/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getUserRoles, roles, serverurl } from "./Appconfig";
 
 // -------------------- ROLE HIERARCHY --------------------
 
@@ -11,11 +11,11 @@ const ROLE_HIERARCHY = {
   3: "National Level",
   2: "District Level",
   1: "Assembly Level",
-} as const
+} as const;
 
 const getRolesByLevel = (level: number) => {
-  return roles.filter((r) => r.level === level)
-}
+  return roles.filter((r) => r.level === level);
+};
 
 // -------------------- Header Styles --------------------
 const headerStyles = css`
@@ -26,7 +26,7 @@ const headerStyles = css`
   width: 100%;
   backdrop-filter: blur(6px);
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
-`
+`;
 
 const headerContentStyles = css`
   max-width: 1200px;
@@ -36,7 +36,7 @@ const headerContentStyles = css`
   align-items: center;
   justify-content: space-between;
   height: 72px;
-`
+`;
 
 const logoStyles = css`
   display: flex;
@@ -66,7 +66,7 @@ const logoStyles = css`
     margin: 0;
     font-size: 12px;
   }
-`
+`;
 
 const navStyles = css`
   display: flex;
@@ -91,7 +91,7 @@ const navStyles = css`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const myPagTabStyles = css`
   background: #2563eb;
@@ -99,7 +99,7 @@ const myPagTabStyles = css`
   padding: 8px 12px;
   font-weight: 700;
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
-`
+`;
 
 const mobileMenuBtn = (isOpen: boolean) => css`
   display: none;
@@ -116,7 +116,7 @@ const mobileMenuBtn = (isOpen: boolean) => css`
     transition: all 0.25s ease;
     color: white;
   }
-`
+`;
 
 const mobileNavStyles = (isOpen: boolean) => css`
   display: ${isOpen ? "flex" : "none"};
@@ -146,13 +146,13 @@ const mobileNavStyles = (isOpen: boolean) => css`
   a:hover {
     color: #2563eb;
   }
-`
+`;
 
 // -------------------- Modal Styles --------------------
 const fadeIn = keyframes`
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
-`
+`;
 
 const modalOverlay = css`
   position: fixed;
@@ -167,7 +167,7 @@ const modalOverlay = css`
   z-index: 100;
   animation: ${fadeIn} 0.25s ease-out;
   overflow-y: auto;
-`
+`;
 
 const modal = css`
   background: white;
@@ -177,7 +177,7 @@ const modal = css`
   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   position: relative;
   animation: ${fadeIn} 0.3s ease-out;
-`
+`;
 
 const tabs = css`
   display: flex;
@@ -202,7 +202,7 @@ const tabs = css`
   .inactive {
     background: white;
   }
-`
+`;
 
 const formStyles = css`
   display: flex;
@@ -237,7 +237,7 @@ const formStyles = css`
     background: #fbbf24;
     box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
   }
-`
+`;
 
 const profileCard = css`
   background: #fff;
@@ -292,90 +292,92 @@ const profileCard = css`
       background: #2563eb;
     }
   }
-`
+`;
 
-const churchDropdownWrapper = css`
-  position: relative;
-  width: 100%;
+// const churchDropdownWrapper = css`
+//   position: relative;
+//   width: 100%;
 
-  input {
-    width: 100%;
-    box-sizing: border-box;
-    outline: none;
-    padding: 12px 14px;
-    border: #2563eb 1px solid;
-    font-size: 0.95rem;
-    background: white;
-  }
-`
+//   input {
+//     width: 100%;
+//     box-sizing: border-box;
+//     outline: none;
+//     padding: 12px 14px;
+//     border: #2563eb 1px solid;
+//     font-size: 0.95rem;
+//     background: white;
+//   }
+// `
 
-const churchList = css`
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  left: 0;
-  background: white;
-  border: 1px solid #2563eb;
-  margin-top: 4px;
-  max-height: 160px;
-  overflow-y: auto;
-  z-index: 200;
-  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
+// const churchList = css`
+//   position: absolute;
+//   top: 100%;
+//   width: 100%;
+//   left: 0;
+//   background: white;
+//   border: 1px solid #2563eb;
+//   margin-top: 4px;
+//   max-height: 160px;
+//   overflow-y: auto;
+//   z-index: 200;
+//   box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
 
-  div {
-    padding: 8px 14px;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
-  }
+//   div {
+//     padding: 8px 14px;
+//     cursor: pointer;
+//     width: 100%;
+//     box-sizing: border-box;
+//   }
 
-  div:hover {
-    background: #f0f0f0;
-  }
-`
+//   div:hover {
+//     background: #f0f0f0;
+//   }
+// `
 
-const roleProgressStyles = css`
-  margin-bottom: 12px;
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 600;
-`
+// const roleProgressStyles = css`
+//   margin-bottom: 12px;
+//   font-size: 0.85rem;
+//   color: #666;
+//   font-weight: 600;
+// `
 
-const roleSelectedStyles = css`
-  padding: 8px 12px;
-  background: #e0f2fe;
-  border: 1px solid #0284c7;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+// const roleSelectedStyles = css`
+//   padding: 8px 12px;
+//   background: #e0f2fe;
+//   border: 1px solid #0284c7;
+//   border-radius: 4px;
+//   margin-bottom: 8px;
+//   font-size: 0.9rem;
 
-  strong {
-    color: #0c4a6e;
-  }
-`
+//   strong {
+//     color: #0c4a6e;
+//   }
+// `
 
 interface componentProps {
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface ModalProps {
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setPageContent: React.Dispatch<React.SetStateAction<string>>
-  isModalOpen: boolean
-  pageContent: string
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setPageContent: React.Dispatch<React.SetStateAction<string>>;
+  isModalOpen: boolean;
+  pageContent: string;
 }
 
 interface LoadingProps {
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  loading: boolean
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
 }
 
 type Idprops = {
-  itemId: number | null
-}
+  itemId: number | null;
+};
 
 // -------------------- Component --------------------
-export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idprops> = ({
+export const Navbar: React.FC<
+  componentProps & ModalProps & LoadingProps & Idprops
+> = ({
   setActiveTab,
   setIsModalOpen,
   setPageContent,
@@ -385,63 +387,63 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
   loading,
   itemId,
 }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [tab, setTab] = useState<"login" | "register">("login")
-  const [idnumber, setIdnumber] = useState("")
-  const [fullname, setFullname] = useState("")
-  const [phonenumber, setPhonenumber] = useState("")
-  const [email, setEmail] = useState("")
+  const [tab, setTab] = useState<"login" | "register">("login");
+  const [idnumber, setIdnumber] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [email, setEmail] = useState("");
 
-  const [otp, setOtp] = useState("")
-  const [otpSent, setOtpSent] = useState(false)
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
 
-  const [churches, setChurches] = useState<{ id: number; name: string }[]>([])
+  const [churches, setChurches] = useState<{ id: number; name: string }[]>([]);
 
-  const [selectedChurch, setSelectedChurch] = useState<number | null>(null)
-  const [search, setSearch] = useState("")
-  const [selectedRole, setSelectedRole] = useState("")
-  const [isCreatingChurch, setIsCreatingChurch] = useState(false)
-  const [newChurchName, setNewChurchName] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("")
-  const [description, setDescription] = useState("")
-  const [location, setLocation] = useState("")
-  const [phone, setPhone] = useState("")
-  const [amount, setAmount] = useState("") // Amount input
-  const [churchEmail, setChurchEmail] = useState("")
-  const [loggedFullname, setLoggedFullname] = useState("")
-  const [loggedPhone, setLoggedPhone] = useState("")
-  const [loggedNationalRole, setLoggedNationalRole] = useState("")
-  const [loggedDistrictRole, setLoggedDistrictRole] = useState("")
-  const [loggedAssemblyRole, setLoggedAssemblyRole] = useState("")
-  const [loggedEmail, setLoggedEmail] = useState("")
-  const [loggedChurchId, setLoggedChurchId] = useState("")
-  const [loggedIdNumber, setLoggedIdNumber] = useState("")
-  const [loggedSubscription, setLoggedSubscription] = useState("")
-  const [loggedDateJoined, setLoggedDateJoined] = useState("")
-  const [userChurch, setUserChurch] = useState("")
+  const [selectedChurch, setSelectedChurch] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [isCreatingChurch, setIsCreatingChurch] = useState(false);
+  const [newChurchName, setNewChurchName] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [phone, setPhone] = useState("");
+  const [amount, setAmount] = useState(""); // Amount input
+  const [churchEmail, setChurchEmail] = useState("");
+  const [loggedFullname, setLoggedFullname] = useState("");
+  const [loggedPhone, setLoggedPhone] = useState("");
+  const [loggedNationalRole, setLoggedNationalRole] = useState("");
+  const [loggedDistrictRole, setLoggedDistrictRole] = useState("");
+  const [loggedAssemblyRole, setLoggedAssemblyRole] = useState("");
+  const [loggedEmail, setLoggedEmail] = useState("");
+  const [loggedChurchId, setLoggedChurchId] = useState("");
+  const [loggedIdNumber, setLoggedIdNumber] = useState("");
+  const [loggedSubscription, setLoggedSubscription] = useState("");
+  const [loggedDateJoined, setLoggedDateJoined] = useState("");
+  const [userChurch, setUserChurch] = useState("");
 
-  const [dashboardShow, setDashboardShow] = useState(false)
+  const [dashboardShow, setDashboardShow] = useState(false);
 
-  const [currentRoleLevel, setCurrentRoleLevel] = useState<3 | 2 | 1 | null>(3)
+  const [currentRoleLevel, setCurrentRoleLevel] = useState<3 | 2 | 1 | null>(3);
   const [selectedRolesByLevel, setSelectedRolesByLevel] = useState<{
-    [key: number]: string
-  }>({})
+    [key: number]: string;
+  }>({});
 
-  const [regions, setRegions] = useState<{ id: number; name: string }[]>([])
-  const [selectedRegion, setSelectedRegion] = useState<number | null>(null)
+  const [regions, setRegions] = useState<{ id: number; name: string }[]>([]);
+  const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
 
   useEffect(() => {
-    const storedPhone = localStorage.getItem("userPhone")
-    const storedName = localStorage.getItem("userFullname")
-    const storedNationalRole = localStorage.getItem("nationalRole")
-    const storedDistrictRole = localStorage.getItem("districtRole")
-    const storedAssemblyRole = localStorage.getItem("assemblyRole")
-    const storedIdNumber = localStorage.getItem("userIdNumber")
-    const storedChurchId = localStorage.getItem("userChurchId")
-    const storedEmail = localStorage.getItem("userEmail")
-    const storedSubscription = localStorage.getItem("userSubscription")
-    const storedDateJoined = localStorage.getItem("userDateJoined")
+    const storedPhone = localStorage.getItem("userPhone");
+    const storedName = localStorage.getItem("userFullname");
+    const storedNationalRole = localStorage.getItem("nationalRole");
+    const storedDistrictRole = localStorage.getItem("districtRole");
+    const storedAssemblyRole = localStorage.getItem("assemblyRole");
+    const storedIdNumber = localStorage.getItem("userIdNumber");
+    const storedChurchId = localStorage.getItem("userChurchId");
+    const storedEmail = localStorage.getItem("userEmail");
+    const storedSubscription = localStorage.getItem("userSubscription");
+    const storedDateJoined = localStorage.getItem("userDateJoined");
 
     if (
       storedPhone &&
@@ -455,248 +457,263 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
       storedSubscription &&
       storedDateJoined
     ) {
-      setLoggedPhone(storedPhone)
-      setLoggedFullname(storedName)
-      setLoggedNationalRole(storedNationalRole)
-      setLoggedAssemblyRole(storedAssemblyRole)
-      setLoggedDistrictRole(storedDistrictRole)
-      setLoggedChurchId(storedChurchId)
-      setLoggedEmail(storedEmail)
-      setLoggedIdNumber(storedIdNumber)
-      setLoggedSubscription(storedSubscription)
-      setLoggedDateJoined(storedDateJoined)
+      setLoggedPhone(storedPhone);
+      setLoggedFullname(storedName);
+      setLoggedNationalRole(storedNationalRole);
+      setLoggedAssemblyRole(storedAssemblyRole);
+      setLoggedDistrictRole(storedDistrictRole);
+      setLoggedChurchId(storedChurchId);
+      setLoggedEmail(storedEmail);
+      setLoggedIdNumber(storedIdNumber);
+      setLoggedSubscription(storedSubscription);
+      setLoggedDateJoined(storedDateJoined);
 
-      if (loggedNationalRole === "3" || loggedDistrictRole === "2" || loggedAssemblyRole === "1") {
-        setDashboardShow(true)
+      if (
+        loggedNationalRole === "3" ||
+        loggedDistrictRole === "2" ||
+        loggedAssemblyRole === "1"
+      ) {
+        setDashboardShow(true);
       }
     }
-  }, [loggedAssemblyRole, loggedDistrictRole, loggedNationalRole])
+  }, [loggedAssemblyRole, loggedDistrictRole, loggedNationalRole]);
 
   useEffect(() => {
     const fetchChurches = async () => {
       try {
-        const response = await axios.get(`${serverurl}/church/list`)
-        setChurches(response.data)
+        const response = await axios.get(`${serverurl}/church/list`);
+        setChurches(response.data);
       } catch (error) {
-        console.error("Error fetching churches:", error)
+        console.error("Error fetching churches:", error);
       }
-    }
+    };
 
     const fetchChurch = async () => {
       try {
         const response = await axios.post(`${serverurl}/church/church`, {
           id: loggedChurchId,
-        })
+        });
 
-        setUserChurch(response.data.church.name)
+        setUserChurch(response.data.church.name);
       } catch (error) {
-        console.error("Error fetching church:", error)
+        console.error("Error fetching church:", error);
       }
-    }
+    };
 
     const fetchRegions = async () => {
       try {
-        const response = await axios.get(`${serverurl}/region/list`)
-        setRegions(response.data)
+        const response = await axios.get(`${serverurl}/region/list`);
+        setRegions(response.data);
       } catch (error) {
-        console.error("Error fetching regions:", error)
+        console.error("Error fetching regions:", error);
       }
-    }
+    };
 
     if (loggedChurchId) {
-      fetchChurch()
+      fetchChurch();
     }
-    fetchChurches()
-    fetchRegions()
-  }, [loggedChurchId])
+    fetchChurches();
+    fetchRegions();
+  }, [loggedChurchId]);
 
   useEffect(() => {
     // If a district role is selected, ensure a region is also selected or prompt for it.
     // If a region is selected and currentRoleLevel is 2, move to Assembly Level.
-   if (selectedRegion && currentRoleLevel === 2) {
+    if (selectedRegion && currentRoleLevel === 2) {
       // Automatically move to the next step if region is selected and current level is district
-      setCurrentRoleLevel(1)
+      setCurrentRoleLevel(1);
     } else if (selectedRolesByLevel[1] && currentRoleLevel === 1) {
       // Automatically move to the next step if assembly role is selected and current level is assembly
-      setCurrentRoleLevel(null) // Indicates all roles are selected
+      setCurrentRoleLevel(null); // Indicates all roles are selected
     }
-  }, [selectedRolesByLevel, selectedRegion, currentRoleLevel])
+  }, [selectedRolesByLevel, selectedRegion, currentRoleLevel]);
 
-  const filteredChurches = churches.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()))
+  const filteredChurches = churches.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const LogOut = () => {
-    localStorage.removeItem("userPhone")
-    localStorage.removeItem("userFullname")
-    localStorage.removeItem("nationalRole")
-    localStorage.removeItem("districtRole")
-    localStorage.removeItem("assemblyRole")
-    localStorage.removeItem("userIdNumber")
-    localStorage.removeItem("userChurchId")
-    localStorage.removeItem("userEmail")
-    localStorage.removeItem("userDateJoined")
-    localStorage.removeItem("userSubscription")
+    localStorage.removeItem("userPhone");
+    localStorage.removeItem("userFullname");
+    localStorage.removeItem("nationalRole");
+    localStorage.removeItem("districtRole");
+    localStorage.removeItem("assemblyRole");
+    localStorage.removeItem("userIdNumber");
+    localStorage.removeItem("userChurchId");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userDateJoined");
+    localStorage.removeItem("userSubscription");
 
-    setLoggedPhone("")
-    setLoggedFullname("")
-    setDashboardShow(false)
-    setLoggedSubscription("")
-    setActiveTab("Home")
+    setLoggedPhone("");
+    setLoggedFullname("");
+    setDashboardShow(false);
+    setLoggedSubscription("");
+    setActiveTab("Home");
 
-    toast.success("You have logged out successfully.")
-  }
+    toast.success("You have logged out successfully.");
+  };
 
   const handleRoleSelection = (roleValue: string, level: number) => {
     setSelectedRolesByLevel((prev) => ({
       ...prev,
       [level]: roleValue,
-    }))
-    setSelectedRole(roleValue) // This might be redundant if selectedRolesByLevel is used consistently
+    }));
+    setSelectedRole(roleValue); // This might be redundant if selectedRolesByLevel is used consistently
 
     // Determine the next level to present
-    let nextLevel: 3 | 2 | 1 | null = null
+    let nextLevel: 3 | 2 | 1 | null = null;
 
     // If national role is selected, next is district (level 2)
     if (level === 3) {
-      nextLevel = 2
+      nextLevel = 2;
     }
     // If district role is selected, next is assembly (level 1)
     else if (level === 2) {
       // Ensure region is selected before moving to assembly
       if (selectedRegion) {
-        nextLevel = 1
+        nextLevel = 1;
       } else {
         // If region not selected, prompt user and stay on district level or re-evaluate
         // toast.warn("Please select a region for your district role.")
-        setCurrentRoleLevel(2) // Stay on district level
-        return // Stop further processing
+        setCurrentRoleLevel(2); // Stay on district level
+        return; // Stop further processing
       }
     }
     // If assembly role is selected, all roles are done
     else if (level === 1) {
-      nextLevel = null // All roles selected
+      nextLevel = null; // All roles selected
     }
 
-    setCurrentRoleLevel(nextLevel as any) // Cast to any to avoid strict type issues if nextLevel becomes null
+    setCurrentRoleLevel(nextLevel as any); // Cast to any to avoid strict type issues if nextLevel becomes null
 
     // If we've completed all selections, ensure the state reflects that
     if (nextLevel === null) {
-      setCurrentRoleLevel(null) // Explicitly set to null when done
+      setCurrentRoleLevel(null); // Explicitly set to null when done
     } else {
-      setCurrentRoleLevel(nextLevel)
+      setCurrentRoleLevel(nextLevel);
     }
-  }
+  };
 
   const resetRoleSelection = () => {
-    setCurrentRoleLevel(3)
-    setSelectedRolesByLevel({})
-    setSelectedRole("") // Reset any individual role selection state if needed
-    setSelectedRegion(null) // Also reset region selection
-    setSelectedChurch(null) // Reset church selection
-  }
+    setCurrentRoleLevel(3);
+    setSelectedRolesByLevel({});
+    setSelectedRole(""); // Reset any individual role selection state if needed
+    setSelectedRegion(null); // Also reset region selection
+    setSelectedChurch(null); // Reset church selection
+  };
 
   const goBackLevel = () => {
     if (currentRoleLevel === null) {
       // If at church selection, go back to Assembly
-      setCurrentRoleLevel(1)
-      setSelectedChurch(null)
-      setSearch("")
+      setCurrentRoleLevel(1);
+      setSelectedChurch(null);
+      setSearch("");
     } else if (currentRoleLevel === 1) {
       // If at Assembly, go back to Region selection (District level)
-      setCurrentRoleLevel(2)
-      const newRoles = { ...selectedRolesByLevel }
-      delete newRoles[1]
-      setSelectedRolesByLevel(newRoles)
-      setSelectedRole("")
+      setCurrentRoleLevel(2);
+      const newRoles = { ...selectedRolesByLevel };
+      delete newRoles[1];
+      setSelectedRolesByLevel(newRoles);
+      setSelectedRole("");
     } else if (currentRoleLevel === 2) {
       // If at District/Region, check if region is selected
       if (selectedRegion) {
         // Go back from region to district role
-        setSelectedRegion(null)
+        setSelectedRegion(null);
       } else if (selectedRolesByLevel[2]) {
         // Go back from district role to National
-        setCurrentRoleLevel(3)
-        const newRoles = { ...selectedRolesByLevel }
-        delete newRoles[2]
-        setSelectedRolesByLevel(newRoles)
-        setSelectedRole("")
+        setCurrentRoleLevel(3);
+        const newRoles = { ...selectedRolesByLevel };
+        delete newRoles[2];
+        setSelectedRolesByLevel(newRoles);
+        setSelectedRole("");
       } else {
         // Already at start of district, go to National
-        setCurrentRoleLevel(3)
+        setCurrentRoleLevel(3);
       }
     } else if (currentRoleLevel === 3) {
       // At National level, clear national selection if exists
       if (selectedRolesByLevel[3]) {
-        const newRoles = { ...selectedRolesByLevel }
-        delete newRoles[3]
-        setSelectedRolesByLevel(newRoles)
-        setSelectedRole("")
+        const newRoles = { ...selectedRolesByLevel };
+        delete newRoles[3];
+        setSelectedRolesByLevel(newRoles);
+        setSelectedRole("");
       }
     }
-  }
+  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       if (!otpSent) {
         const res = await axios.post(`${serverurl}/user/login`, {
           phonenumber: phone,
-        })
+        });
 
-        setOtpSent(true)
-        toast.success(`OTP sent to ${res.data.fullname}`)
-        localStorage.setItem("userId", res.data.id)
-        localStorage.setItem("userIdNumber", res.data.idnumber)
-        localStorage.setItem("userFullname", res.data.fullname)
-        localStorage.setItem("userPhone", res.data.phonenumber)
-        localStorage.setItem("userEmail", res.data.email)
-        localStorage.setItem("userRole", res.data.role)
+        setOtpSent(true);
+        toast.success(`OTP sent to ${res.data.fullname}`);
+        localStorage.setItem("userId", res.data.id);
+        localStorage.setItem("userIdNumber", res.data.idnumber);
+        localStorage.setItem("userFullname", res.data.fullname);
+        localStorage.setItem("userPhone", res.data.phonenumber);
+        localStorage.setItem("userEmail", res.data.email);
+        localStorage.setItem("userRole", res.data.role);
 
-        localStorage.setItem("nationalRole", String(res.data.nationalrole))
-        localStorage.setItem("districtRole", String(res.data.districtrole))
-        localStorage.setItem("assemblyRole", String(res.data.assemblyrole))
+        localStorage.setItem("nationalRole", String(res.data.nationalrole));
+        localStorage.setItem("districtRole", String(res.data.districtrole));
+        localStorage.setItem("assemblyRole", String(res.data.assemblyrole));
 
-        localStorage.setItem("userChurchId", res.data.churchid)
-        localStorage.setItem("userSubscription", res.data.subscription)
-        localStorage.setItem("userDateJoined", res.data.datecreated)
+        localStorage.setItem("userChurchId", res.data.churchid);
+        localStorage.setItem("userSubscription", res.data.subscription);
+        localStorage.setItem("userDateJoined", res.data.datecreated);
       } else {
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
           phonenumber: phone,
           otp,
-        })
+        });
 
-        localStorage.setItem("userId", res.data.user.id)
-        localStorage.setItem("userFullname", res.data.user.fullname)
-        localStorage.setItem("userPhone", res.data.user.phonenumber)
-        localStorage.setItem("userEmail", res.data.user.email)
-        localStorage.setItem("nationalRole", String(res.data.user.nationalrole))
-        localStorage.setItem("districtRole", String(res.data.user.districtrole))
-        localStorage.setItem("assemblyRole", String(res.data.user.assemblyrole))
-        localStorage.setItem("userChurchId", res.data.user.churchid)
-        localStorage.setItem("userSubscription", res.data.user.subscription)
-        localStorage.setItem("userDateJoined", res.data.user.datecreated)
+        localStorage.setItem("userId", res.data.user.id);
+        localStorage.setItem("userFullname", res.data.user.fullname);
+        localStorage.setItem("userPhone", res.data.user.phonenumber);
+        localStorage.setItem("userEmail", res.data.user.email);
+        localStorage.setItem(
+          "nationalRole",
+          String(res.data.user.nationalrole)
+        );
+        localStorage.setItem(
+          "districtRole",
+          String(res.data.user.districtrole)
+        );
+        localStorage.setItem(
+          "assemblyRole",
+          String(res.data.user.assemblyrole)
+        );
+        localStorage.setItem("userChurchId", res.data.user.churchid);
+        localStorage.setItem("userSubscription", res.data.user.subscription);
+        localStorage.setItem("userDateJoined", res.data.user.datecreated);
 
-        setLoggedIdNumber(res.data.user.idnumber)
-        setLoggedFullname(res.data.user.fullname)
-        setLoggedPhone(res.data.user.phonenumber)
-        setLoggedEmail(res.data.user.email)
-        setLoggedNationalRole(res.data.user.nationalrole)
-        setLoggedDistrictRole(res.data.user.districtrole)
-        setLoggedAssemblyRole(res.data.user.assemblyrole)
-        setLoggedChurchId(res.data.user.churchid)
-        setLoggedSubscription(res.data.user.subscription)
-        setLoggedDateJoined(res.data.user.datecreated)
+        setLoggedIdNumber(res.data.user.idnumber);
+        setLoggedFullname(res.data.user.fullname);
+        setLoggedPhone(res.data.user.phonenumber);
+        setLoggedEmail(res.data.user.email);
+        setLoggedNationalRole(res.data.user.nationalrole);
+        setLoggedDistrictRole(res.data.user.districtrole);
+        setLoggedAssemblyRole(res.data.user.assemblyrole);
+        setLoggedChurchId(res.data.user.churchid);
+        setLoggedSubscription(res.data.user.subscription);
+        setLoggedDateJoined(res.data.user.datecreated);
 
-        toast.success("Login successful!")
+        toast.success("Login successful!");
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Something went wrong")
+      toast.error(err.response?.data?.error || "Something went wrong");
     }
-  }
+  };
 
   const handleTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true) // ✅ start loading
+    e.preventDefault();
+    setLoading(true); // ✅ start loading
 
     try {
       const transactionData = {
@@ -705,43 +722,49 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
         amount: amount ? amount : 149,
         activity: pageContent,
         itemid: itemId ? itemId : null,
-      }
+      };
 
-      const res = await axios.post(`${serverurl}/transaction/deposit`, transactionData)
+      const res = await axios.post(
+        `${serverurl}/transaction/deposit`,
+        transactionData
+      );
 
-      console.log("Response:", res.data)
-      toast.success("Transaction successful!")
+      console.log("Response:", res.data);
+      toast.success("Transaction successful!");
     } catch (err: any) {
-      console.error("Error:", err)
-      toast.error(err.response?.data?.error || "Something went wrong")
+      console.error("Error:", err);
+      toast.error(err.response?.data?.error || "Something went wrong");
     } finally {
-      setLoading(false) // ✅ stop loading
+      setLoading(false); // ✅ stop loading
     }
-  }
+  };
 
   const handleSpecialPrayer = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const response = await axios.post(`${serverurl}/prayerrequest/new`, {
         idnumber: loggedIdNumber,
         description,
         churchid: itemId,
-      })
+      });
 
-      toast.success(response.data.message || "Prayer request sent successfully!")
+      toast.success(
+        response.data.message || "Prayer request sent successfully!"
+      );
     } catch (error: any) {
-      console.error("Error creating church:", error)
+      console.error("Error creating church:", error);
 
       if (error.response?.data?.message) {
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       } else {
-        toast.error("An error occurred while creating the church.")
+        toast.error("An error occurred while creating the church.");
       }
     }
-  }
+  };
   const handleNewChurch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!newChurchName.trim()) return toast.warning("Please enter a church name.")
+    e.preventDefault();
+    if (!newChurchName.trim())
+      return toast.warning("Please enter a church name.");
 
     try {
       const response = await axios.post(`${serverurl}/church/register`, {
@@ -751,42 +774,46 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
         location,
         phone,
         email: churchEmail,
-      })
+      });
 
-      const registeredChurch = response.data
+      const registeredChurch = response.data;
 
-      toast.success(response.data.message || "Church registered successfully!")
+      toast.success(response.data.message || "Church registered successfully!");
 
-      setChurches([...churches, registeredChurch])
-      setSelectedChurch(registeredChurch.id)
-      setSearch("")
-      setNewChurchName("")
-      setIsCreatingChurch(false)
+      setChurches([...churches, registeredChurch]);
+      setSelectedChurch(registeredChurch.id);
+      setSearch("");
+      setNewChurchName("");
+      setIsCreatingChurch(false);
     } catch (error: any) {
-      console.error("Error creating church:", error)
+      console.error("Error creating church:", error);
 
       if (error.response?.data?.message) {
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       } else {
-        toast.error("An error occurred while creating the church.")
+        toast.error("An error occurred while creating the church.");
       }
     }
-  }
+  };
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Ensure all required fields for registration are filled
     if (!idnumber || !fullname || !phonenumber) {
-      return toast.warning("Please fill in all required fields (ID, Name, Phone).")
+      return toast.warning(
+        "Please fill in all required fields (ID, Name, Phone)."
+      );
     }
 
     if (currentRoleLevel === 2 && !selectedRegion) {
-      return toast.warning("Please select a region for your district role.")
+      return toast.warning("Please select a region for your district role.");
     }
 
     if (currentRoleLevel === 1 && !selectedChurch) {
-      return toast.warning("Please select or register your church for your assembly role.")
+      return toast.warning(
+        "Please select or register your church for your assembly role."
+      );
     }
 
     // Ensure that if a higher-level role was skipped, the lower level is selected correctly
@@ -805,33 +832,33 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
       assemblyRole: selectedRolesByLevel[1] || null,
       churchid: selectedChurch, // Will be null if no assembly role or church selected
       regionid: selectedRegion, // Will be null if no district role or region selected
-    }
+    };
 
     try {
-      const response = await axios.post(`${serverurl}/user/register`, data)
+      const response = await axios.post(`${serverurl}/user/register`, data);
 
-      toast.success(response.data.message || "User registered successfully!")
+      toast.success(response.data.message || "User registered successfully!");
 
       // Clear form and reset states
-      setIdnumber("")
-      setFullname("")
-      setPhonenumber("")
-      setEmail("")
-      setSelectedChurch(null)
-      setSearch("") // Clear search for church dropdown
-      setSelectedRegion(null)
-      resetRoleSelection() // Resets currentRoleLevel and selectedRolesByLevel
-      setTab("login") // Optionally switch to login tab after successful registration
+      setIdnumber("");
+      setFullname("");
+      setPhonenumber("");
+      setEmail("");
+      setSelectedChurch(null);
+      setSearch(""); // Clear search for church dropdown
+      setSelectedRegion(null);
+      resetRoleSelection(); // Resets currentRoleLevel and selectedRolesByLevel
+      setTab("login"); // Optionally switch to login tab after successful registration
     } catch (error: any) {
-      console.error("Registration error:", error)
+      console.error("Registration error:", error);
 
       if (error.response?.data?.message) {
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       } else {
-        toast.error("An error occurred during registration.")
+        toast.error("An error occurred during registration.");
       }
     }
-  }
+  };
 
   const renderCascadingRoleSelector = () => {
     // Start by showing the National Level selector if no role is selected yet
@@ -852,7 +879,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             required
             onChange={(e) => {
               if (e.target.value) {
-                handleRoleSelection(e.target.value, 3)
+                handleRoleSelection(e.target.value, 3);
               }
             }}
             style={{
@@ -873,7 +900,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             ))}
           </select>
         </div>
-      )
+      );
     }
 
     if (currentRoleLevel === 2) {
@@ -891,9 +918,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 fontSize: "0.9rem",
               }}
             >
-              <span style={{ fontWeight: 600, color: "#1e40af" }}>National Role:</span>{" "}
+              <span style={{ fontWeight: 600, color: "#1e40af" }}>
+                National Role:
+              </span>{" "}
               <span style={{ color: "#1e3a8a" }}>
-                {getRolesByLevel(3).find((r) => r.value === selectedRolesByLevel[3])?.label}
+                {
+                  getRolesByLevel(3).find(
+                    (r) => r.value === selectedRolesByLevel[3]
+                  )?.label
+                }
               </span>
             </div>
           )}
@@ -915,7 +948,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 required
                 onChange={(e) => {
                   if (e.target.value) {
-                    handleRoleSelection(e.target.value, 2)
+                    handleRoleSelection(e.target.value, 2);
                   }
                 }}
                 style={{
@@ -949,9 +982,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                   fontSize: "0.9rem",
                 }}
               >
-                <span style={{ fontWeight: 600, color: "#1e40af" }}>District Role:</span>{" "}
+                <span style={{ fontWeight: 600, color: "#1e40af" }}>
+                  District Role:
+                </span>{" "}
                 <span style={{ color: "#1e3a8a" }}>
-                  {getRolesByLevel(2).find((r) => r.value === selectedRolesByLevel[2])?.label}
+                  {
+                    getRolesByLevel(2).find(
+                      (r) => r.value === selectedRolesByLevel[2]
+                    )?.label
+                  }
                 </span>
               </div>
 
@@ -968,7 +1007,11 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 </label>
                 <select
                   value={selectedRegion || ""}
-                  onChange={(e) => setSelectedRegion(e.target.value ? Number(e.target.value) : null)}
+                  onChange={(e) =>
+                    setSelectedRegion(
+                      e.target.value ? Number(e.target.value) : null
+                    )
+                  }
                   required
                   style={{
                     width: "100%",
@@ -1006,7 +1049,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             </div>
           )}
         </div>
-      )
+      );
     }
 
     if (currentRoleLevel === 1) {
@@ -1024,9 +1067,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 fontSize: "0.9rem",
               }}
             >
-              <span style={{ fontWeight: 600, color: "#1e40af" }}>National Role:</span>{" "}
+              <span style={{ fontWeight: 600, color: "#1e40af" }}>
+                National Role:
+              </span>{" "}
               <span style={{ color: "#1e3a8a" }}>
-                {getRolesByLevel(3).find((r) => r.value === selectedRolesByLevel[3])?.label}
+                {
+                  getRolesByLevel(3).find(
+                    (r) => r.value === selectedRolesByLevel[3]
+                  )?.label
+                }
               </span>
             </div>
           )}
@@ -1043,9 +1092,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 fontSize: "0.9rem",
               }}
             >
-              <span style={{ fontWeight: 600, color: "#1e40af" }}>District Role:</span>{" "}
+              <span style={{ fontWeight: 600, color: "#1e40af" }}>
+                District Role:
+              </span>{" "}
               <span style={{ color: "#1e3a8a" }}>
-                {getRolesByLevel(2).find((r) => r.value === selectedRolesByLevel[2])?.label}
+                {
+                  getRolesByLevel(2).find(
+                    (r) => r.value === selectedRolesByLevel[2]
+                  )?.label
+                }
               </span>
             </div>
           )}
@@ -1108,7 +1163,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               required
               onChange={(e) => {
                 if (e.target.value) {
-                  handleRoleSelection(e.target.value, 1)
+                  handleRoleSelection(e.target.value, 1);
                 }
               }}
               style={{
@@ -1130,7 +1185,7 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             </select>
           </div>
         </div>
-      )
+      );
     }
 
     return (
@@ -1147,9 +1202,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               fontSize: "0.9rem",
             }}
           >
-            <span style={{ fontWeight: 600, color: "#1e40af" }}>National Role:</span>{" "}
+            <span style={{ fontWeight: 600, color: "#1e40af" }}>
+              National Role:
+            </span>{" "}
             <span style={{ color: "#1e3a8a" }}>
-              {getRolesByLevel(3).find((r) => r.value === selectedRolesByLevel[3])?.label}
+              {
+                getRolesByLevel(3).find(
+                  (r) => r.value === selectedRolesByLevel[3]
+                )?.label
+              }
             </span>
           </div>
         )}
@@ -1165,9 +1226,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               fontSize: "0.9rem",
             }}
           >
-            <span style={{ fontWeight: 600, color: "#1e40af" }}>District Role:</span>{" "}
+            <span style={{ fontWeight: 600, color: "#1e40af" }}>
+              District Role:
+            </span>{" "}
             <span style={{ color: "#1e3a8a" }}>
-              {getRolesByLevel(2).find((r) => r.value === selectedRolesByLevel[2])?.label}
+              {
+                getRolesByLevel(2).find(
+                  (r) => r.value === selectedRolesByLevel[2]
+                )?.label
+              }
             </span>
           </div>
         )}
@@ -1224,9 +1291,15 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               fontSize: "0.9rem",
             }}
           >
-            <span style={{ fontWeight: 600, color: "#1e40af" }}>Assembly Role:</span>{" "}
+            <span style={{ fontWeight: 600, color: "#1e40af" }}>
+              Assembly Role:
+            </span>{" "}
             <span style={{ color: "#1e3a8a" }}>
-              {getRolesByLevel(1).find((r) => r.value === selectedRolesByLevel[1])?.label}
+              {
+                getRolesByLevel(1).find(
+                  (r) => r.value === selectedRolesByLevel[1]
+                )?.label
+              }
             </span>
           </div>
         )}
@@ -1248,8 +1321,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             placeholder="Type to search churches..."
             value={search}
             onChange={(e) => {
-              setSearch(e.target.value)
-              setSelectedChurch(null) // Clear selected church when search term changes
+              setSearch(e.target.value);
+              setSelectedChurch(null); // Clear selected church when search term changes
             }}
             style={{
               width: "100%",
@@ -1276,8 +1349,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 <div
                   key={church.id}
                   onClick={() => {
-                    setSelectedChurch(church.id)
-                    setSearch(church.name) // Set search input to the selected church name
+                    setSelectedChurch(church.id);
+                    setSearch(church.name); // Set search input to the selected church name
                   }}
                   style={{
                     padding: "10px 14px",
@@ -1285,8 +1358,12 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                     borderBottom: "1px solid #f3f4f6",
                     transition: "background 0.2s",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "#f9fafb")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "white")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "#f9fafb")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "white")
+                  }
                 >
                   {church.name}
                 </div>
@@ -1308,16 +1385,20 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 textAlign: "center",
                 transition: "background 0.2s",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#dbeafe")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#eff6ff")}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.background = "#dbeafe")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.background = "#eff6ff")
+              }
             >
               + Register "{search}" as a new church
             </div>
           )}
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -1340,8 +1421,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             <a
               href="."
               onClick={(e) => {
-                e.preventDefault()
-                setActiveTab("home")
+                e.preventDefault();
+                setActiveTab("home");
               }}
             >
               Home
@@ -1349,8 +1430,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             <a
               href="."
               onClick={(e) => {
-                e.preventDefault()
-                setActiveTab("NewsList")
+                e.preventDefault();
+                setActiveTab("NewsList");
               }}
             >
               News & Events
@@ -1358,8 +1439,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             <a
               href="."
               onClick={(e) => {
-                e.preventDefault()
-                setActiveTab("SermonsList")
+                e.preventDefault();
+                setActiveTab("SermonsList");
               }}
             >
               Churches & Sermons
@@ -1367,8 +1448,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             <a
               href="."
               onClick={(e) => {
-                e.preventDefault()
-                setActiveTab("AssemblyProgramsList")
+                e.preventDefault();
+                setActiveTab("AssemblyProgramsList");
               }}
             >
               Assembly Programs
@@ -1376,8 +1457,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             <a
               href="."
               onClick={(e) => {
-                e.preventDefault()
-                setActiveTab("PAGProgramsList")
+                e.preventDefault();
+                setActiveTab("PAGProgramsList");
               }}
             >
               Community
@@ -1386,8 +1467,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               <a
                 href="."
                 onClick={(e) => {
-                  e.preventDefault()
-                  setActiveTab("Dashboard")
+                  e.preventDefault();
+                  setActiveTab("Dashboard");
                 }}
               >
                 Dashboard
@@ -1400,9 +1481,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               href="."
               css={myPagTabStyles}
               onClick={(e) => {
-                e.preventDefault()
-                setIsModalOpen(true)
-                setPageContent("Membership")
+                e.preventDefault();
+                setIsModalOpen(true);
+                setPageContent("Membership");
               }}
               style={{ color: "white" }}
             >
@@ -1424,13 +1505,16 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
         </div>
 
         {/* Mobile Nav */}
-        <nav css={mobileNavStyles(isMobileMenuOpen)} aria-label="Mobile navigation">
+        <nav
+          css={mobileNavStyles(isMobileMenuOpen)}
+          aria-label="Mobile navigation"
+        >
           <a
             href="."
             onClick={(e) => {
-              e.preventDefault()
-              setActiveTab("home")
-              setIsMobileMenuOpen(false)
+              e.preventDefault();
+              setActiveTab("home");
+              setIsMobileMenuOpen(false);
             }}
           >
             Home
@@ -1438,9 +1522,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
           <a
             href="."
             onClick={(e) => {
-              e.preventDefault()
-              setActiveTab("NewsList")
-              setIsMobileMenuOpen(false)
+              e.preventDefault();
+              setActiveTab("NewsList");
+              setIsMobileMenuOpen(false);
             }}
           >
             News & Events
@@ -1448,9 +1532,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
           <a
             href="."
             onClick={(e) => {
-              e.preventDefault()
-              setActiveTab("SermonsList")
-              setIsMobileMenuOpen(false)
+              e.preventDefault();
+              setActiveTab("SermonsList");
+              setIsMobileMenuOpen(false);
             }}
           >
             Churches & Sermons
@@ -1458,9 +1542,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
           <a
             href="."
             onClick={(e) => {
-              e.preventDefault()
-              setActiveTab("AssemblyProgramsList")
-              setIsMobileMenuOpen(false)
+              e.preventDefault();
+              setActiveTab("AssemblyProgramsList");
+              setIsMobileMenuOpen(false);
             }}
           >
             Assembly Programs
@@ -1468,9 +1552,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
           <a
             href="."
             onClick={(e) => {
-              e.preventDefault()
-              setActiveTab("PAGProgramsList")
-              setIsMobileMenuOpen(false)
+              e.preventDefault();
+              setActiveTab("PAGProgramsList");
+              setIsMobileMenuOpen(false);
             }}
           >
             Community
@@ -1479,9 +1563,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             <a
               href="."
               onClick={(e) => {
-                e.preventDefault()
-                setActiveTab("Dashboard")
-                setIsMobileMenuOpen(false)
+                e.preventDefault();
+                setActiveTab("Dashboard");
+                setIsMobileMenuOpen(false);
               }}
             >
               Dashboard
@@ -1494,9 +1578,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
             href="."
             css={myPagTabStyles}
             onClick={(e) => {
-              e.preventDefault()
-              setIsModalOpen(true)
-              setPageContent("Membership")
+              e.preventDefault();
+              setIsModalOpen(true);
+              setPageContent("Membership");
             }}
             style={{ color: "white" }}
           >
@@ -1527,10 +1611,16 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
               </div>
               {!loggedFullname && pageContent === "Membership" ? (
                 <div css={tabs}>
-                  <button className={tab === "login" ? "active" : "inactive"} onClick={() => setTab("login")}>
+                  <button
+                    className={tab === "login" ? "active" : "inactive"}
+                    onClick={() => setTab("login")}
+                  >
                     Login
                   </button>
-                  <button className={tab === "register" ? "active" : "inactive"} onClick={() => setTab("register")}>
+                  <button
+                    className={tab === "register" ? "active" : "inactive"}
+                    onClick={() => setTab("register")}
+                  >
                     Register
                   </button>
                 </div>
@@ -1551,7 +1641,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
 
                 <div className="row">
                   <span className="label">Email</span>
-                  <span className="value">{loggedEmail ? loggedEmail : "N/A"}</span>
+                  <span className="value">
+                    {loggedEmail ? loggedEmail : "N/A"}
+                  </span>
                 </div>
 
                 <div className="row">
@@ -1572,7 +1664,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                     <span
                       style={{
                         padding: "4px 8px",
-                        color: Number(loggedSubscription) === 1 ? "#2563eb" : "red",
+                        color:
+                          Number(loggedSubscription) === 1 ? "#2563eb" : "red",
                         fontWeight: 500,
                       }}
                     >
@@ -1586,13 +1679,14 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                           padding: "6px 14px",
                           border: "none",
                           cursor: "pointer",
-                          background: " linear-gradient(90deg, #2563eb, #fbbf24)",
+                          background:
+                            " linear-gradient(90deg, #2563eb, #fbbf24)",
                           color: "white",
                           fontWeight: 500,
                         }}
                         onClick={() => {
-                          setIsModalOpen(true)
-                          setPageContent("Subscription")
+                          setIsModalOpen(true);
+                          setPageContent("Subscription");
                         }}
                       >
                         Renew
@@ -1603,15 +1697,17 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
 
                 <div className="row">
                   <span className="label">Member Since</span>
-                  <span className="value">{new Date(loggedDateJoined).toDateString()}</span>
+                  <span className="value">
+                    {new Date(loggedDateJoined).toDateString()}
+                  </span>
                 </div>
 
                 <a
                   href="."
                   className="logout-btn"
                   onClick={(e) => {
-                    e.preventDefault()
-                    LogOut()
+                    e.preventDefault();
+                    LogOut();
                   }}
                 >
                   Logout
@@ -1639,7 +1735,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                   onChange={(e) => setPhone(e.target.value)}
                   required
                 />
-                {pageContent === "Tithe" || pageContent === "Donation" || pageContent === "Offering" ? (
+                {pageContent === "Tithe" ||
+                pageContent === "Donation" ||
+                pageContent === "Offering" ? (
                   <input
                     type="number"
                     placeholder="Enter Amount"
@@ -1700,7 +1798,11 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 </a>
 
                 <button type="submit" disabled={loading}>
-                  {loading ? "Processing..." : otpSent ? "Verify OTP" : "Login with Phone"}
+                  {loading
+                    ? "Processing..."
+                    : otpSent
+                    ? "Verify OTP"
+                    : "Login with Phone"}
                 </button>
               </form>
             ) : (
@@ -1772,12 +1874,12 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                         transition: "all 0.2s",
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#e5e7eb"
-                        e.currentTarget.style.borderColor = "#9ca3af"
+                        e.currentTarget.style.background = "#e5e7eb";
+                        e.currentTarget.style.borderColor = "#9ca3af";
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#f3f4f6"
-                        e.currentTarget.style.borderColor = "#d1d5db"
+                        e.currentTarget.style.background = "#f3f4f6";
+                        e.currentTarget.style.borderColor = "#d1d5db";
                       }}
                     >
                       <span style={{ fontSize: "1.1rem" }}>←</span>
@@ -1819,7 +1921,9 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                   }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <h2 style={{ marginTop: 0, marginBottom: "16px" }}>Register My Church</h2>
+                  <h2 style={{ marginTop: 0, marginBottom: "16px" }}>
+                    Register My Church
+                  </h2>
                   <form onSubmit={handleNewChurch}>
                     <input
                       type="text"
@@ -1931,13 +2035,13 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                       <button
                         type="button"
                         onClick={() => {
-                          setIsCreatingChurch(false)
-                          setNewChurchName("")
-                          setDescription("")
-                          setSelectedCategory("")
-                          setLocation("")
-                          setPhone("")
-                          setChurchEmail("")
+                          setIsCreatingChurch(false);
+                          setNewChurchName("");
+                          setDescription("");
+                          setSelectedCategory("");
+                          setLocation("");
+                          setPhone("");
+                          setChurchEmail("");
                         }}
                         style={{
                           flex: 1,
@@ -1967,8 +2071,8 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
                 color: "black",
               }}
               onClick={(e) => {
-                e.preventDefault()
-                setIsModalOpen(false)
+                e.preventDefault();
+                setIsModalOpen(false);
               }}
             >
               close
@@ -1977,5 +2081,5 @@ export const Navbar: React.FC<componentProps & ModalProps & LoadingProps & Idpro
         </div>
       )}
     </>
-  )
-}
+  );
+};
