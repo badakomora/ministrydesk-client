@@ -476,7 +476,6 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     if (
       [
         "nationalrole",
-        "executiverole",
         "districtrole",
         "assemblyrole",
       ].includes(column)

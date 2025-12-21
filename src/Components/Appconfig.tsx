@@ -36,7 +36,7 @@ export const roles = [
   { value: "A5", label: "Deaconess (Women Department)", level: 1 },
   { value: "A6", label: "Sunday School Superintendent", level: 1 },
   { value: "A7", label: "CED – Christian Education Department", level: 1 },
-  { value: "0", label: "N/A", level: 1 },
+  { value: "A8", label: "Member", level: 1 },
 
   /* =========================
      N/A

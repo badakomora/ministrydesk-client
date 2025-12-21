@@ -402,7 +402,6 @@ export const Navbar: React.FC<
 
   const [selectedChurch, setSelectedChurch] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
   const [isCreatingChurch, setIsCreatingChurch] = useState(false);
   const [newChurchName, setNewChurchName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -430,7 +429,7 @@ export const Navbar: React.FC<
     [key: number]: string;
   }>({});
 
-  const [regions, setRegions] = useState<{ id: number; name: string }[]>([]);
+  const [, setRegions] = useState<{ id: number; name: string }[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
 
   useEffect(() => {
@@ -469,9 +468,9 @@ export const Navbar: React.FC<
       setLoggedDateJoined(storedDateJoined);
 
       if (
-        loggedNationalRole === "3" ||
-        loggedDistrictRole === "2" ||
-        loggedAssemblyRole === "1"
+        loggedNationalRole === "N5" ||
+        loggedDistrictRole === "D2" ||
+        loggedAssemblyRole === "A2"
       ) {
         setDashboardShow(true);
       }
@@ -558,8 +557,6 @@ export const Navbar: React.FC<
       ...prev,
       [level]: roleValue,
     }));
-    setSelectedRole(roleValue); // This might be redundant if selectedRolesByLevel is used consistently
-
     // Determine the next level to present
     let nextLevel: 3 | 2 | 1 | null = null;
 
@@ -597,7 +594,6 @@ export const Navbar: React.FC<
   const resetRoleSelection = () => {
     setCurrentRoleLevel(3);
     setSelectedRolesByLevel({});
-    setSelectedRole(""); // Reset any individual role selection state if needed
     setSelectedRegion(null); // Also reset region selection
     setSelectedChurch(null); // Reset church selection
   };
@@ -614,7 +610,6 @@ export const Navbar: React.FC<
       const newRoles = { ...selectedRolesByLevel };
       delete newRoles[1];
       setSelectedRolesByLevel(newRoles);
-      setSelectedRole("");
     } else if (currentRoleLevel === 2) {
       // If at District/Region, check if region is selected
       if (selectedRegion) {
@@ -626,7 +621,6 @@ export const Navbar: React.FC<
         const newRoles = { ...selectedRolesByLevel };
         delete newRoles[2];
         setSelectedRolesByLevel(newRoles);
-        setSelectedRole("");
       } else {
         // Already at start of district, go to National
         setCurrentRoleLevel(3);
@@ -637,7 +631,6 @@ export const Navbar: React.FC<
         const newRoles = { ...selectedRolesByLevel };
         delete newRoles[3];
         setSelectedRolesByLevel(newRoles);
-        setSelectedRole("");
       }
     }
   };
@@ -816,22 +809,28 @@ export const Navbar: React.FC<
       );
     }
 
-    // Ensure that if a higher-level role was skipped, the lower level is selected correctly
-    // For example, if National (3) was skipped, District (2) should not be selected without a National role.
-    // However, the current flow forces selection from National, so this might be implicitly handled.
-    // Let's assume the user selects roles sequentially.
-
     const data = {
       idnumber,
       fullname,
       phonenumber,
       email,
-      // If a role was selected for a level, include it. Otherwise, it's null.
+      // Role selections
       nationalRole: selectedRolesByLevel[3] || null,
       districtRole: selectedRolesByLevel[2] || null,
       assemblyRole: selectedRolesByLevel[1] || null,
-      churchid: selectedChurch, // Will be null if no assembly role or church selected
-      regionid: selectedRegion, // Will be null if no district role or region selected
+      // Church and region associations
+      churchid: selectedChurch,
+      regionid: selectedRegion,
+      // Additional form fields that were missing
+      selectedCategory,
+      description,
+      location,
+      phone,
+      amount,
+      churchEmail,
+      // Church creation fields
+      isCreatingChurch,
+      newChurchName: isCreatingChurch ? newChurchName : null,
     };
 
     try {
@@ -845,10 +844,18 @@ export const Navbar: React.FC<
       setPhonenumber("");
       setEmail("");
       setSelectedChurch(null);
-      setSearch(""); // Clear search for church dropdown
+      setSearch("");
       setSelectedRegion(null);
-      resetRoleSelection(); // Resets currentRoleLevel and selectedRolesByLevel
-      setTab("login"); // Optionally switch to login tab after successful registration
+      setSelectedCategory("");
+      setDescription("");
+      setLocation("");
+      setPhone("");
+      setAmount("");
+      setChurchEmail("");
+      setIsCreatingChurch(false);
+      setNewChurchName("");
+      resetRoleSelection();
+      setTab("login");
     } catch (error: any) {
       console.error("Registration error:", error);
 
@@ -1345,12 +1352,12 @@ export const Navbar: React.FC<
                 background: "white",
               }}
             >
-              {filteredChurches.map((church) => (
+              {filteredChurches.map((c) => (
                 <div
-                  key={church.id}
+                  key={c.id}
                   onClick={() => {
-                    setSelectedChurch(church.id);
-                    setSearch(church.name); // Set search input to the selected church name
+                    setSelectedChurch(c.id);
+                    setSearch(c.name); // Set search input to the selected church name
                   }}
                   style={{
                     padding: "10px 14px",
@@ -1365,36 +1372,39 @@ export const Navbar: React.FC<
                     (e.currentTarget.style.background = "white")
                   }
                 >
-                  {church.name}
+                  {c.name}
                 </div>
               ))}
             </div>
           )}
           {/* Option to register new church if search yields no results */}
-          {search && !selectedChurch && filteredChurches.length === 0 && (
-            <div
-              onClick={() => setIsCreatingChurch(true)}
-              style={{
-                padding: "10px 14px",
-                cursor: "pointer",
-                background: "#eff6ff",
-                color: "#2563eb",
-                fontWeight: "600",
-                border: "1px dashed #93c5fd",
-                borderRadius: "6px",
-                textAlign: "center",
-                transition: "background 0.2s",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "#dbeafe")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "#eff6ff")
-              }
-            >
-              + Register "{search}" as a new church
-            </div>
-          )}
+          {search &&
+            !selectedChurch &&
+            filteredChurches.length === 0 &&
+            selectedRolesByLevel[1] === "A1" && (
+              <div
+                onClick={() => setIsCreatingChurch(true)}
+                style={{
+                  padding: "10px 14px",
+                  cursor: "pointer",
+                  background: "#eff6ff",
+                  color: "#2563eb",
+                  fontWeight: "600",
+                  border: "1px dashed #93c5fd",
+                  borderRadius: "6px",
+                  textAlign: "center",
+                  transition: "background 0.2s",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "#dbeafe")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "#eff6ff")
+                }
+              >
+                + Register "{search}" as a new church
+              </div>
+            )}
         </div>
       </div>
     );

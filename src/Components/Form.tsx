@@ -1646,9 +1646,8 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
       <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
       <div css={formGrid}>
-        {localStorage.getItem("assemblyRole") === "3" ? (
-          ""
-        ) : (
+        {localStorage.getItem("nationalRole") === "N5" || localStorage.getItem("districtRole") === "D2" ? (
+        
           <div css={[fieldStyle, fullWidth]}>
             <label css={labelStyle}>Who can see this post? *</label>
             <select
@@ -1668,7 +1667,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
               <div css={errorText}>{errors.visibility}</div>
             )}
           </div>
-        )}
+        ):null}
 
         <div css={fieldStyle}>
           <label css={labelStyle}>Category *</label>
