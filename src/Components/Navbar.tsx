@@ -723,7 +723,7 @@ export const Navbar: React.FC<
       );
 
       console.log("Response:", res.data);
-      toast.success("Transaction successful!");
+      toast.success(res.data.message || "Transaction initiated successfully!");
     } catch (err: any) {
       console.error("Error:", err);
       toast.error(err.response?.data?.error || "Something went wrong");
