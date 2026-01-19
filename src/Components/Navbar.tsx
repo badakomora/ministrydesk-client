@@ -528,7 +528,7 @@ export const Navbar: React.FC<
   }, [selectedRolesByLevel, selectedRegion, currentRoleLevel]);
 
   const filteredChurches = churches.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+    c.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const LogOut = () => {
@@ -672,15 +672,15 @@ export const Navbar: React.FC<
         localStorage.setItem("userEmail", res.data.user.email);
         localStorage.setItem(
           "nationalRole",
-          String(res.data.user.nationalrole)
+          String(res.data.user.nationalrole),
         );
         localStorage.setItem(
           "districtRole",
-          String(res.data.user.districtrole)
+          String(res.data.user.districtrole),
         );
         localStorage.setItem(
           "assemblyRole",
-          String(res.data.user.assemblyrole)
+          String(res.data.user.assemblyrole),
         );
         localStorage.setItem("userChurchId", res.data.user.churchid);
         localStorage.setItem("userSubscription", res.data.user.subscription);
@@ -712,14 +712,14 @@ export const Navbar: React.FC<
       const transactionData = {
         idnumber: idnumber ? idnumber : loggedIdNumber,
         phone: phone,
-        amount: amount ? amount : 149,
+        amount: amount ? amount : 1,
         activity: pageContent,
         itemid: itemId ? itemId : null,
       };
 
       const res = await axios.post(
         `${serverurl}/transaction/deposit`,
-        transactionData
+        transactionData,
       );
 
       console.log("Response:", res.data);
@@ -742,7 +742,7 @@ export const Navbar: React.FC<
       });
 
       toast.success(
-        response.data.message || "Prayer request sent successfully!"
+        response.data.message || "Prayer request sent successfully!",
       );
     } catch (error: any) {
       console.error("Error creating church:", error);
@@ -795,7 +795,7 @@ export const Navbar: React.FC<
     // Ensure all required fields for registration are filled
     if (!idnumber || !fullname || !phonenumber) {
       return toast.warning(
-        "Please fill in all required fields (ID, Name, Phone)."
+        "Please fill in all required fields (ID, Name, Phone).",
       );
     }
 
@@ -805,7 +805,7 @@ export const Navbar: React.FC<
 
     if (currentRoleLevel === 1 && !selectedChurch) {
       return toast.warning(
-        "Please select or register your church for your assembly role."
+        "Please select or register your church for your assembly role.",
       );
     }
 
@@ -931,7 +931,7 @@ export const Navbar: React.FC<
               <span style={{ color: "#1e3a8a" }}>
                 {
                   getRolesByLevel(3).find(
-                    (r) => r.value === selectedRolesByLevel[3]
+                    (r) => r.value === selectedRolesByLevel[3],
                   )?.label
                 }
               </span>
@@ -995,7 +995,7 @@ export const Navbar: React.FC<
                 <span style={{ color: "#1e3a8a" }}>
                   {
                     getRolesByLevel(2).find(
-                      (r) => r.value === selectedRolesByLevel[2]
+                      (r) => r.value === selectedRolesByLevel[2],
                     )?.label
                   }
                 </span>
@@ -1016,7 +1016,7 @@ export const Navbar: React.FC<
                   value={selectedRegion || ""}
                   onChange={(e) =>
                     setSelectedRegion(
-                      e.target.value ? Number(e.target.value) : null
+                      e.target.value ? Number(e.target.value) : null,
                     )
                   }
                   required
@@ -1080,7 +1080,7 @@ export const Navbar: React.FC<
               <span style={{ color: "#1e3a8a" }}>
                 {
                   getRolesByLevel(3).find(
-                    (r) => r.value === selectedRolesByLevel[3]
+                    (r) => r.value === selectedRolesByLevel[3],
                   )?.label
                 }
               </span>
@@ -1105,7 +1105,7 @@ export const Navbar: React.FC<
               <span style={{ color: "#1e3a8a" }}>
                 {
                   getRolesByLevel(2).find(
-                    (r) => r.value === selectedRolesByLevel[2]
+                    (r) => r.value === selectedRolesByLevel[2],
                   )?.label
                 }
               </span>
@@ -1215,7 +1215,7 @@ export const Navbar: React.FC<
             <span style={{ color: "#1e3a8a" }}>
               {
                 getRolesByLevel(3).find(
-                  (r) => r.value === selectedRolesByLevel[3]
+                  (r) => r.value === selectedRolesByLevel[3],
                 )?.label
               }
             </span>
@@ -1239,7 +1239,7 @@ export const Navbar: React.FC<
             <span style={{ color: "#1e3a8a" }}>
               {
                 getRolesByLevel(2).find(
-                  (r) => r.value === selectedRolesByLevel[2]
+                  (r) => r.value === selectedRolesByLevel[2],
                 )?.label
               }
             </span>
@@ -1304,7 +1304,7 @@ export const Navbar: React.FC<
             <span style={{ color: "#1e3a8a" }}>
               {
                 getRolesByLevel(1).find(
-                  (r) => r.value === selectedRolesByLevel[1]
+                  (r) => r.value === selectedRolesByLevel[1],
                 )?.label
               }
             </span>
@@ -1811,8 +1811,8 @@ export const Navbar: React.FC<
                   {loading
                     ? "Processing..."
                     : otpSent
-                    ? "Verify OTP"
-                    : "Login with Phone"}
+                      ? "Verify OTP"
+                      : "Login with Phone"}
                 </button>
               </form>
             ) : (
