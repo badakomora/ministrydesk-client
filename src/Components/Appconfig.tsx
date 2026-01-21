@@ -1,4 +1,5 @@
-export const serverurl = "http://localhost:4000";
+// export const serverurl = "http://localhost:4000";
+export const serverurl = "https://ministrydesk-server.onrender.com";
 
 //1 = assembly, 2 = district, 3 = executive
 export const roles = [
