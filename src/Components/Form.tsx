@@ -464,7 +464,7 @@
 //     category: "",
 //     department: "",
 //     title: "",
-//     datePosted: "",
+//     created_at: "",
 //     description: "",
 //     buttons: {
 //       offerTithes: 1,
@@ -560,7 +560,7 @@
 //     if (formData.category === "3" && !formData.department.trim())
 //       newErrors.department = "Department is required";
 //     if (!formData.title.trim()) newErrors.title = "Title is required";
-//     if (!formData.datePosted.trim()) newErrors.datePosted = "Date is required";
+//     if (!formData.created_at.trim()) newErrors.created_at = "Date is required";
 //     if (!formData.description.trim())
 //       newErrors.description = "Description is required";
 //     if (!documentFile) newErrors.documentFile = "Document file is required";
@@ -590,7 +590,7 @@
 //       form.append("category", formData.category);
 //       if (formData.department) form.append("department", formData.department);
 //       form.append("title", formData.title);
-//       form.append("datePosted", formData.datePosted);
+//       form.append("created_at", formData.created_at);
 //       form.append("description", formData.description);
 
 //       Object.entries(formData.buttons).forEach(([k, v]) =>
@@ -617,7 +617,7 @@
 //         category: "",
 //         department: "",
 //         title: "",
-//         datePosted: "",
+//         created_at: "",
 //         description: "",
 //         buttons: {
 //           offerTithes: 1,
@@ -722,12 +722,12 @@
 //           <label css={labelStyle}>Date Posted *</label>
 //           <input
 //             type="date"
-//             name="datePosted"
-//             value={formData.datePosted}
+//             name="created_at"
+//             value={formData.created_at}
 //             onChange={handleInput}
 //             css={inputBase}
 //           />
-//           {errors.datePosted && <div css={errorText}>{errors.datePosted}</div>}
+//           {errors.created_at && <div css={errorText}>{errors.created_at}</div>}
 //         </div>
 
 //         <div css={fullWidth}>
@@ -945,29 +945,29 @@ import { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { roles, serverurl } from "./Appconfig";
+import { serverurl } from "./Appconfig";
 
 /* ----------------------
    Utility: Get User Role Level
    ---------------------- */
-const getUserRoleLevel = (): number => {
-  if (localStorage.getItem("nationalRole") === "3") return 4;
-  if (localStorage.getItem("executiveRole") === "3") return 3;
-  if (localStorage.getItem("districtRole") === "3") return 2;
-  return 0;
-};
+// const getUserRoleLevel = (): number => {
+//   if (localStorage.getItem("nationalRole") === "3") return 4;
+//   if (localStorage.getItem("executiveRole") === "3") return 3;
+//   if (localStorage.getItem("districtRole") === "3") return 2;
+//   return 0;
+// };
 
-const getVisibilityOptions = (userLevel: number) => {
-  const uniqueLabels = new Set<string>();
-  return roles
-    .filter((role) => role.level >= userLevel)
-    .filter((role) => {
-      if (uniqueLabels.has(role.label)) return false;
-      uniqueLabels.add(role.label);
-      return true;
-    })
-    .map((role) => role.label);
-};
+// const getVisibilityOptions = (userLevel: number) => {
+//   const uniqueLabels = new Set<string>();
+//   return roles
+//     .filter((role) => role.level >= userLevel)
+//     .filter((role) => {
+//       if (uniqueLabels.has(role.label)) return false;
+//       uniqueLabels.add(role.label);
+//       return true;
+//     })
+//     .map((role) => role.label);
+// };
 
 /* ----------------------
    Design tokens
@@ -1411,7 +1411,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
     category: "",
     department: "",
     title: "",
-    datePosted: "",
+    created_at: "",
     description: "",
     comments: "",
     buttons: {
@@ -1430,10 +1430,10 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  const visibilityOptions = useMemo(() => {
-    const userLevel = getUserRoleLevel();
-    return getVisibilityOptions(userLevel);
-  }, []);
+  // const visibilityOptions = useMemo(() => {
+  //   const userLevel = getUserRoleLevel();
+  //   return getVisibilityOptions(userLevel);
+  // }, []);
 
   const imagePreviews = useMemo(() => {
     return carouselImages.map((f) => ({
@@ -1509,7 +1509,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   //   if (formData.category === "3" && !formData.department.trim())
   //     newErrors.department = "Department is required";
   //   if (!formData.title.trim()) newErrors.title = "Title is required";
-  //   if (!formData.datePosted.trim()) newErrors.datePosted = "Date is required";
+  //   if (!formData.created_at.trim()) newErrors.created_at = "Date is required";
   //   if (!formData.description.trim())
   //     newErrors.description = "Description is required";
   //   if (!documentFile) newErrors.documentFile = "Document file is required";
@@ -1538,8 +1538,8 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             category: data.category || "",
             department: data.department || "",
             title: data.title || "",
-            datePosted: data.datePosted
-              ? new Date(data.datePosted).toISOString().split("T")[0]
+            created_at: data.created_at
+              ? new Date(data.created_at).toISOString().split("T")[0]
               : "",
             description: data.description || "",
             comments: data.comments || "",
@@ -1591,7 +1591,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
       form.append("category", formData.category);
       if (formData.department) form.append("department", formData.department);
       form.append("title", formData.title);
-      form.append("datePosted", formData.datePosted);
+      form.append("created_at", formData.created_at);
       form.append("description", formData.description);
       if (formData.comments) form.append("comments", formData.comments);
 
@@ -1626,7 +1626,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
         category: "",
         department: "",
         title: "",
-        datePosted: "",
+        created_at: "",
         description: "",
         comments: "",
         buttons: {
@@ -1651,6 +1651,27 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   };
 
   const [showComments, setShowComments] = useState(false);
+  const [showDiscussionToggle, setShowDiscussionToggle] =
+    useState<boolean>(false);
+  const [, setDiscussionEnabled] = useState<boolean>(false);
+  const handleVisibility = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // 👇 Only show toggle when Public is selected
+    if (name === "visibility") {
+      if (value === "1") {
+        setShowDiscussionToggle(true);
+      } else {
+        setShowDiscussionToggle(false);
+        setDiscussionEnabled(false); // reset
+      }
+    }
+  };
   return (
     <div css={containerStyle}>
       <h2 css={headingStyle}>Create Post / Upload Content</h2>
@@ -1668,15 +1689,13 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
               <select
                 name="visibility"
                 value={formData.visibility}
-                onChange={handleInput}
+                onChange={handleVisibility}
                 css={selectStyle}
               >
                 <option value="">Select visibility</option>
-                {/* {visibilityOptions.map((option) => ( */}
-                {/* {option} */}
+
                 <option value="0">Private</option>
                 <option value="1">Public</option>
-                {/* ))} */}
               </select>
 
               {errors.visibility && (
@@ -1684,6 +1703,13 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
               )}
             </div>
 
+            {/* ✅ SHOW DISCUSSION TOGGLE */}
+            {showDiscussionToggle && (
+              <div css={fieldStyle}>
+                <label css={labelStyle}>Hide/Show Discussion</label>
+                <input type="checkbox" css={checkboxInput} />{" "}
+              </div>
+            )}
             {/* ----------------------
                 Comments Popup Modal
                 ---------------------- */}
@@ -1793,15 +1819,15 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
         </div>
 
         <div css={fieldStyle}>
-          <label css={labelStyle}>Date Posted *</label>
+          <label css={labelStyle}>Date Posted * </label>
           <input
             type="date"
-            name="datePosted"
-            value={formData.datePosted}
+            name="created_at"
+            value={formData.created_at}
             onChange={handleInput}
             css={inputBase}
           />
-          {errors.datePosted && <div css={errorText}>{errors.datePosted}</div>}
+          {errors.created_at && <div css={errorText}>{errors.created_at}</div>}
         </div>
 
         <div css={fullWidth}>
@@ -1986,6 +2012,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
 
         <div css={fieldStyle}>
           <label css={labelStyle}>Enable Feature / Disable Feature</label>
+
           {Object.entries(buttonLabels).map(([key, label]) => (
             <label key={key} css={checkboxRow}>
               <input
