@@ -1046,7 +1046,9 @@ const inputBase = css`
   font-size: 0.95rem;
   color: ${tokens.text};
 
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
   font-family: inherit;
 
   &:focus {
@@ -1411,6 +1413,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
     title: "",
     datePosted: "",
     description: "",
+    comments: "",
     buttons: {
       offerTithes: 1,
       offerDonations: 1,
@@ -1448,7 +1451,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const handleInput = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -1495,6 +1498,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const handleVerseChange = (idx: number, value: string) =>
     setBibleVerses((prev) => prev.map((v, i) => (i === idx ? value : v)));
 
+  /* ----------------------
+     Validate function (disabled)
+     ---------------------- */
   // const validate = () => {
   //   const newErrors: Record<string, string> = {};
   //   if (!formData.visibility.trim())
@@ -1536,6 +1542,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
               ? new Date(data.datePosted).toISOString().split("T")[0]
               : "",
             description: data.description || "",
+            comments: data.comments || "",
             buttons: {
               offerTithes: data.offerTithes ?? 1,
               offerDonations: data.offerDonations ?? 1,
@@ -1586,14 +1593,15 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
       form.append("title", formData.title);
       form.append("datePosted", formData.datePosted);
       form.append("description", formData.description);
+      if (formData.comments) form.append("comments", formData.comments);
 
       Object.entries(formData.buttons).forEach(([k, v]) =>
-        form.append(k, v ? "1" : "0")
+        form.append(k, v ? "1" : "0"),
       );
 
       form.append(
         "verses",
-        JSON.stringify(bibleVerses.filter((v) => v.trim() !== ""))
+        JSON.stringify(bibleVerses.filter((v) => v.trim() !== "")),
       );
 
       if (documentFile) form.append("documentFile", documentFile);
@@ -1620,6 +1628,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
         title: "",
         datePosted: "",
         description: "",
+        comments: "",
         buttons: {
           offerTithes: 1,
           offerDonations: 1,
@@ -1641,34 +1650,98 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
     }
   };
 
+  const [showComments, setShowComments] = useState(false);
   return (
     <div css={containerStyle}>
       <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
       <div css={formGrid}>
-        {localStorage.getItem("nationalRole") === "N5" || localStorage.getItem("districtRole") === "D2" ? (
-        
-          <div css={[fieldStyle, fullWidth]}>
-            <label css={labelStyle}>Who can see this post? *</label>
-            <select
-              name="visibility"
-              value={formData.visibility}
-              onChange={handleInput}
-              css={selectStyle}
-            >
-              <option value="">Select visibility</option>
-              {visibilityOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            {errors.visibility && (
-              <div css={errorText}>{errors.visibility}</div>
-            )}
-          </div>
-        ):null}
+        {/* ----------------------
+            Visibility field - conditional rendering
+            ---------------------- */}
 
+        {localStorage.getItem("nationalRole") === "N5" ||
+        localStorage.getItem("districtRole") === "D2" ? (
+          <>
+            <div css={[fieldStyle, fullWidth]}>
+              <label css={labelStyle}>Who can see this post? *</label>
+              <select
+                name="visibility"
+                value={formData.visibility}
+                onChange={handleInput}
+                css={selectStyle}
+              >
+                <option value="">Select visibility</option>
+                {/* {visibilityOptions.map((option) => ( */}
+                {/* {option} */}
+                <option value="0">Private</option>
+                <option value="1">Public</option>
+                {/* ))} */}
+              </select>
+
+              {errors.visibility && (
+                <div css={errorText}>{errors.visibility}</div>
+              )}
+            </div>
+
+            {/* ----------------------
+                Comments Popup Modal
+                ---------------------- */}
+            {showComments && (
+              <div
+                css={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(0,0,0,0.5)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 1000,
+                }}
+              >
+                <div
+                  css={{
+                    background: "#fff",
+                    padding: "20px",
+                    borderRadius: "10px",
+                    width: "300px",
+                  }}
+                >
+                  <h3>Add Comment</h3>
+
+                  <textarea
+                    value={formData.comments || ""}
+                    onChange={(e) =>
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        comments: e.target.value,
+                      }))
+                    }
+                    css={{
+                      width: "100%",
+                      minHeight: "80px",
+                      marginTop: "10px",
+                    }}
+                  />
+
+                  <button
+                    onClick={() => setShowComments(false)}
+                    css={{
+                      marginTop: "10px",
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        ) : null}
         <div css={fieldStyle}>
           <label css={labelStyle}>Category *</label>
           <select
