@@ -938,15 +938,6 @@
 //     </div>
 //   );
 // };
-
-/** @jsxImportSource @emotion/react */
-import type React from "react";
-import { useMemo, useState, useEffect } from "react";
-import { css } from "@emotion/react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { serverurl } from "./Appconfig";
-
 /* ----------------------
    Utility: Get User Role Level
    ---------------------- */
@@ -968,6 +959,16 @@ import { serverurl } from "./Appconfig";
 //     })
 //     .map((role) => role.label);
 // };
+
+
+/** @jsxImportSource @emotion/react */
+import type React from "react";
+import { useMemo, useState, useEffect } from "react";
+import { css } from "@emotion/react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { serverurl } from "./Appconfig";
+
 
 /* ----------------------
    Design tokens
@@ -1427,6 +1428,11 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [bibleVerses, setBibleVerses] = useState<string[]>([""]);
 
+  // Store fetched file paths from database
+  const [fetchedDocumentPath, setFetchedDocumentPath] = useState<string>("");
+  const [fetchedCarouselPaths, setFetchedCarouselPaths] = useState<string[]>([]);
+  const [fetchedAudioPath, setFetchedAudioPath] = useState<string>("");
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -1487,10 +1493,24 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const removeImageAt = (index: number) =>
     setCarouselImages((prev) => prev.filter((_, i) => i !== index));
 
+  const removeFetchedImageAt = (index: number) =>
+    setFetchedCarouselPaths((prev) => prev.filter((_, i) => i !== index));
+
   const isVideoFile = (file: File) => file.type.startsWith("video/");
 
-  const removeDocument = () => setDocumentFile(null);
-  const removeAudio = () => setAudioFile(null);
+  const isVideoFilePath = (path: string) => {
+    const videoExtensions = ['.mp4', '.webm', '.avi', '.mov', '.mkv'];
+    return videoExtensions.some(ext => path.toLowerCase().endsWith(ext));
+  };
+
+  const removeDocument = () => {
+    setDocumentFile(null);
+    setFetchedDocumentPath("");
+  };
+  const removeAudio = () => {
+    setAudioFile(null);
+    setFetchedAudioPath("");
+  };
 
   const addVerse = () => setBibleVerses((prev) => [...prev, ""]);
   const removeVerse = (idx: number) =>
@@ -1544,10 +1564,10 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             description: data.description || "",
             comments: data.comments || "",
             buttons: {
-              offerTithes: data.offerTithes ?? 1,
-              offerDonations: data.offerDonations ?? 1,
-              requestSpecialPrayers: data.requestSpecialPrayers ?? 1,
-              contributeOffering: data.contributeOffering ?? 1,
+              offerTithes: data.offertithes ?? 1,
+              offerDonations: data.offerdonations ?? 1,
+              requestSpecialPrayers: data.requestspecialprayers ?? 1,
+              contributeOffering: data.contributeoffering ?? 1,
             },
           });
 
@@ -1556,6 +1576,25 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             setBibleVerses(data.verses.length ? data.verses : [""]);
           } else {
             setBibleVerses([""]);
+          }
+
+          // Store fetched file paths for display
+          if (data.documentfile) {
+            setFetchedDocumentPath(data.documentfile);
+          } else {
+            setFetchedDocumentPath("");
+          }
+
+          if (data.carouselimages && Array.isArray(data.carouselimages)) {
+            setFetchedCarouselPaths(data.carouselimages);
+          } else {
+            setFetchedCarouselPaths([]);
+          }
+
+          if (data.audiofile) {
+            setFetchedAudioPath(data.audiofile);
+          } else {
+            setFetchedAudioPath("");
           }
 
           // Files are left empty (cannot assign File objects directly from URLs)
@@ -1872,6 +1911,17 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
                     ✕
                   </button>
                 </>
+              ) : fetchedDocumentPath ? (
+                <>
+                  <span css={filenameText}>{fetchedDocumentPath.split('/').pop()}</span>
+                  <button
+                    onClick={removeDocument}
+                    css={removeFileBtn}
+                    aria-label="Remove document"
+                  >
+                    ✕
+                  </button>
+                </>
               ) : (
                 <span css={helpText}>No document selected</span>
               )}
@@ -1896,8 +1946,8 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
               Add Files
             </label>
             <div css={filenameBox}>
-              {carouselImages.length ? (
-                <span>{carouselImages.length} file(s)</span>
+              {carouselImages.length + fetchedCarouselPaths.length ? (
+                <span>{carouselImages.length + fetchedCarouselPaths.length} file(s)</span>
               ) : (
                 <span css={helpText}>No files selected</span>
               )}
@@ -1908,11 +1958,11 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
           )}
         </div>
 
-        {carouselImages.length > 0 && (
+        {carouselImages.length > 0 && fetchedCarouselPaths.length > 0 && (
           <div css={[fieldStyle, fullWidth]}>
             <div css={thumbsWrap}>
               {imagePreviews.map((preview, idx) => (
-                <div key={idx} css={thumbContainer}>
+                <div key={`new-${idx}`} css={thumbContainer}>
                   {isVideoFile(preview.file) ? (
                     <video css={thumbVideo} src={preview.url} muted />
                   ) : (
@@ -1930,6 +1980,30 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
                     onClick={() => removeImageAt(idx)}
                     type="button"
                     aria-label={`Remove file ${idx + 1}`}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              {fetchedCarouselPaths.map((path, idx) => (
+                <div key={`fetched-${idx}`} css={thumbContainer}>
+                  {isVideoFilePath(path) ? (
+                    <video css={thumbVideo} src={path} muted />
+                  ) : (
+                    <img
+                      css={thumb}
+                      src={path}
+                      alt={`Fetched Preview ${idx}`}
+                    />
+                  )}
+                  {isVideoFilePath(path) && (
+                    <span css={thumbLabel}>VIDEO</span>
+                  )}
+                  <button
+                    css={removeThumbBtn}
+                    onClick={() => removeFetchedImageAt(idx)}
+                    type="button"
+                    aria-label={`Remove fetched file ${idx + 1}`}
                   >
                     ✕
                   </button>
@@ -1963,6 +2037,17 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
                     ✕
                   </button>
                 </>
+              ) : fetchedAudioPath ? (
+                <>
+                  <span css={filenameText}>{fetchedAudioPath.split('/').pop()}</span>
+                  <button
+                    onClick={removeAudio}
+                    css={removeFileBtn}
+                    aria-label="Remove audio"
+                  >
+                    ✕
+                  </button>
+                </>
               ) : (
                 <span css={helpText}>No audio selected</span>
               )}
@@ -1976,6 +2061,16 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
               css={audioPlayer}
               controls
               src={URL.createObjectURL(audioFile)}
+            />
+          </div>
+        )}
+
+        {fetchedAudioPath && !audioFile && (
+          <div css={fieldStyle}>
+            <audio
+              css={audioPlayer}
+              controls
+              src={fetchedAudioPath}
             />
           </div>
         )}
