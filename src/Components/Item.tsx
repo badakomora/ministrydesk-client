@@ -277,6 +277,7 @@ interface ItemData {
   postedby?: string | null;
   churchname?: string;
   carouselimages?: string[];
+  visibility?: string;
 }
 
 interface Comment {
@@ -317,6 +318,58 @@ export const Item: React.FC<Idprops & ModalProps> = ({
   const [index, setIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
+  const [userChurchId, setUserChurchId] = useState<number | null>(null);
+  const [userNationalRole, setUserNationalRole] = useState<string | null>(null);
+  const [userDistrictRole, setUserDistrictRole] = useState<string | null>(null);
+
+  // Get user's church ID and roles on mount
+  useEffect(() => {
+    const storedChurchId = localStorage.getItem("churchId");
+    if (storedChurchId) {
+      setUserChurchId(parseInt(storedChurchId, 10));
+    }
+
+    const storedNationalRole = localStorage.getItem("nationalRole");
+    if (storedNationalRole) {
+      setUserNationalRole(storedNationalRole);
+    }
+
+    const storedDistrictRole = localStorage.getItem("districtRole");
+    if (storedDistrictRole) {
+      setUserDistrictRole(storedDistrictRole);
+    }
+  }, []);
+
+  // Filter items based on visibility
+  const isItemVisible = useCallback(
+    (item: ItemData): boolean => {
+      // If visibility is "1", show to everyone
+      if (item.visibility === "1") {
+        return true;
+      }
+
+      // If visibility is "0", show only to users with specific roles (N1-N6 or D1-D8)
+      if (item.visibility === "0") {
+        // National roles: N1-N6
+        const nationalRoles = ["N1", "N2", "N3", "N4", "N5", "N6"];
+        // District roles: D1-D8
+        const districtRoles = ["D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8"];
+
+        const hasNationalRole = userNationalRole
+          ? nationalRoles.includes(userNationalRole)
+          : false;
+        const hasDistrictRole = userDistrictRole
+          ? districtRoles.includes(userDistrictRole)
+          : false;
+
+        return hasNationalRole || hasDistrictRole;
+      }
+
+      // Default: show the item
+      return true;
+    },
+    [userNationalRole, userDistrictRole],
+  );
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -326,9 +379,13 @@ export const Item: React.FC<Idprops & ModalProps> = ({
         const items = Array.isArray(response.data)
           ? response.data
           : [response.data];
-        setpostedItems(items);
-        if (items.length > 0) {
-          setSelectedItemId(items[0].id);
+
+        // Filter items based on visibility
+        const visibleItems = items.filter(isItemVisible);
+
+        setpostedItems(visibleItems);
+        if (visibleItems.length > 0) {
+          setSelectedItemId(visibleItems[0].id);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch items");
@@ -341,7 +398,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
     if (itemId) {
       fetchItems();
     }
-  }, [itemId]);
+  }, [itemId, isItemVisible]);
 
   const parseVerses = (versesData?: string[]): string[] => {
     if (!versesData || versesData.length === 0) return [];
@@ -434,7 +491,10 @@ export const Item: React.FC<Idprops & ModalProps> = ({
     return (
       <div css={styles.emptyContainer}>
         <div css={css({ textAlign: "center" })}>
-          <p css={css({ color: "#64748b" })}>No items found.</p>
+          <p css={css({ color: "#64748b" })}>
+            This matter will be discussed by the Executive and District Board
+            until further communication is issued..
+          </p>
         </div>
       </div>
     );
