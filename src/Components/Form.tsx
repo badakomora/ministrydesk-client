@@ -960,7 +960,6 @@
 //     .map((role) => role.label);
 // };
 
-
 /** @jsxImportSource @emotion/react */
 import type React from "react";
 import { useMemo, useState, useEffect } from "react";
@@ -968,7 +967,6 @@ import { css } from "@emotion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { serverurl } from "./Appconfig";
-
 
 /* ----------------------
    Design tokens
@@ -1409,6 +1407,7 @@ type Idprops = {
 export const Form: React.FC<Idprops> = ({ itemId }) => {
   const [formData, setFormData] = useState({
     visibility: "",
+    discussion: "",
     category: "",
     department: "",
     title: "",
@@ -1430,7 +1429,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
 
   // Store fetched file paths from database
   const [fetchedDocumentPath, setFetchedDocumentPath] = useState<string>("");
-  const [fetchedCarouselPaths, setFetchedCarouselPaths] = useState<string[]>([]);
+  const [fetchedCarouselPaths, setFetchedCarouselPaths] = useState<string[]>(
+    [],
+  );
   const [fetchedAudioPath, setFetchedAudioPath] = useState<string>("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -1499,8 +1500,8 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const isVideoFile = (file: File) => file.type.startsWith("video/");
 
   const isVideoFilePath = (path: string) => {
-    const videoExtensions = ['.mp4', '.webm', '.avi', '.mov', '.mkv'];
-    return videoExtensions.some(ext => path.toLowerCase().endsWith(ext));
+    const videoExtensions = [".mp4", ".webm", ".avi", ".mov", ".mkv"];
+    return videoExtensions.some((ext) => path.toLowerCase().endsWith(ext));
   };
 
   const removeDocument = () => {
@@ -1555,6 +1556,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
         if (data) {
           setFormData({
             visibility: data.visibility || "",
+            discussion: data.discussion || "",
             category: data.category || "",
             department: data.department || "",
             title: data.title || "",
@@ -1626,6 +1628,22 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
       form.append("userid", userId);
 
       form.append("visibility", formData.visibility);
+      form.append("discussion", formData.discussion ? "1" : "0");
+
+      <div css={fieldStyle}>
+        <label css={labelStyle}>Show/Hide Discussion</label>
+        <input
+          type="checkbox"
+          css={checkboxInput}
+          checked={formData.discussion === "1"}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              discussion: e.target.checked ? "1" : "0",
+            })
+          }
+        />
+      </div>;
 
       form.append("category", formData.category);
       if (formData.department) form.append("department", formData.department);
@@ -1662,6 +1680,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
 
       setFormData({
         visibility: "",
+        discussion: "",
         category: "",
         department: "",
         title: "",
@@ -1743,9 +1762,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             </div>
 
             {/* ✅ SHOW DISCUSSION TOGGLE */}
-            {showDiscussionToggle && (
+            {itemId && showDiscussionToggle && (
               <div css={fieldStyle}>
-                <label css={labelStyle}>Hide/Show Discussion</label>
+                <label css={labelStyle}>Show/Hide Discussion</label>
                 <input type="checkbox" css={checkboxInput} />{" "}
               </div>
             )}
@@ -1913,7 +1932,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
                 </>
               ) : fetchedDocumentPath ? (
                 <>
-                  <span css={filenameText}>{fetchedDocumentPath.split('/').pop()}</span>
+                  <span css={filenameText}>
+                    {fetchedDocumentPath.split("/").pop()}
+                  </span>
                   <button
                     onClick={removeDocument}
                     css={removeFileBtn}
@@ -1947,7 +1968,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             </label>
             <div css={filenameBox}>
               {carouselImages.length + fetchedCarouselPaths.length ? (
-                <span>{carouselImages.length + fetchedCarouselPaths.length} file(s)</span>
+                <span>
+                  {carouselImages.length + fetchedCarouselPaths.length} file(s)
+                </span>
               ) : (
                 <span css={helpText}>No files selected</span>
               )}
@@ -1996,9 +2019,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
                       alt={`Fetched Preview ${idx}`}
                     />
                   )}
-                  {isVideoFilePath(path) && (
-                    <span css={thumbLabel}>VIDEO</span>
-                  )}
+                  {isVideoFilePath(path) && <span css={thumbLabel}>VIDEO</span>}
                   <button
                     css={removeThumbBtn}
                     onClick={() => removeFetchedImageAt(idx)}
@@ -2039,7 +2060,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
                 </>
               ) : fetchedAudioPath ? (
                 <>
-                  <span css={filenameText}>{fetchedAudioPath.split('/').pop()}</span>
+                  <span css={filenameText}>
+                    {fetchedAudioPath.split("/").pop()}
+                  </span>
                   <button
                     onClick={removeAudio}
                     css={removeFileBtn}
@@ -2067,11 +2090,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
 
         {fetchedAudioPath && !audioFile && (
           <div css={fieldStyle}>
-            <audio
-              css={audioPlayer}
-              controls
-              src={fetchedAudioPath}
-            />
+            <audio css={audioPlayer} controls src={fetchedAudioPath} />
           </div>
         )}
 
@@ -2106,7 +2125,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
         </div>
 
         <div css={fieldStyle}>
-          <label css={labelStyle}>Enable Feature / Disable Feature</label>
+          <label css={labelStyle}>
+            Enable Giving Feature / Disable Feature
+          </label>
 
           {Object.entries(buttonLabels).map(([key, label]) => (
             <label key={key} css={checkboxRow}>

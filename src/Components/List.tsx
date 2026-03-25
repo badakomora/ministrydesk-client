@@ -108,8 +108,6 @@ const listStyles = css`
     }
   }
 
-  /* ---------- PINNED & LATEST TAG STYLES WITH FULL BACKGROUND ---------- */
-
   .card.pinned {
     background: #fff8e6;
     border-left: 5px solid #fbbf24;
@@ -142,12 +140,13 @@ type Idprops = {
 
 type Item = {
   id: number;
-  category: "1" | "2" | "3"; // Server categories
+  category: "1" | "2" | "3";
   title: string;
   description: string;
   date: string | null;
   extraInfo?: string;
   churchName: string;
+  visibility: number; // already exists
 };
 
 export const List: React.FC<componentProps & Idprops> = ({
@@ -158,11 +157,9 @@ export const List: React.FC<componentProps & Idprops> = ({
   const [search, setSearch] = useState("");
   const [items, setItems] = useState<Item[]>([]);
 
-  // Utility to truncate long text
   const truncate = (text: string, max = 50) =>
     text.length > max ? text.slice(0, max) + "..." : text;
 
-  // Fetch server data
   useEffect(() => {
     let mounted = true;
     axios
@@ -170,6 +167,7 @@ export const List: React.FC<componentProps & Idprops> = ({
       .then((res) => {
         if (!mounted) return;
         const data: any[] = Array.isArray(res.data) ? res.data : [];
+
         const transformed: Item[] = data.map((d) => ({
           id: d.id,
           category: d.category.toString() as "1" | "2" | "3",
@@ -177,7 +175,9 @@ export const List: React.FC<componentProps & Idprops> = ({
           description: truncate(d.description || d.message || "", 50),
           date: d.dateposted || null,
           churchName: d.churchname || "",
+          visibility: Number(d.visibility) || 0,
         }));
+
         setItems(transformed);
       })
       .catch((err) => {
@@ -190,7 +190,6 @@ export const List: React.FC<componentProps & Idprops> = ({
     };
   }, []);
 
-  // Filter by church search
   const filterByChurch = (item: Item) =>
     item.churchName.toLowerCase().includes(search.toLowerCase());
 
@@ -204,7 +203,6 @@ export const List: React.FC<componentProps & Idprops> = ({
     (i) => i.category === "3" && filterByChurch(i)
   );
 
-  // Reusable section renderer
   const renderSection = (
     sectionItems: Item[],
     title: string,
@@ -239,21 +237,42 @@ export const List: React.FC<componentProps & Idprops> = ({
                 }
               }}
               className={`card ${
-                idx === 0 ? "pinned" : idx < 4 ? "latest" : ""
+                item.visibility === 0
+                  ? "latest"
+                  : idx === 0
+                  ? "pinned"
+                  : idx < 4
+                  ? "latest"
+                  : ""
               }`}
             >
               <h3>
                 <span className="title">{item.title}</span>
-                {idx === 0 && <span className="tag pinned">PINNED</span>}
-                {idx > 0 && idx < 4 && (
+
+                {item.visibility === 0 && (
+                  <span className="tag latest">
+                    UP FOR DISCUSSION
+                  </span>
+                )}
+
+                {item.visibility !== 0 && idx === 0 && (
+                  <span className="tag pinned">PINNED</span>
+                )}
+
+                {item.visibility !== 0 && idx > 0 && idx < 4 && (
                   <span className="tag latest">LATEST</span>
                 )}
               </h3>
+
               <p>{item.description}</p>
+
               {item.extraInfo && <small>{item.extraInfo}</small>}
+
               <small>
                 ⛪ {item.churchName}{" "}
-                {item.date ? `• ${new Date(item.date).toDateString()}` : ""}
+                {item.date
+                  ? `• ${new Date(item.date).toDateString()}`
+                  : ""}
               </small>
             </div>
           ))

@@ -278,6 +278,7 @@ interface ItemData {
   churchname?: string;
   carouselimages?: string[];
   visibility?: string;
+  discussion?: string;
 }
 
 interface Comment {
@@ -318,7 +319,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
   const [index, setIndex] = useState(0);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
-  const [userChurchId, setUserChurchId] = useState<number | null>(null);
+  const [, setUserChurchId] = useState<number | null>(null);
   const [userNationalRole, setUserNationalRole] = useState<string | null>(null);
   const [userDistrictRole, setUserDistrictRole] = useState<string | null>(null);
 
@@ -449,6 +450,7 @@ export const Item: React.FC<Idprops & ModalProps> = ({
         itemid: itemId,
         userid: localStorage.getItem("userId"),
         comment: commentText,
+        visibility: currentItem?.visibility || "1",
       });
 
       toast.success(res.data.message);
@@ -748,24 +750,32 @@ export const Item: React.FC<Idprops & ModalProps> = ({
                   No comments yet. Be the first to comment!
                 </div>
               ) : (
-                comments.map((c, idx) => (
-                  <div key={idx} css={styles.commentItem}>
-                    <div css={styles.commentAuthor}>{c.fullname}</div>
-                    <div
-                      css={css({
-                        marginTop: "4px",
-                        fontSize: "11px",
-                        color: "#94a3b8",
-                        display: "flex",
-                      })}
-                    >
-                      <span>{getCombinedRoles(c)}</span>
-                      <span>, {c.churchname}</span>
-                    </div>
+                comments.map((c, idx) => {
+                  // Skip rendering if discussion is hidden and visibility is 0
+                  if (
+                    currentItem.visibility === "0" &&
+                    currentItem.discussion === "0"
+                  )
+                    return null;
 
-                    <div css={styles.commentText}>{c.comment}</div>
-                  </div>
-                ))
+                  return (
+                    <div key={idx} css={styles.commentItem}>
+                      <div css={styles.commentAuthor}>{c.fullname}</div>
+                      <div
+                        css={css({
+                          marginTop: "4px",
+                          fontSize: "11px",
+                          color: "#94a3b8",
+                          display: "flex",
+                        })}
+                      >
+                        <span>{getCombinedRoles(c)}</span>
+                        <span>, {c.churchname}</span>
+                      </div>
+                      <div css={styles.commentText}>{c.comment}</div>
+                    </div>
+                  );
+                })
               )}
             </div>
           </div>
