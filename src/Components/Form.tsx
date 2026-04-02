@@ -961,11 +961,13 @@
 // };
 
 /** @jsxImportSource @emotion/react */
+"use client";
 import type React from "react";
 import { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { serverurl } from "./Appconfig";
 
 /* ----------------------
@@ -1382,6 +1384,11 @@ const removeFileBtn = css`
   }
 `;
 
+const otherFormStyle = css`
+  ${containerStyle};
+  text-align: center;
+`;
+
 /* ----------------------
    Component
    ---------------------- */
@@ -1401,10 +1408,17 @@ const buttonLabels: Record<keyof ButtonToggles, string> = {
 };
 
 type Idprops = {
-  itemId: number | null;
+  itemId?: number | null;
 };
 
-export const Form: React.FC<Idprops> = ({ itemId }) => {
+interface ModalProps {
+  pageContent: string;
+}
+
+export const Form: React.FC<Idprops & ModalProps> = ({
+  itemId = null,
+  pageContent,
+}) => {
   const [formData, setFormData] = useState({
     visibility: "",
     discussion: "",
@@ -1427,7 +1441,6 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [bibleVerses, setBibleVerses] = useState<string[]>([""]);
 
-  // Store fetched file paths from database
   const [fetchedDocumentPath, setFetchedDocumentPath] = useState<string>("");
   const [fetchedCarouselPaths, setFetchedCarouselPaths] = useState<string[]>(
     [],
@@ -1436,11 +1449,6 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-
-  // const visibilityOptions = useMemo(() => {
-  //   const userLevel = getUserRoleLevel();
-  //   return getVisibilityOptions(userLevel);
-  // }, []);
 
   const imagePreviews = useMemo(() => {
     return carouselImages.map((f) => ({
@@ -1508,6 +1516,7 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
     setDocumentFile(null);
     setFetchedDocumentPath("");
   };
+
   const removeAudio = () => {
     setAudioFile(null);
     setFetchedAudioPath("");
@@ -1518,28 +1527,6 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
     setBibleVerses((prev) => prev.filter((_, i) => i !== idx));
   const handleVerseChange = (idx: number, value: string) =>
     setBibleVerses((prev) => prev.map((v, i) => (i === idx ? value : v)));
-
-  /* ----------------------
-     Validate function (disabled)
-     ---------------------- */
-  // const validate = () => {
-  //   const newErrors: Record<string, string> = {};
-  //   if (!formData.visibility.trim())
-  //     newErrors.visibility = "Visibility is required";
-  //   if (!formData.category.trim()) newErrors.category = "Category is required";
-  //   if (formData.category === "3" && !formData.department.trim())
-  //     newErrors.department = "Department is required";
-  //   if (!formData.title.trim()) newErrors.title = "Title is required";
-  //   if (!formData.created_at.trim()) newErrors.created_at = "Date is required";
-  //   if (!formData.description.trim())
-  //     newErrors.description = "Description is required";
-  //   if (!documentFile) newErrors.documentFile = "Document file is required";
-  //   if (!carouselImages.length)
-  //     newErrors.carouselImages = "At least one carousel image is required";
-
-  //   setErrors(newErrors);
-  //   return Object.keys(newErrors).length === 0;
-  // };
 
   useEffect(() => {
     if (!itemId) return;
@@ -1573,14 +1560,12 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             },
           });
 
-          // Populate Bible verses if present
           if (data.verses && Array.isArray(data.verses)) {
             setBibleVerses(data.verses.length ? data.verses : [""]);
           } else {
             setBibleVerses([""]);
           }
 
-          // Store fetched file paths for display
           if (data.documentfile) {
             setFetchedDocumentPath(data.documentfile);
           } else {
@@ -1599,7 +1584,6 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
             setFetchedAudioPath("");
           }
 
-          // Files are left empty (cannot assign File objects directly from URLs)
           setDocumentFile(null);
           setCarouselImages([]);
           setAudioFile(null);
@@ -1615,35 +1599,25 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   }, [itemId]);
 
   const handleSubmit = async () => {
-    // if (!validate()) return;
     setSubmitting(true);
 
     try {
       const form = new FormData();
 
-      const churchId = localStorage.getItem("userChurchId") || "";
-      const userId = localStorage.getItem("userId") || "";
+      const churchId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userChurchId") || ""
+          : "";
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || ""
+          : "";
 
       form.append("churchid", churchId);
       form.append("userid", userId);
 
       form.append("visibility", formData.visibility);
       form.append("discussion", formData.discussion ? "1" : "0");
-
-      <div css={fieldStyle}>
-        <label css={labelStyle}>Show/Hide Discussion</label>
-        <input
-          type="checkbox"
-          css={checkboxInput}
-          checked={formData.discussion === "1"}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              discussion: e.target.checked ? "1" : "0",
-            })
-          }
-        />
-      </div>;
 
       form.append("category", formData.category);
       if (formData.department) form.append("department", formData.department);
@@ -1668,9 +1642,15 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
         carouselImages.forEach((f) => form.append("carouselImages", f));
       }
 
-      const url = `${serverurl}/item/create`;
+      // Use PUT for updates when NOT "create post", use POST for creating
+      const isCreatePost = pageContent === "create post";
+      const url = isCreatePost
+        ? `${serverurl}/item/create`
+        : `${serverurl}/item/update/${itemId}`;
 
-      await axios.post(url, form, {
+      const method = isCreatePost ? axios.post : axios.put;
+
+      await method(url, form, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -1709,9 +1689,9 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
   };
 
   const [showComments, setShowComments] = useState(false);
-  const [showDiscussionToggle, setShowDiscussionToggle] =
-    useState<boolean>(false);
+  const [, setShowDiscussionToggle] = useState<boolean>(false);
   const [, setDiscussionEnabled] = useState<boolean>(false);
+
   const handleVisibility = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
 
@@ -1720,439 +1700,503 @@ export const Form: React.FC<Idprops> = ({ itemId }) => {
       [name]: value,
     }));
 
-    // 👇 Only show toggle when Public is selected
     if (name === "visibility") {
       if (value === "1") {
         setShowDiscussionToggle(true);
       } else {
         setShowDiscussionToggle(false);
-        setDiscussionEnabled(false); // reset
+        setDiscussionEnabled(false);
       }
     }
   };
-  return (
-    <div css={containerStyle}>
-      <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
-      <div css={formGrid}>
-        {/* ----------------------
-            Visibility field - conditional rendering
-            ---------------------- */}
+  // CONDITIONAL RENDERING: Show the form if pageContent matches
+  if (
+    pageContent === "News & Events" ||
+    pageContent === "Sermons" ||
+    pageContent === "Assembly Programs" ||
+    pageContent === "create post"
+  ) {
+    return (
+      <div css={containerStyle}>
+        <h2 css={headingStyle}>Create Post / Upload Content</h2>
 
-        {localStorage.getItem("nationalRole") === "N5" ||
-        localStorage.getItem("districtRole") === "D2" ? (
-          <>
-            <div css={[fieldStyle, fullWidth]}>
-              <label css={labelStyle}>Who can see this post? *</label>
-              <select
-                name="visibility"
-                value={formData.visibility}
-                onChange={handleVisibility}
-                css={selectStyle}
-              >
-                <option value="">Select visibility</option>
+        <div css={formGrid}>
+          {localStorage.getItem("nationalRole") === "N5" ||
+          localStorage.getItem("districtRole") === "D2" ? (
+            <>
+              <div css={[fieldStyle, fullWidth]}>
+                <label css={labelStyle}>Who can see this post? *</label>
+                <select
+                  name="visibility"
+                  value={formData.visibility}
+                  onChange={handleVisibility}
+                  css={selectStyle}
+                >
+                  <option value="">Select visibility</option>
+                  <option value="0">Private</option>
+                  <option value="1">Public</option>
+                </select>
 
-                <option value="0">Private</option>
-                <option value="1">Public</option>
-              </select>
-
-              {errors.visibility && (
-                <div css={errorText}>{errors.visibility}</div>
-              )}
-            </div>
-
-            {/* ✅ SHOW DISCUSSION TOGGLE */}
-            {itemId && showDiscussionToggle && (
-              <div css={fieldStyle}>
-                <label css={labelStyle}>Show/Hide Discussion</label>
-                <input type="checkbox" css={checkboxInput} />{" "}
+                {errors.visibility && (
+                  <div css={errorText}>{errors.visibility}</div>
+                )}
               </div>
-            )}
-            {/* ----------------------
-                Comments Popup Modal
-                ---------------------- */}
-            {showComments && (
-              <div
-                css={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  background: "rgba(0,0,0,0.5)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  zIndex: 1000,
-                }}
-              >
+
+              {showComments && (
                 <div
                   css={{
-                    background: "#fff",
-                    padding: "20px",
-                    borderRadius: "10px",
-                    width: "300px",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(0,0,0,0.5)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    zIndex: 1000,
                   }}
                 >
-                  <h3>Add Comment</h3>
-
-                  <textarea
-                    value={formData.comments || ""}
-                    onChange={(e) =>
-                      setFormData((prev: any) => ({
-                        ...prev,
-                        comments: e.target.value,
-                      }))
-                    }
+                  <div
                     css={{
-                      width: "100%",
-                      minHeight: "80px",
-                      marginTop: "10px",
-                    }}
-                  />
-
-                  <button
-                    onClick={() => setShowComments(false)}
-                    css={{
-                      marginTop: "10px",
-                      padding: "8px 12px",
-                      cursor: "pointer",
+                      background: "#fff",
+                      padding: "20px",
+                      borderRadius: "10px",
+                      width: "300px",
                     }}
                   >
-                    Close
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
-        ) : null}
-        <div css={fieldStyle}>
-          <label css={labelStyle}>Category *</label>
-          <select
-            name="category"
-            value={formData.category}
-            onChange={handleInput}
-            css={selectStyle}
-          >
-            <option value="">Select a category</option>
-            <option value="1">News & Events</option>
-            <option value="2">Churches & Sermons</option>
-            <option value="3">Assembly Programs</option>
-          </select>
-          {errors.category && <div css={errorText}>{errors.category}</div>}
-        </div>
+                    <h3>Add Comment</h3>
 
-        {formData.category === "3" && (
+                    <textarea
+                      value={formData.comments || ""}
+                      onChange={(e) =>
+                        setFormData((prev: any) => ({
+                          ...prev,
+                          comments: e.target.value,
+                        }))
+                      }
+                      css={{
+                        width: "100%",
+                        minHeight: "80px",
+                        marginTop: "10px",
+                      }}
+                    />
+
+                    <button
+                      onClick={() => setShowComments(false)}
+                      css={{
+                        marginTop: "10px",
+                        padding: "8px 12px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : null}
+
           <div css={fieldStyle}>
-            <label css={labelStyle}>Department *</label>
+            <label css={labelStyle}>Category *</label>
             <select
-              name="department"
-              value={formData.department}
+              name="category"
+              value={formData.category}
               onChange={handleInput}
               css={selectStyle}
             >
-              <option value="">Select a department</option>
-              <option value="Youth">Youth</option>
-              <option value="Men">Men</option>
-              <option value="Women">Women</option>
-              <option value="CED">CED</option>
-              <option value="Sunday School">Sunday School</option>
+              <option value="">Select a category</option>
+              <option value="1">News & Events</option>
+              <option value="2">Churches & Sermons</option>
+              <option value="3">Assembly Programs</option>
             </select>
-            {errors.department && (
-              <div css={errorText}>{errors.department}</div>
-            )}
+            {errors.category && <div css={errorText}>{errors.category}</div>}
           </div>
-        )}
 
-        <div css={fieldStyle}>
-          <label css={labelStyle}>Title *</label>
-          <input
-            name="title"
-            value={formData.title}
-            onChange={handleInput}
-            css={inputBase}
-            placeholder="Add a short, descriptive title"
-          />
-          {errors.title && <div css={errorText}>{errors.title}</div>}
-        </div>
+          {formData.category === "3" && (
+            <div css={fieldStyle}>
+              <label css={labelStyle}>Department *</label>
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleInput}
+                css={selectStyle}
+              >
+                <option value="">Select a department</option>
+                <option value="Youth">Youth</option>
+                <option value="Men">Men</option>
+                <option value="Women">Women</option>
+                <option value="CED">CED</option>
+                <option value="Sunday School">Sunday School</option>
+              </select>
+              {errors.department && (
+                <div css={errorText}>{errors.department}</div>
+              )}
+            </div>
+          )}
 
-        <div css={fieldStyle}>
-          <label css={labelStyle}>Date Posted * </label>
-          <input
-            type="date"
-            name="created_at"
-            value={formData.created_at}
-            onChange={handleInput}
-            css={inputBase}
-          />
-          {errors.created_at && <div css={errorText}>{errors.created_at}</div>}
-        </div>
-
-        <div css={fullWidth}>
           <div css={fieldStyle}>
-            <label css={labelStyle}>Description *</label>
-            <textarea
-              name="description"
-              value={formData.description}
+            <label css={labelStyle}>Title *</label>
+            <input
+              name="title"
+              value={formData.title}
               onChange={handleInput}
-              css={textareaStyle}
-              placeholder="Write a short description or summary for the post..."
+              css={inputBase}
+              placeholder="Add a short, descriptive title"
             />
-            <div css={helpText}>{formData.description.length} characters</div>
-            {errors.description && (
-              <div css={errorText}>{errors.description}</div>
+            {errors.title && <div css={errorText}>{errors.title}</div>}
+          </div>
+
+          <div css={fieldStyle}>
+            <label css={labelStyle}>Date Posted * </label>
+            <input
+              type="date"
+              name="created_at"
+              value={formData.created_at}
+              onChange={handleInput}
+              css={inputBase}
+            />
+            {errors.created_at && (
+              <div css={errorText}>{errors.created_at}</div>
             )}
           </div>
-        </div>
-        <label css={labelStyle}>Attach files</label>
-        <br />
-        <div css={fieldStyle}>
-          <label css={labelStyle}>Document File (only pdf, doc, docx)</label>
-          <div css={fileInputWrapper}>
-            <label css={fileButton} aria-hidden>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                style={{ display: "none" }}
-                onChange={onDocumentChange}
+
+          <div css={fullWidth}>
+            <div css={fieldStyle}>
+              <label css={labelStyle}>Description *</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInput}
+                css={textareaStyle}
+                placeholder="Write a short description or summary for the post..."
               />
-              Upload Document
-            </label>
-            <div css={filenameBox}>
-              {documentFile ? (
-                <>
-                  <span css={filenameText}>{documentFile.name}</span>
-                  <button
-                    onClick={removeDocument}
-                    css={removeFileBtn}
-                    aria-label="Remove document"
-                  >
-                    ✕
-                  </button>
-                </>
-              ) : fetchedDocumentPath ? (
-                <>
-                  <span css={filenameText}>
-                    {fetchedDocumentPath.split("/").pop()}
-                  </span>
-                  <button
-                    onClick={removeDocument}
-                    css={removeFileBtn}
-                    aria-label="Remove document"
-                  >
-                    ✕
-                  </button>
-                </>
-              ) : (
-                <span css={helpText}>No document selected</span>
+              <div css={helpText}>{formData.description.length} characters</div>
+              {errors.description && (
+                <div css={errorText}>{errors.description}</div>
               )}
             </div>
           </div>
-          {errors.documentFile && (
-            <div css={errorText}>{errors.documentFile}</div>
-          )}
-        </div>
 
-        <div css={fieldStyle}>
-          <label css={labelStyle}>Videos & Photos</label>
-          <div css={fileInputWrapper}>
-            <label css={fileButton} aria-hidden>
-              <input
-                type="file"
-                accept="image/*,video/*"
-                multiple
-                style={{ display: "none" }}
-                onChange={onCarouselChange}
-              />
-              Add Files
-            </label>
-            <div css={filenameBox}>
-              {carouselImages.length + fetchedCarouselPaths.length ? (
-                <span>
-                  {carouselImages.length + fetchedCarouselPaths.length} file(s)
-                </span>
-              ) : (
-                <span css={helpText}>No files selected</span>
-              )}
-            </div>
-          </div>
-          {errors.carouselImages && (
-            <div css={errorText}>{errors.carouselImages}</div>
-          )}
-        </div>
+          <label css={labelStyle}>Attach files</label>
+          <br />
 
-        {carouselImages.length > 0 && fetchedCarouselPaths.length > 0 && (
-          <div css={[fieldStyle, fullWidth]}>
-            <div css={thumbsWrap}>
-              {imagePreviews.map((preview, idx) => (
-                <div key={`new-${idx}`} css={thumbContainer}>
-                  {isVideoFile(preview.file) ? (
-                    <video css={thumbVideo} src={preview.url} muted />
-                  ) : (
-                    <img
-                      css={thumb}
-                      src={preview.url || "/placeholder.svg"}
-                      alt={`Preview ${idx}`}
-                    />
-                  )}
-                  {isVideoFile(preview.file) && (
-                    <span css={thumbLabel}>VIDEO</span>
-                  )}
-                  <button
-                    css={removeThumbBtn}
-                    onClick={() => removeImageAt(idx)}
-                    type="button"
-                    aria-label={`Remove file ${idx + 1}`}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              {fetchedCarouselPaths.map((path, idx) => (
-                <div key={`fetched-${idx}`} css={thumbContainer}>
-                  {isVideoFilePath(path) ? (
-                    <video css={thumbVideo} src={path} muted />
-                  ) : (
-                    <img
-                      css={thumb}
-                      src={path}
-                      alt={`Fetched Preview ${idx}`}
-                    />
-                  )}
-                  {isVideoFilePath(path) && <span css={thumbLabel}>VIDEO</span>}
-                  <button
-                    css={removeThumbBtn}
-                    onClick={() => removeFetchedImageAt(idx)}
-                    type="button"
-                    aria-label={`Remove fetched file ${idx + 1}`}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div css={fieldStyle}>
-          <label css={labelStyle}>Audio File </label>
-          <div css={fileInputWrapper}>
-            <label css={fileButton} aria-hidden>
-              <input
-                type="file"
-                accept="audio/*"
-                style={{ display: "none" }}
-                onChange={onAudioChange}
-              />
-              Upload Audio
-            </label>
-            <div css={filenameBox}>
-              {audioFile ? (
-                <>
-                  <span css={filenameText}>{audioFile.name}</span>
-                  <button
-                    onClick={removeAudio}
-                    css={removeFileBtn}
-                    aria-label="Remove audio"
-                  >
-                    ✕
-                  </button>
-                </>
-              ) : fetchedAudioPath ? (
-                <>
-                  <span css={filenameText}>
-                    {fetchedAudioPath.split("/").pop()}
-                  </span>
-                  <button
-                    onClick={removeAudio}
-                    css={removeFileBtn}
-                    aria-label="Remove audio"
-                  >
-                    ✕
-                  </button>
-                </>
-              ) : (
-                <span css={helpText}>No audio selected</span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {audioFile && (
           <div css={fieldStyle}>
-            <audio
-              css={audioPlayer}
-              controls
-              src={URL.createObjectURL(audioFile)}
-            />
-          </div>
-        )}
-
-        {fetchedAudioPath && !audioFile && (
-          <div css={fieldStyle}>
-            <audio css={audioPlayer} controls src={fetchedAudioPath} />
-          </div>
-        )}
-
-        <div css={[fieldStyle, bibleVersesSection]}>
-          <label css={labelStyle}>Bible Verses (If any)</label>
-          <div css={versesList}>
-            {bibleVerses.map((verse, idx) => (
-              <div key={idx} css={verseRow}>
+            <label css={labelStyle}>Document File (only pdf, doc, docx)</label>
+            <div css={fileInputWrapper}>
+              <label css={fileButton} aria-hidden>
                 <input
-                  type="text"
-                  value={verse}
-                  onChange={(e) => handleVerseChange(idx, e.target.value)}
-                  css={verseInput}
-                  placeholder="e.g., John 3:16"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  style={{ display: "none" }}
+                  onChange={onDocumentChange}
                 />
-                {bibleVerses.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeVerse(idx)}
-                    css={removeVerseBtn}
-                    aria-label={`Remove verse ${idx + 1}`}
-                  >
-                    ✕
-                  </button>
+                Upload Document
+              </label>
+              <div css={filenameBox}>
+                {documentFile ? (
+                  <>
+                    <span css={filenameText}>{documentFile.name}</span>
+                    <button
+                      onClick={removeDocument}
+                      css={removeFileBtn}
+                      aria-label="Remove document"
+                    >
+                      ✕
+                    </button>
+                  </>
+                ) : fetchedDocumentPath ? (
+                  <>
+                    <span css={filenameText}>
+                      {fetchedDocumentPath.split("/").pop()}
+                    </span>
+                    <button
+                      onClick={removeDocument}
+                      css={removeFileBtn}
+                      aria-label="Remove document"
+                    >
+                      ✕
+                    </button>
+                  </>
+                ) : (
+                  <span css={helpText}>No document selected</span>
                 )}
               </div>
+            </div>
+            {errors.documentFile && (
+              <div css={errorText}>{errors.documentFile}</div>
+            )}
+          </div>
+
+          <div css={fieldStyle}>
+            <label css={labelStyle}>Videos & Photos</label>
+            <div css={fileInputWrapper}>
+              <label css={fileButton} aria-hidden>
+                <input
+                  type="file"
+                  accept="image/*,video/*"
+                  multiple
+                  style={{ display: "none" }}
+                  onChange={onCarouselChange}
+                />
+                Add Files
+              </label>
+              <div css={filenameBox}>
+                {carouselImages.length + fetchedCarouselPaths.length ? (
+                  <span>
+                    {carouselImages.length + fetchedCarouselPaths.length}{" "}
+                    file(s)
+                  </span>
+                ) : (
+                  <span css={helpText}>No files selected</span>
+                )}
+              </div>
+            </div>
+            {errors.carouselImages && (
+              <div css={errorText}>{errors.carouselImages}</div>
+            )}
+          </div>
+
+          {carouselImages.length > 0 && fetchedCarouselPaths.length > 0 && (
+            <div css={[fieldStyle, fullWidth]}>
+              <div css={thumbsWrap}>
+                {imagePreviews.map((preview, idx) => (
+                  <div key={`new-${idx}`} css={thumbContainer}>
+                    {isVideoFile(preview.file) ? (
+                      <video css={thumbVideo} src={preview.url} muted />
+                    ) : (
+                      <img
+                        css={thumb}
+                        src={preview.url || "/placeholder.svg"}
+                        alt={`Preview ${idx}`}
+                      />
+                    )}
+                    {isVideoFile(preview.file) && (
+                      <span css={thumbLabel}>VIDEO</span>
+                    )}
+                    <button
+                      css={removeThumbBtn}
+                      onClick={() => removeImageAt(idx)}
+                      type="button"
+                      aria-label={`Remove file ${idx + 1}`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                {fetchedCarouselPaths.map((path, idx) => (
+                  <div key={`fetched-${idx}`} css={thumbContainer}>
+                    {isVideoFilePath(path) ? (
+                      <video css={thumbVideo} src={path} muted />
+                    ) : (
+                      <img
+                        css={thumb}
+                        src={path}
+                        alt={`Fetched Preview ${idx}`}
+                      />
+                    )}
+                    {isVideoFilePath(path) && (
+                      <span css={thumbLabel}>VIDEO</span>
+                    )}
+                    <button
+                      css={removeThumbBtn}
+                      onClick={() => removeFetchedImageAt(idx)}
+                      type="button"
+                      aria-label={`Remove fetched file ${idx + 1}`}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div css={fieldStyle}>
+            <label css={labelStyle}>Audio File </label>
+            <div css={fileInputWrapper}>
+              <label css={fileButton} aria-hidden>
+                <input
+                  type="file"
+                  accept="audio/*"
+                  style={{ display: "none" }}
+                  onChange={onAudioChange}
+                />
+                Upload Audio
+              </label>
+              <div css={filenameBox}>
+                {audioFile ? (
+                  <>
+                    <span css={filenameText}>{audioFile.name}</span>
+                    <button
+                      onClick={removeAudio}
+                      css={removeFileBtn}
+                      aria-label="Remove audio"
+                    >
+                      ✕
+                    </button>
+                  </>
+                ) : fetchedAudioPath ? (
+                  <>
+                    <span css={filenameText}>
+                      {fetchedAudioPath.split("/").pop()}
+                    </span>
+                    <button
+                      onClick={removeAudio}
+                      css={removeFileBtn}
+                      aria-label="Remove audio"
+                    >
+                      ✕
+                    </button>
+                  </>
+                ) : (
+                  <span css={helpText}>No audio selected</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {audioFile && (
+            <div css={fieldStyle}>
+              <audio
+                css={audioPlayer}
+                controls
+                src={URL.createObjectURL(audioFile)}
+              />
+            </div>
+          )}
+
+          {fetchedAudioPath && !audioFile && (
+            <div css={fieldStyle}>
+              <audio css={audioPlayer} controls src={fetchedAudioPath} />
+            </div>
+          )}
+
+          <div css={[fieldStyle, bibleVersesSection]}>
+            <label css={labelStyle}>Bible Verses (If any)</label>
+            <div css={versesList}>
+              {bibleVerses.map((verse, idx) => (
+                <div key={idx} css={verseRow}>
+                  <input
+                    type="text"
+                    value={verse}
+                    onChange={(e) => handleVerseChange(idx, e.target.value)}
+                    css={verseInput}
+                    placeholder="e.g., John 3:16"
+                  />
+                  {bibleVerses.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeVerse(idx)}
+                      css={removeVerseBtn}
+                      aria-label={`Remove verse ${idx + 1}`}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button type="button" onClick={addVerse} css={addVerseBtn}>
+              + Add Verse
+            </button>
+          </div>
+
+          <div css={fieldStyle}>
+            <label css={labelStyle}>
+              Enable Giving Feature / Disable Feature
+            </label>
+
+            {Object.entries(buttonLabels).map(([key, label]) => (
+              <label key={key} css={checkboxRow}>
+                <input
+                  type="checkbox"
+                  checked={formData.buttons[key as keyof ButtonToggles] === 1}
+                  onChange={handleToggle(key as keyof ButtonToggles)}
+                  css={checkboxInput}
+                />
+                <span css={checkboxLabel}>{label}</span>
+              </label>
             ))}
           </div>
-          <button type="button" onClick={addVerse} css={addVerseBtn}>
-            + Add Verse
-          </button>
-        </div>
 
-        <div css={fieldStyle}>
-          <label css={labelStyle}>
-            Enable Giving Feature / Disable Feature
-          </label>
-
-          {Object.entries(buttonLabels).map(([key, label]) => (
-            <label key={key} css={checkboxRow}>
-              <input
-                type="checkbox"
-                checked={formData.buttons[key as keyof ButtonToggles] === 1}
-                onChange={handleToggle(key as keyof ButtonToggles)}
-                css={checkboxInput}
-              />
-              <span css={checkboxLabel}>{label}</span>
-            </label>
-          ))}
-        </div>
-
-        <div css={actionsRow}>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={submitting}
-            css={primaryButton(submitting)}
-          >
-            {submitting ? "Submitting..." : "Submit Post"}
-          </button>
+          <div css={actionsRow}>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting}
+              css={primaryButton(submitting)}
+            >
+              {submitting ? "Submitting..." : "Submit Post"}
+            </button>
+          </div>
         </div>
       </div>
+    );
+  }
+
+  // ALTERNATIVE: Show "other form" for all other pageContent values
+  return (
+    <div css={otherFormStyle}>
+      <h2 css={headingStyle}>Other Form</h2>
+      <p>This is the alternative form for other page content types.</p>
     </div>
   );
 };
+
+export default function Page() {
+  const [pageContent, setPageContent] = useState("News & Events");
+
+  return (
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      <div
+        style={{
+          padding: "20px",
+          textAlign: "center",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        <h1>Form Demo - Select Page Content Type</h1>
+        <div style={{ marginBottom: "20px" }}>
+          <button
+            onClick={() => setPageContent("News & Events")}
+            style={{ margin: "5px", padding: "10px 15px" }}
+          >
+            News & Events
+          </button>
+          <button
+            onClick={() => setPageContent("Sermons")}
+            style={{ margin: "5px", padding: "10px 15px" }}
+          >
+            Sermons
+          </button>
+          <button
+            onClick={() => setPageContent("Assembly Programs")}
+            style={{ margin: "5px", padding: "10px 15px" }}
+          >
+            Assembly Programs
+          </button>
+          <button
+            onClick={() => setPageContent("create post")}
+            style={{ margin: "5px", padding: "10px 15px" }}
+          >
+            Create Post
+          </button>
+          <button
+            onClick={() => setPageContent("Other")}
+            style={{ margin: "5px", padding: "10px 15px" }}
+          >
+            Other
+          </button>
+        </div>
+        <p style={{ fontWeight: "bold" }}>Current: {pageContent}</p>
+      </div>
+
+      <Form pageContent={pageContent} itemId={null} />
+    </>
+  );
+}

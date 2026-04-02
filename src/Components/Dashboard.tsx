@@ -342,7 +342,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
   };
 
   const handleItemsPerPageChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setItemsPerPage(Number.parseInt(e.target.value));
     setCurrentPage(1); // reset to first page
@@ -359,7 +359,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
 
     return items.filter((item) => {
       const dateString = formatSearchableDate(
-        item.dateposted || item.date || ""
+        item.dateposted || item.date || "",
       );
       const title = String(item.title ?? "").toLowerCase();
       const church = String(item.church ?? "").toLowerCase();
@@ -400,10 +400,12 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     selectedCategory === "Church Members"
       ? users
       : selectedCategory === "Message Inquiries"
-      ? messages
-      : selectedCategory === "Prayer Requests"
-      ? requests
-      : items.filter((item) => item.category === categoryMap[selectedCategory]);
+        ? messages
+        : selectedCategory === "Prayer Requests"
+          ? requests
+          : items.filter(
+              (item) => item.category === categoryMap[selectedCategory],
+            );
 
   const filteredData = filterBySearch(rawCategoryData);
 
@@ -418,10 +420,10 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
 
   // safe mobile fallback if mobileColumns/mobileHeaders don't exist
   const displayColumns = isMobile
-    ? currentConfig.mobileColumns ?? currentConfig.columns
+    ? (currentConfig.mobileColumns ?? currentConfig.columns)
     : currentConfig.columns;
   const displayHeaders = isMobile
-    ? currentConfig.mobileHeaders ?? currentConfig.headers
+    ? (currentConfig.mobileHeaders ?? currentConfig.headers)
     : currentConfig.headers;
 
   const [churches, setChurches] = useState<Record<number, string>>({});
@@ -473,13 +475,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     }
 
     // ✅ Church Member roles
-    if (
-      [
-        "nationalrole",
-        "districtrole",
-        "assemblyrole",
-      ].includes(column)
-    ) {
+    if (["nationalrole", "districtrole", "assemblyrole"].includes(column)) {
       // Combine all 4 roles, skip 0
       return getCombinedRoles(item);
     }
@@ -560,7 +556,14 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
               </select>
 
               <div style={dropdownContainer}>
-                <button style={primaryBtn} onClick={() => setActiveTab("Form")}>
+                <button
+                  style={primaryBtn}
+                  onClick={() => {
+                    setActiveTab("Form");
+                    setPageContent("create post");
+                    setItemId(null);
+                  }}
+                >
                   📝 Create New
                 </button>
               </div>
@@ -587,7 +590,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                             <th key={idx} style={tableHeaderCell}>
                               {header}
                             </th>
-                          )
+                          ),
                         )}
                     </tr>
                   </thead>
@@ -622,7 +625,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                               displayColumns.map(
                                 (
                                   column: string,
-                                  cidx: React.Key | null | undefined
+                                  cidx: React.Key | null | undefined,
                                 ) => (
                                   <td key={String(cidx)} style={tableCell}>
                                     {column === "action" ? (
@@ -643,7 +646,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                                       getCellValue(item, column)
                                     )}
                                   </td>
-                                )
+                                ),
                               )}
                           </tr>
                         );

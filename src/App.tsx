@@ -52,7 +52,7 @@ function App() {
           setItemId={setItemId}
         />
       ) : activeTab === "Form" ? (
-        <Form itemId={itemId} />
+        <Form itemId={itemId} pageContent={pageContent} />
       ) : (
         <Home
           setActiveTab={setActiveTab}
