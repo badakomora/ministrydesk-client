@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-"use client";
 import type React from "react";
 import { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
@@ -422,10 +421,10 @@ const removeFileBtn = css`
   }
 `;
 
-const otherFormStyle = css`
-  ${containerStyle};
-  text-align: center;
-`;
+// const otherFormStyle = css`
+//   ${containerStyle};
+//   text-align: center;
+// `;
 
 /* ----------------------
    Component
@@ -487,6 +486,11 @@ export const Form: React.FC<Idprops & ModalProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+
+  // State for fetched data (church members, message inquiries, prayer requests)
+  const [fetchedData, setFetchedData] = useState<any>(null);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [dataError, setDataError] = useState<string>("");
 
   const imagePreviews = useMemo(() => {
     return carouselImages.map((f) => ({
@@ -635,6 +639,52 @@ export const Form: React.FC<Idprops & ModalProps> = ({
       mounted = false;
     };
   }, [itemId]);
+
+  // Fetch data for Church Members, Message Inquiries, and Prayer Requests
+  useEffect(() => {
+    if (
+      !itemId ||
+      (pageContent !== "Church Members" &&
+        pageContent !== "Message Inquiries" &&
+        pageContent !== "Prayer Requests")
+    ) {
+      return;
+    }
+
+    let mounted = true;
+    setDataLoading(true);
+    setDataError("");
+
+    let endpoint = "";
+    if (pageContent === "Church Members") {
+      endpoint = `${serverurl}/user/churchmember/${itemId}`;
+    } else if (pageContent === "Message Inquiries") {
+      endpoint = `${serverurl}/message/messageinquiry/${itemId}`;
+    } else if (pageContent === "Prayer Requests") {
+      endpoint = `${serverurl}/prayerrequest/requests/${itemId}`;
+    }
+
+    axios
+      .get(endpoint)
+      .then((res) => {
+        if (!mounted) return;
+        setFetchedData(res.data);
+        setDataLoading(false);
+      })
+      .catch((err) => {
+        if (!mounted) return;
+        console.error("Error fetching data:", err);
+        setDataError(
+          err.response?.data?.message ||
+            "Failed to fetch data. Please try again.",
+        );
+        setDataLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [itemId, pageContent]);
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -1179,13 +1229,159 @@ export const Form: React.FC<Idprops & ModalProps> = ({
     pageContent === "Prayer Requests"
   ) {
     return (
-      <div css={otherFormStyle}>
-        <h2 css={headingStyle}>Other Form</h2>
-        <p>
-          This is the alternative form for other page content types.
-          {pageContent}
-          {itemId}
-        </p>
+      <div css={containerStyle}>
+        <h2 css={headingStyle}>{pageContent}</h2>
+
+        {dataLoading && (
+          <div css={{ textAlign: "center", padding: "20px" }}>
+            <p>Loading data...</p>
+          </div>
+        )}
+
+        {dataError && (
+          <div
+            css={{
+              color: tokens.danger,
+              padding: "12px",
+              marginBottom: "16px",
+            }}
+          >
+            <strong>Error:</strong> {dataError}
+          </div>
+        )}
+
+        {!dataLoading && fetchedData && (
+          <div>
+            {Array.isArray(fetchedData) && fetchedData.length > 0 ? (
+              <div
+                css={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              >
+                {fetchedData.map((item: any, index: number) => (
+                  <div
+                    key={index}
+                    css={{
+                      padding: "16px",
+                      border: `1px solid ${tokens.border}`,
+                      borderRadius: tokens.radius,
+                      backgroundColor: tokens.inputBg,
+                    }}
+                  >
+                    {pageContent === "Church Members" && (
+                      <div>
+                        <h3 css={{ marginBottom: "8px", color: tokens.text }}>
+                          {item.name || item.fullname || "N/A"}
+                        </h3>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Email:</strong> {item.email || "N/A"}
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Phone:</strong> {item.phone || "N/A"}
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Role:</strong> {item.role || "Member"}
+                        </p>
+                        {item.joindate && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Joined:</strong>{" "}
+                            {new Date(item.joindate).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {pageContent === "Message Inquiries" && (
+                      <div>
+                        <h3 css={{ marginBottom: "8px", color: tokens.text }}>
+                          {item.name || item.sender || "Unknown Sender"}
+                        </h3>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Email:</strong> {item.email || "N/A"}
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Subject:</strong>{" "}
+                          {item.subject || item.title || "N/A"}
+                        </p>
+                        <p css={{ margin: "8px 0", color: tokens.text }}>
+                          <strong>Message:</strong>
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          {item.message || item.description || "No message"}
+                        </p>
+                        {item.created_at && (
+                          <p
+                            css={{
+                              margin: "4px 0",
+                              color: tokens.muted,
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            <strong>Date:</strong>{" "}
+                            {new Date(item.created_at).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {pageContent === "Prayer Requests" && (
+                      <div>
+                        <h3 css={{ marginBottom: "8px", color: tokens.text }}>
+                          {item.name || item.requester || "Anonymous"}
+                        </h3>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Email:</strong> {item.email || "N/A"}
+                        </p>
+                        <p css={{ margin: "8px 0", color: tokens.text }}>
+                          <strong>Prayer Request:</strong>
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          {item.request ||
+                            item.message ||
+                            item.description ||
+                            "No request"}
+                        </p>
+                        {item.category && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Category:</strong> {item.category}
+                          </p>
+                        )}
+                        {item.created_at && (
+                          <p
+                            css={{
+                              margin: "4px 0",
+                              color: tokens.muted,
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            <strong>Date:</strong>{" "}
+                            {new Date(item.created_at).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div
+                css={{
+                  textAlign: "center",
+                  padding: "20px",
+                  color: tokens.muted,
+                }}
+              >
+                <p>No data available for {pageContent}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {!dataLoading && !fetchedData && !dataError && (
+          <div
+            css={{ textAlign: "center", padding: "20px", color: tokens.muted }}
+          >
+            <p>No data found</p>
+          </div>
+        )}
       </div>
     );
   }
