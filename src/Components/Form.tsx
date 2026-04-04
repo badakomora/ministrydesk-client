@@ -668,7 +668,14 @@ export const Form: React.FC<Idprops & ModalProps> = ({
       .get(endpoint)
       .then((res) => {
         if (!mounted) return;
-        setFetchedData(res.data);
+        const data = res.data;
+
+        setFetchedData(
+          Array.isArray(data)
+            ? data
+            : data.data || data.members || data.rows || data.requests || [],
+        );
+        console.log("Fetched data:", res.data);
         setDataLoading(false);
       })
       .catch((err) => {
@@ -1275,7 +1282,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                           <strong>Email:</strong> {item.email || "N/A"}
                         </p>
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
-                          <strong>Phone:</strong> {item.phone || "N/A"}
+                          <strong>Phone:</strong> {item.phonenumber || "N/A"}
                         </p>
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
                           <strong>Role:</strong> {item.role || "Member"}
