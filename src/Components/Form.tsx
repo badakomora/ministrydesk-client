@@ -697,11 +697,12 @@ export const Form: React.FC<Idprops & ModalProps> = ({
   useEffect(() => {
     const fetchChurch = async () => {
       try {
-        const churchId = fetchedData?.[0]?.churchId;
+        const churchId = fetchedData?.[0]?.churchid;
+        console.log("Fetched churchId:", churchId);
         if (!churchId) return;
 
         const response = await axios.get(
-          `${serverurl}/church/church/${churchId}`,
+          `${serverurl}/church/mychurch/${churchId}`,
         );
 
         setUserChurch(response.data.church.name);
@@ -1310,7 +1311,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                           </small>{" "}
                           <span>
                             {" "}
-                            <b>{userChurch[item.churchId] || "N/A"}</b>
+                            <b>{userChurch || "N/A"}</b>
                           </span>
                         </span>
                         <p css={{ margin: "4px 0", color: tokens.muted }}>

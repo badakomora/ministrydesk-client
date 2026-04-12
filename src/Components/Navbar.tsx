@@ -429,7 +429,7 @@ export const Navbar: React.FC<
     [key: number]: string;
   }>({});
 
-  const [, setRegions] = useState<{ id: number; name: string }[]>([]);
+  // const [, setRegions] = useState<{ id: number; name: string }[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
 
   useEffect(() => {
@@ -499,20 +499,20 @@ export const Navbar: React.FC<
       }
     };
 
-    const fetchRegions = async () => {
-      try {
-        const response = await axios.get(`${serverurl}/region/list`);
-        setRegions(response.data);
-      } catch (error) {
-        console.error("Error fetching regions:", error);
-      }
-    };
+    // const fetchRegions = async () => {
+    //   try {
+    //     const response = await axios.get(`${serverurl}/region/list`);
+    //     setRegions(response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching regions:", error);
+    //   }
+    // };
 
     if (loggedChurchId) {
       fetchChurch();
     }
     fetchChurches();
-    fetchRegions();
+    // fetchRegions();
   }, [loggedChurchId]);
 
   useEffect(() => {
