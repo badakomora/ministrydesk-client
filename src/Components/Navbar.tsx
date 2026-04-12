@@ -1669,7 +1669,7 @@ export const Navbar: React.FC<
                 </div>
 
                 <div className="row">
-                  <span className="label">Subscription</span>
+                  <span className="label">Membership</span>
                   <span style={{ display: "flex", gap: "8px" }}>
                     <span
                       style={{

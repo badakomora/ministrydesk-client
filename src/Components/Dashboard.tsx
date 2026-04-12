@@ -3,7 +3,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import {
   formatSearchableDate,
-  getCombinedRoles,
+  getRoleLabel,
   getStatusLabel,
   getStatusStyle,
   getSubscriptionLabel,
@@ -476,8 +476,10 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
 
     // ✅ Church Member roles
     if (["nationalrole", "districtrole", "assemblyrole"].includes(column)) {
-      // Combine all 4 roles, skip 0
-      return getCombinedRoles(item);
+      return [item.nationalrole, item.districtrole, item.assemblyrole]
+        .map(getRoleLabel)
+        .filter((role) => role !== "N/A")
+        .join(", ");
     }
 
     if (column === "churchid") return churches[value] ?? "Unknown";

@@ -44,11 +44,16 @@ export const roles = [
   ========================== */
 ];
 
-export const getRoleLabel = (roleNumber: string | number) => {
-  // If roleNumber is 0, return empty string
-  if (String(roleNumber) === "0") return "";
+// export const getRoleLabel = (roleNumber: string | number) => {
+//   // If roleNumber is 0, return empty string
+//   if (String(roleNumber) === "0") return "";
 
-  return roles.find((r) => r.value === String(roleNumber))?.label || "";
+//   return roles.find((r) => r.value === String(roleNumber))?.label || "";
+// };
+
+export const getRoleLabel = (value: string) => {
+  const role = roles.find((r) => r.value === value);
+  return role ? role.label : "N/A";
 };
 
 // Appconfig.ts or a helpers file

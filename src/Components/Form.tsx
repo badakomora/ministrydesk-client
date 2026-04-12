@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { serverurl } from "./Appconfig";
+import { getRoleLabel, serverurl } from "./Appconfig";
 
 /* ----------------------
    Design tokens
@@ -693,6 +693,25 @@ export const Form: React.FC<Idprops & ModalProps> = ({
     };
   }, [itemId, pageContent]);
 
+  const [userChurch, setUserChurch] = useState<string>("");
+  useEffect(() => {
+    const fetchChurch = async () => {
+      try {
+        const churchId = fetchedData?.[0]?.churchId;
+        if (!churchId) return;
+
+        const response = await axios.get(
+          `${serverurl}/church/church/${churchId}`,
+        );
+
+        setUserChurch(response.data.church.name);
+      } catch (error) {
+        console.error("Error fetching church:", error);
+      }
+    };
+
+    fetchChurch();
+  }, [fetchedData]);
   const handleSubmit = async () => {
     setSubmitting(true);
 
@@ -1276,8 +1295,30 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                     {pageContent === "Church Members" && (
                       <div>
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
-                          {item.name || item.fullname || "N/A"}
+                          {item.name || item.fullname || "N/A"}{" "}
                         </h3>
+                        <span>
+                          <small>
+                            {[
+                              item.nationalrole,
+                              item.districtrole,
+                              item.assemblyrole,
+                            ]
+                              .map(getRoleLabel)
+                              .filter((role) => role !== "N/A")
+                              .join(", ")}
+                          </small>{" "}
+                          <span>
+                            {" "}
+                            <b>{userChurch[item.churchId] || "N/A"}</b>
+                          </span>
+                        </span>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Id Number:</strong>{" "}
+                          {item.idnumber
+                            ? item.idnumber.toString().replace(/^.{4}/, "****")
+                            : "N/A"}
+                        </p>
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
                           <strong>Email:</strong> {item.email || "N/A"}
                         </p>
@@ -1285,14 +1326,30 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                           <strong>Phone:</strong> {item.phonenumber || "N/A"}
                         </p>
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
-                          <strong>Role:</strong> {item.role || "Member"}
+                          <strong>Membership:</strong>{" "}
+                          {item.subscription === 1 ? "Active" : "Expired"}
                         </p>
-                        {item.joindate && (
+                        {item.datecreated && (
                           <p css={{ margin: "4px 0", color: tokens.muted }}>
                             <strong>Joined:</strong>{" "}
-                            {new Date(item.joindate).toLocaleDateString()}
+                            {new Date(item.datecreated).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              },
+                            )}
                           </p>
                         )}
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Account Status:</strong>{" "}
+                          {item.status === "1" ? "Active" : "Pending..."}{" "}
+                          <span>
+                            <button>Activate</button>{" "}
+                            <button>Deactivate</button>
+                          </span>
+                        </p>
                       </div>
                     )}
 
