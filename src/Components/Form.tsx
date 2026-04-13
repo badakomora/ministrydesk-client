@@ -4,7 +4,6 @@ import { useMemo, useState, useEffect } from "react";
 import { css } from "@emotion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { getRoleLabel, serverurl } from "./Appconfig";
 
 /* ----------------------
@@ -1360,12 +1359,9 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                           {item.name || item.sender || "Unknown Sender"}
                         </h3>
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
-                          <strong>Email:</strong> {item.email || "N/A"}
+                          <strong>Phone Number:</strong> {item.phone}
                         </p>
-                        <p css={{ margin: "4px 0", color: tokens.muted }}>
-                          <strong>Subject:</strong>{" "}
-                          {item.subject || item.title || "N/A"}
-                        </p>
+
                         <p css={{ margin: "8px 0", color: tokens.text }}>
                           <strong>Message:</strong>
                         </p>
@@ -1384,6 +1380,13 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                             {new Date(item.created_at).toLocaleString()}
                           </p>
                         )}
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Status:</strong>{" "}
+                          {item.status === "1" ? "Responded" : "Pending..."}{" "}
+                          <span>
+                            <button>Respond</button>
+                          </span>
+                        </p>
                       </div>
                     )}
 
