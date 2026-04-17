@@ -81,6 +81,8 @@ const rolesData = {
 
 localStorage.setItem("loggedRoles", JSON.stringify(rolesData));
 
+
+// for logged in user
 export function getUserRoles(roles: { value: string; label: string }[]) {
   const stored = localStorage.getItem("loggedRoles");
   if (!stored) return "";

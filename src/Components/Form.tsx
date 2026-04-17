@@ -639,13 +639,15 @@ export const Form: React.FC<Idprops & ModalProps> = ({
     };
   }, [itemId]);
 
-  // Fetch data for Church Members, Message Inquiries, and Prayer Requests
+  // Fetch data for Church Members, Message Inquiries, Prayer Requests, Churches, and Word of the Day
   useEffect(() => {
     if (
       !itemId ||
       (pageContent !== "Church Members" &&
         pageContent !== "Message Inquiries" &&
-        pageContent !== "Prayer Requests")
+        pageContent !== "Prayer Requests" &&
+        pageContent !== "Churches" &&
+        pageContent !== "Word of the Day")
     ) {
       return;
     }
@@ -661,6 +663,10 @@ export const Form: React.FC<Idprops & ModalProps> = ({
       endpoint = `${serverurl}/message/messageinquiry/${itemId}`;
     } else if (pageContent === "Prayer Requests") {
       endpoint = `${serverurl}/prayerrequest/requests/${itemId}`;
+    } else if (pageContent === "Churches") {
+      endpoint = `${serverurl}/church/mychurch/${itemId}`;
+    } else if (pageContent === "Word of the Day") {
+      endpoint = `${serverurl}/wordoftheday/word/${itemId}`;
     }
 
     axios
@@ -672,7 +678,13 @@ export const Form: React.FC<Idprops & ModalProps> = ({
         setFetchedData(
           Array.isArray(data)
             ? data
-            : data.data || data.members || data.rows || data.requests || [],
+            : data.data ||
+                data.members ||
+                data.rows ||
+                data.requests ||
+                data.churches ||
+                data.wordoftheday ||
+                [],
         );
         console.log("Fetched data:", res.data);
         setDataLoading(false);
@@ -1243,7 +1255,11 @@ export const Form: React.FC<Idprops & ModalProps> = ({
               disabled={submitting}
               css={primaryButton(submitting)}
             >
-              {submitting ? "Submitting..." : "Submit Post"}
+              {submitting
+                ? "Submitting..."
+                : itemId === null
+                  ? "Submit Post"
+                  : "Update Post"}
             </button>
           </div>
         </div>
@@ -1252,7 +1268,9 @@ export const Form: React.FC<Idprops & ModalProps> = ({
   } else if (
     pageContent === "Church Members" ||
     pageContent === "Message Inquiries" ||
-    pageContent === "Prayer Requests"
+    pageContent === "Prayer Requests" ||
+    pageContent === "Churches" ||
+    pageContent === "Word of the Day"
   ) {
     return (
       <div css={containerStyle}>
@@ -1393,11 +1411,9 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                     {pageContent === "Prayer Requests" && (
                       <div>
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
-                          {item.name || item.requester || "Anonymous"}
+                          {item.userid || "Anonymous"}
                         </h3>
-                        <p css={{ margin: "4px 0", color: tokens.muted }}>
-                          <strong>Email:</strong> {item.email || "N/A"}
-                        </p>
+
                         <p css={{ margin: "8px 0", color: tokens.text }}>
                           <strong>Prayer Request:</strong>
                         </p>
@@ -1422,6 +1438,108 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                           >
                             <strong>Date:</strong>{" "}
                             {new Date(item.created_at).toLocaleString()}
+                          </p>
+                        )}
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Status:</strong>{" "}
+                          {item.status === "1" ? "Responded" : "Pending..."}{" "}
+                          <span>
+                            <button>Respond</button>
+                          </span>
+                        </p>
+                      </div>
+                    )}
+
+                    {pageContent === "Churches" && (
+                      <div>
+                        <h3 css={{ marginBottom: "8px", color: tokens.text }}>
+                          {item.name || item.churchname || "N/A"}
+                        </h3>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Location:</strong>{" "}
+                          {item.location || item.address || "N/A"}
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Pastor:</strong>{" "}
+                          {item.pastor || item.leadername || "N/A"}
+                        </p>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Contact:</strong>{" "}
+                          {item.phone || item.contact || "N/A"}
+                        </p>
+                        {item.email && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Email:</strong> {item.email}
+                          </p>
+                        )}
+                        {item.description && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Description:</strong> {item.description}
+                          </p>
+                        )}
+                        {item.members && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Members:</strong> {item.members}
+                          </p>
+                        )}
+                        {item.created_at && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Established:</strong>{" "}
+                            {new Date(item.created_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              },
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {pageContent === "Word of the Day" && (
+                      <div>
+                        <h3 css={{ marginBottom: "8px", color: tokens.text }}>
+                          {item.title || item.verse || "Daily Word"}
+                        </h3>
+                        <p
+                          css={{
+                            margin: "8px 0",
+                            color: tokens.text,
+                            fontStyle: "italic",
+                          }}
+                        >
+                          {item.content ||
+                            item.wordoftheday ||
+                            item.message ||
+                            "No content available"}
+                        </p>
+                        {item.author && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Author:</strong> {item.author}
+                          </p>
+                        )}
+                        {item.reference && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Reference:</strong> {item.reference}
+                          </p>
+                        )}
+                        {item.category && (
+                          <p css={{ margin: "4px 0", color: tokens.muted }}>
+                            <strong>Category:</strong> {item.category}
+                          </p>
+                        )}
+                        {item.created_at && (
+                          <p
+                            css={{
+                              margin: "4px 0",
+                              color: tokens.muted,
+                              fontSize: "0.85rem",
+                            }}
+                          >
+                            <strong>Date:</strong>{" "}
+                            {new Date(item.created_at).toLocaleDateString()}
                           </p>
                         )}
                       </div>

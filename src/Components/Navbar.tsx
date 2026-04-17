@@ -738,7 +738,7 @@ export const Navbar: React.FC<
       const response = await axios.post(`${serverurl}/prayerrequest/new`, {
         idnumber: loggedIdNumber,
         description,
-        churchid: itemId,
+        churchid: loggedChurchId,
       });
 
       toast.success(
@@ -1421,7 +1421,9 @@ export const Navbar: React.FC<
               ⛪
             </div>
             <div>
-              <h1>Ministry Desk</h1>
+              <h1 style={{ background: "blue", color: "white" }}>
+                Ministry Desk
+              </h1>
               <p>Connecting churches & people</p>
             </div>
           </div>
@@ -1615,7 +1617,9 @@ export const Navbar: React.FC<
                   ⛪
                 </div>
                 <div>
-                  <h1>Ministry Desk</h1>
+                  <h1 style={{ background: "blue", color: "white" }}>
+                    Ministry Desk
+                  </h1>
                   <p>Connecting churches & people</p>
                 </div>
               </div>

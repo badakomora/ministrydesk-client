@@ -231,6 +231,14 @@ const columnConfigs = {
     columns: ["dateposted", "title", "description", "action"],
     headers: ["Date", "Title", "Description", "Action"],
   },
+  Churches: {
+    columns: ["name", "location", "datecreated", "action"],
+    headers: ["Church Name", "Location", "Created", "Action"],
+  },
+  "Word of the Day": {
+    columns: ["dateposted", "title", "description", "action"],
+    headers: ["Date", "Title", "Word of the Day", "Action"],
+  },
 };
 
 interface componentProps {
@@ -260,6 +268,8 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
   const [items, setItems] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [requests, setRequests] = useState<any[]>([]);
+  const [churches, setChurches] = useState<any[]>([]);
+  const [wordOfDay, setWordOfDay] = useState<any[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
   // Fetch users
@@ -270,6 +280,29 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
 
     // USERS FETCH
     setLoadingUsers(true);
+
+    axios
+      .get(`${serverurl}/church/list`)
+      .then((res) => {
+        if (!mounted) return;
+        setChurches(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching churches:", err);
+        if (mounted) setChurches([]);
+      });
+
+    axios
+      .get(`${serverurl}/wordofday`)
+      .then((res) => {
+        if (!mounted) return;
+        setWordOfDay(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((err) => {
+        console.error("Error fetching word of the day:", err);
+        if (mounted) setWordOfDay([]);
+      });
+
     axios
       .post(`${serverurl}/user/list`, {
         churchid: churchid,
@@ -385,6 +418,16 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
         );
       }
 
+      if (selectedCategory === "Churches") {
+        const name = String(item.name ?? "").toLowerCase();
+        const location = String(item.location ?? "").toLowerCase();
+        return name.includes(query) || location.includes(query);
+      }
+
+      if (selectedCategory === "Word of the Day") {
+        return title.includes(query) || dateString.includes(query);
+      }
+
       return true;
     });
   };
@@ -403,9 +446,13 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
         ? messages
         : selectedCategory === "Prayer Requests"
           ? requests
-          : items.filter(
-              (item) => item.category === categoryMap[selectedCategory],
-            );
+          : selectedCategory === "Churches"
+            ? churches
+            : selectedCategory === "Word of the Day"
+              ? wordOfDay
+              : items.filter(
+                  (item) => item.category === categoryMap[selectedCategory],
+                );
 
   const filteredData = filterBySearch(rawCategoryData);
 
@@ -426,22 +473,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     ? (currentConfig.mobileHeaders ?? currentConfig.headers)
     : currentConfig.headers;
 
-  const [churches, setChurches] = useState<Record<number, string>>({});
-
-  useEffect(() => {
-    const fetchAllChurches = async () => {
-      const res = await axios.get(`${serverurl}/church/list`);
-      const map: Record<number, string> = {};
-
-      res.data.forEach((c: any) => {
-        map[c.id] = c.name;
-      });
-
-      setChurches(map);
-    };
-
-    fetchAllChurches();
-  }, []);
+  // Create a map of church IDs to church names
 
   const getCellValue = (item: any, column: string) => {
     const value = item[column];
@@ -555,6 +587,8 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                 <option>News & Events</option>
                 <option>Sermons</option>
                 <option>Assembly Programs</option>
+                <option>Churches</option>
+                <option>Word of the Day</option>
               </select>
 
               <div style={dropdownContainer}>
@@ -642,7 +676,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                                           setPageContent(selectedCategory);
                                         }}
                                       >
-                                        Action &raquo;
+                                        Action &raquo; 
                                       </div>
                                     ) : (
                                       getCellValue(item, column)
