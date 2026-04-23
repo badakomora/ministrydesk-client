@@ -1532,10 +1532,10 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                             <strong>Members:</strong> {item.members}
                           </p>
                         )}
-                        {item.created_at && (
+                        {item.datecreated && (
                           <p css={{ margin: "4px 0", color: tokens.muted }}>
                             <strong>Established:</strong>{" "}
-                            {new Date(item.created_at).toLocaleDateString(
+                            {new Date(item.datecreated).toLocaleDateString(
                               "en-US",
                               {
                                 year: "numeric",
@@ -1545,6 +1545,14 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                             )}
                           </p>
                         )}
+                         <p css={{ margin: "4px 0", color: tokens.muted }}>
+                          <strong>Account Status:</strong>{" "}
+                          {item.status === "1" ? "Active" : "Pending..."}{" "}
+                          <span>
+                            <button>Activate</button>{" "}
+                            <button>Deactivate</button>
+                          </span>
+                        </p>
                       </div>
                     )}
 

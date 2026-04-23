@@ -232,8 +232,8 @@ const columnConfigs = {
     headers: ["Date", "Title", "Description", "Action"],
   },
   Churches: {
-    columns: ["name", "location", "datecreated", "action"],
-    headers: ["Church Name", "Location", "Created", "Action"],
+    columns: ["name", "location", "datecreated", "status", "action"],
+    headers: ["Church Name", "Location", "Created", "Status", "Action"],
   },
   "Word of the Day": {
     columns: ["dateposted", "title", "description", "action"],
@@ -676,7 +676,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                                           setPageContent(selectedCategory);
                                         }}
                                       >
-                                        Action &raquo; 
+                                        Action &raquo;
                                       </div>
                                     ) : (
                                       getCellValue(item, column)
