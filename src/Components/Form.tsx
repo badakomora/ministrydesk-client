@@ -647,7 +647,8 @@ export const Form: React.FC<Idprops & ModalProps> = ({
         pageContent !== "Message Inquiries" &&
         pageContent !== "Prayer Requests" &&
         pageContent !== "Churches" &&
-        pageContent !== "Word of the Day")
+        pageContent !== "Word of the Day" &&
+        pageContent !== "Church with Word of Day")
     ) {
       return;
     }
@@ -656,48 +657,97 @@ export const Form: React.FC<Idprops & ModalProps> = ({
     setDataLoading(true);
     setDataError("");
 
-    let endpoint = "";
-    if (pageContent === "Church Members") {
-      endpoint = `${serverurl}/user/churchmember/${itemId}`;
-    } else if (pageContent === "Message Inquiries") {
-      endpoint = `${serverurl}/message/messageinquiry/${itemId}`;
-    } else if (pageContent === "Prayer Requests") {
-      endpoint = `${serverurl}/prayerrequest/requests/${itemId}`;
-    } else if (pageContent === "Churches") {
-      endpoint = `${serverurl}/church/mychurch/${itemId}`;
-    } else if (pageContent === "Word of the Day") {
-      endpoint = `${serverurl}/wordoftheday/word/${itemId}`;
+    // Handle combined church + word of day fetch
+    if (pageContent === "Church with Word of Day") {
+      Promise.all([
+        axios.get(`${serverurl}/church/mychurch/${itemId}`),
+        axios.get(`${serverurl}/wordoftheday/word/${itemId}`),
+      ])
+        .then((responses) => {
+          if (!mounted) return;
+
+          const churchData = responses[0].data;
+          const wordData = responses[1].data;
+
+          setFetchedData({
+            church: Array.isArray(churchData) ? churchData[0] : churchData,
+            wordOfDay: Array.isArray(wordData) ? wordData[0] : wordData,
+          });
+
+          console.log("[v0] Fetched church and word of day:", {
+            church: churchData,
+            wordOfDay: wordData,
+          });
+          setDataLoading(false);
+        })
+        .catch((err) => {
+          if (!mounted) return;
+          console.error("[v0] Error fetching church or word of day:", err);
+          setDataError(
+            err.response?.data?.message ||
+              "Failed to fetch church and word of day. Please try again.",
+          );
+          setDataLoading(false);
+        });
+    } else {
+      // Original single endpoint logic
+      let endpoint = "";
+      if (pageContent === "Church Members") {
+        endpoint = `${serverurl}/user/churchmember/${itemId}`;
+      } else if (pageContent === "Message Inquiries") {
+        endpoint = `${serverurl}/message/messageinquiry/${itemId}`;
+      } else if (pageContent === "Prayer Requests") {
+        endpoint = `${serverurl}/prayerrequest/requests/${itemId}`;
+      } else if (pageContent === "Churches") {
+        endpoint = `${serverurl}/church/mychurch/${itemId}`;
+      } else if (pageContent === "Word of the Day") {
+        endpoint = `${serverurl}/wordoftheday/word/${itemId}`;
+      }
+
+      axios
+        .get(endpoint)
+        .then((res) => {
+          if (!mounted) return;
+          const data = res.data;
+
+          console.log("[v0] Raw response data:", data);
+
+          let processedData;
+          if (Array.isArray(data)) {
+            processedData = data;
+          } else if (data.church) {
+            // Handle church endpoint response format
+            processedData = [data.church];
+          } else if (data.data) {
+            processedData = Array.isArray(data.data) ? data.data : [data.data];
+          } else if (data.members) {
+            processedData = Array.isArray(data.members) ? data.members : [data.members];
+          } else if (data.rows) {
+            processedData = Array.isArray(data.rows) ? data.rows : [data.rows];
+          } else if (data.requests) {
+            processedData = Array.isArray(data.requests) ? data.requests : [data.requests];
+          } else if (data.churches) {
+            processedData = Array.isArray(data.churches) ? data.churches : [data.churches];
+          } else if (data.wordoftheday) {
+            processedData = Array.isArray(data.wordoftheday) ? data.wordoftheday : [data.wordoftheday];
+          } else {
+            processedData = [];
+          }
+
+          console.log("[v0] Processed fetched data:", processedData);
+          setFetchedData(processedData);
+          setDataLoading(false);
+        })
+        .catch((err) => {
+          if (!mounted) return;
+          console.error("[v0] Error fetching data:", err);
+          setDataError(
+            err.response?.data?.message ||
+              "Failed to fetch data. Please try again.",
+          );
+          setDataLoading(false);
+        });
     }
-
-    axios
-      .get(endpoint)
-      .then((res) => {
-        if (!mounted) return;
-        const data = res.data;
-
-        setFetchedData(
-          Array.isArray(data)
-            ? data
-            : data.data ||
-                data.members ||
-                data.rows ||
-                data.requests ||
-                data.churches ||
-                data.wordoftheday ||
-                [],
-        );
-        console.log("Fetched data:", res.data);
-        setDataLoading(false);
-      })
-      .catch((err) => {
-        if (!mounted) return;
-        console.error("Error fetching data:", err);
-        setDataError(
-          err.response?.data?.message ||
-            "Failed to fetch data. Please try again.",
-        );
-        setDataLoading(false);
-      });
 
     return () => {
       mounted = false;

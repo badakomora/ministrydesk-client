@@ -1421,8 +1421,10 @@ export const Navbar: React.FC<
               ⛪
             </div>
             <div>
-              <h1 style={{ background: "blue", color: "white" }}>
-                Ministry Desk
+              <h1>
+                <span style={{ background: "blue", color: "white" }}>
+                  Ministry Desk
+                </span>
               </h1>
               <p>Connecting churches & people</p>
             </div>
@@ -1617,8 +1619,10 @@ export const Navbar: React.FC<
                   ⛪
                 </div>
                 <div>
-                  <h1 style={{ background: "blue", color: "white" }}>
-                    Ministry Desk
+                  <h1>
+                    <span style={{ background: "blue", color: "white" }}>
+                      Ministry Desk
+                    </span>
                   </h1>
                   <p>Connecting churches & people</p>
                 </div>
