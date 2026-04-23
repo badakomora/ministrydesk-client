@@ -1535,7 +1535,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                         {item.datecreated && (
                           <p css={{ margin: "4px 0", color: tokens.muted }}>
                             <strong>Established:</strong>{" "}
-                            {new Date(item.datecreated).toLocaleDateString(
+                            {new Date(item.created_at).toLocaleDateString(
                               "en-US",
                               {
                                 year: "numeric",
@@ -1549,8 +1549,8 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                           <strong>Account Status:</strong>{" "}
                           {item.status === "1" ? "Active" : "Pending..."}{" "}
                           <span>
-                            <button>Activate</button>{" "}
-                            <button>Deactivate</button>
+                            <button>Approve</button>{" "}
+                            <button>Decline</button>
                           </span>
                         </p>
                       </div>
