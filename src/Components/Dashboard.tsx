@@ -277,12 +277,15 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     let mounted = true;
     const userid = localStorage.getItem("userId");
     const churchid = localStorage.getItem("userChurchId");
+    const regionid = localStorage.getItem("userRegionId");
+    const nationalRole = localStorage.getItem("nationalRole");
+    const districtRole = localStorage.getItem("districtRole");
 
     // USERS FETCH
     setLoadingUsers(true);
 
     axios
-      .get(`${serverurl}/church/list`)
+      .get(`${serverurl}/church/list/${regionid}`)
       .then((res) => {
         if (!mounted) return;
         setChurches(Array.isArray(res.data) ? res.data : []);
@@ -303,21 +306,53 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
         if (mounted) setWordOfDay([]);
       });
 
-    axios
-      .post(`${serverurl}/user/list`, {
-        churchid: churchid,
-      })
-      .then((res) => {
-        if (!mounted) return;
-        setUsers(Array.isArray(res.data) ? res.data : []);
-      })
-      .catch((err) => {
-        console.error("Error fetching user list:", err);
-        if (mounted) setUsers([]);
-      })
-      .finally(() => {
-        if (mounted) setLoadingUsers(false);
-      });
+    if (nationalRole === "N5") {
+      axios
+        .post(`${serverurl}/user/overseers`)
+        .then((res) => {
+          if (!mounted) return;
+          setUsers(Array.isArray(res.data) ? res.data : []);
+        })
+        .catch((err) => {
+          console.error("Error fetching user list:", err);
+          if (mounted) setUsers([]);
+        })
+        .finally(() => {
+          if (mounted) setLoadingUsers(false);
+        });
+    } else if (districtRole === "D2") {
+      axios
+        .post(`${serverurl}/user/reverend`, {
+          regionid: regionid,
+        })
+        .then((res) => {
+          if (!mounted) return;
+          setUsers(Array.isArray(res.data) ? res.data : []);
+        })
+        .catch((err) => {
+          console.error("Error fetching user list:", err);
+          if (mounted) setUsers([]);
+        })
+        .finally(() => {
+          if (mounted) setLoadingUsers(false);
+        });
+    } else {
+      axios
+        .post(`${serverurl}/user/list`, {
+          churchid: churchid,
+        })
+        .then((res) => {
+          if (!mounted) return;
+          setUsers(Array.isArray(res.data) ? res.data : []);
+        })
+        .catch((err) => {
+          console.error("Error fetching user list:", err);
+          if (mounted) setUsers([]);
+        })
+        .finally(() => {
+          if (mounted) setLoadingUsers(false);
+        });
+    }
 
     axios
       .get(`${serverurl}/item/itemlist/${userid}`)
@@ -568,13 +603,13 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
                 },
               }}
             >
-              <select style={select} onChange={handleCategoryChange}>
-                <option>Reports</option>
-                {/* <option>Church Members</option>
+              {/* <select style={select} onChange={handleCategoryChange}>
+                <option>Reports</option> */}
+              {/* <option>Church Members</option>
                 <option>News & Events</option>
                 <option>Sermons</option>
                 <option>Assembly Programs</option> */}
-              </select>
+              {/* </select> */}
 
               <select
                 style={select}

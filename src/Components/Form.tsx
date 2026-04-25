@@ -721,15 +721,23 @@ export const Form: React.FC<Idprops & ModalProps> = ({
           } else if (data.data) {
             processedData = Array.isArray(data.data) ? data.data : [data.data];
           } else if (data.members) {
-            processedData = Array.isArray(data.members) ? data.members : [data.members];
+            processedData = Array.isArray(data.members)
+              ? data.members
+              : [data.members];
           } else if (data.rows) {
             processedData = Array.isArray(data.rows) ? data.rows : [data.rows];
           } else if (data.requests) {
-            processedData = Array.isArray(data.requests) ? data.requests : [data.requests];
+            processedData = Array.isArray(data.requests)
+              ? data.requests
+              : [data.requests];
           } else if (data.churches) {
-            processedData = Array.isArray(data.churches) ? data.churches : [data.churches];
+            processedData = Array.isArray(data.churches)
+              ? data.churches
+              : [data.churches];
           } else if (data.wordoftheday) {
-            processedData = Array.isArray(data.wordoftheday) ? data.wordoftheday : [data.wordoftheday];
+            processedData = Array.isArray(data.wordoftheday)
+              ? data.wordoftheday
+              : [data.wordoftheday];
           } else {
             processedData = [];
           }
@@ -1324,7 +1332,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
   ) {
     return (
       <div css={containerStyle}>
-        <h2 css={headingStyle}>{pageContent}</h2>
+        {/* <h2 css={headingStyle}>{pageContent}</h2> */}
 
         {dataLoading && (
           <div css={{ textAlign: "center", padding: "20px" }}>
@@ -1545,12 +1553,11 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                             )}
                           </p>
                         )}
-                         <p css={{ margin: "4px 0", color: tokens.muted }}>
+                        <p css={{ margin: "4px 0", color: tokens.muted }}>
                           <strong>Account Status:</strong>{" "}
                           {item.status === "1" ? "Active" : "Pending..."}{" "}
                           <span>
-                            <button>Approve</button>{" "}
-                            <button>Decline</button>
+                            <button>Approve</button> <button>Decline</button>
                           </span>
                         </p>
                       </div>

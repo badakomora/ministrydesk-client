@@ -249,17 +249,17 @@ export const List: React.FC<componentProps & Idprops> = ({
               <h3>
                 <span className="title">{item.title}</span>
 
-                {item.visibility === 0 && (
+                {item.visibility === 1 && (
                   <span className="tag latest">
                     UP FOR DISCUSSION
                   </span>
                 )}
 
-                {item.visibility !== 0 && idx === 0 && (
+                {item.visibility !== 1 && idx === 0 && (
                   <span className="tag pinned">PINNED</span>
                 )}
 
-                {item.visibility !== 0 && idx > 0 && idx < 4 && (
+                {item.visibility !== 1 && idx > 0 && idx < 4 && (
                   <span className="tag latest">LATEST</span>
                 )}
               </h3>

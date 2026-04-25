@@ -431,6 +431,7 @@ export const Navbar: React.FC<
 
   // const [, setRegions] = useState<{ id: number; name: string }[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<number | null>(null);
+  const [refreshChurches, setRefreshChurches] = useState(0);
 
   useEffect(() => {
     const storedPhone = localStorage.getItem("userPhone");
@@ -466,16 +467,20 @@ export const Navbar: React.FC<
       setLoggedIdNumber(storedIdNumber);
       setLoggedSubscription(storedSubscription);
       setLoggedDateJoined(storedDateJoined);
-
-      if (
-        loggedNationalRole === "N5" ||
-        loggedDistrictRole === "D2" ||
-        loggedAssemblyRole === "A2"
-      ) {
-        setDashboardShow(true);
-      }
     }
-  }, [loggedAssemblyRole, loggedDistrictRole, loggedNationalRole]);
+  }, []);
+
+  useEffect(() => {
+    if (
+      loggedNationalRole === "N5" ||
+      loggedDistrictRole === "D2" ||
+      loggedAssemblyRole === "A2"
+    ) {
+      setDashboardShow(true);
+    } else {
+      setDashboardShow(false);
+    }
+  }, [loggedNationalRole, loggedDistrictRole, loggedAssemblyRole]);
 
   useEffect(() => {
     const fetchChurches = async () => {
@@ -513,7 +518,7 @@ export const Navbar: React.FC<
     }
     fetchChurches();
     // fetchRegions();
-  }, [loggedChurchId]);
+  }, [loggedChurchId, refreshChurches]);
 
   useEffect(() => {
     // If a district role is selected, ensure a region is also selected or prompt for it.
@@ -527,8 +532,11 @@ export const Navbar: React.FC<
     }
   }, [selectedRolesByLevel, selectedRegion, currentRoleLevel]);
 
+  // const filteredChurches = churches.filter((c) =>
+  //   c.name.toLowerCase().includes(search.toLowerCase()),
+  // );
   const filteredChurches = churches.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase()),
+    c?.name?.toLowerCase().includes(search?.toLowerCase() || ""),
   );
 
   const LogOut = () => {
@@ -660,6 +668,7 @@ export const Navbar: React.FC<
         localStorage.setItem("userChurchId", res.data.churchid);
         localStorage.setItem("userSubscription", res.data.subscription);
         localStorage.setItem("userDateJoined", res.data.datecreated);
+        localStorage.setItem("userRegionId", res.data.regionid);
       } else {
         const res = await axios.post(`${serverurl}/user/verifyotp`, {
           phonenumber: phone,
@@ -685,7 +694,7 @@ export const Navbar: React.FC<
         localStorage.setItem("userChurchId", res.data.user.churchid);
         localStorage.setItem("userSubscription", res.data.user.subscription);
         localStorage.setItem("userDateJoined", res.data.user.datecreated);
-
+        localStorage.setItem("userRegionId", res.data.user.regionid);
         setLoggedIdNumber(res.data.user.idnumber);
         setLoggedFullname(res.data.user.fullname);
         setLoggedPhone(res.data.user.phonenumber);
@@ -766,15 +775,26 @@ export const Navbar: React.FC<
         categoryid: selectedCategory,
         location,
         phone,
+        regionid: selectedRegion,
         email: churchEmail,
+        pastor: fullname,
       });
 
       const registeredChurch = response.data;
 
       toast.success(response.data.message || "Church registered successfully!");
 
-      setChurches([...churches, registeredChurch]);
-      setSelectedChurch(registeredChurch.id);
+      // Add the church to local state or refetch to ensure it's visible
+      if (registeredChurch?.id && registeredChurch?.name) {
+        setChurches([
+          ...churches,
+          { id: registeredChurch.id, name: registeredChurch.name },
+        ]);
+        setSelectedChurch(registeredChurch.id);
+      } else {
+        // Fallback: refetch all churches to ensure the new one appears
+        setRefreshChurches((prev) => prev + 1);
+      }
       setSearch("");
       setNewChurchName("");
       setIsCreatingChurch(false);
@@ -837,6 +857,9 @@ export const Navbar: React.FC<
       const response = await axios.post(`${serverurl}/user/register`, data);
 
       toast.success(response.data.message || "User registered successfully!");
+
+      // Refetch churches to ensure any newly created church appears in search
+      setRefreshChurches((prev) => prev + 1);
 
       // Clear form and reset states
       setIdnumber("");
@@ -1472,7 +1495,7 @@ export const Navbar: React.FC<
               href="."
               onClick={(e) => {
                 e.preventDefault();
-                setActiveTab("PAGProgramsList");
+                toast.error("Community section coming soon!");
               }}
             >
               Community
@@ -1567,7 +1590,7 @@ export const Navbar: React.FC<
             href="."
             onClick={(e) => {
               e.preventDefault();
-              setActiveTab("PAGProgramsList");
+              toast.error("Community section coming soon!");
               setIsMobileMenuOpen(false);
             }}
           >
