@@ -284,17 +284,18 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     // USERS FETCH
     setLoadingUsers(true);
 
-    axios
-      .get(`${serverurl}/church/list/${regionid}`)
-      .then((res) => {
-        if (!mounted) return;
-        setChurches(Array.isArray(res.data) ? res.data : []);
-      })
-      .catch((err) => {
-        console.error("Error fetching churches:", err);
-        if (mounted) setChurches([]);
-      });
-
+    if (districtRole === "D2") {
+      axios
+        .get(`${serverurl}/church/list/${regionid}`)
+        .then((res) => {
+          if (!mounted) return;
+          setChurches(Array.isArray(res.data) ? res.data : []);
+        })
+        .catch((err) => {
+          console.error("Error fetching churches:", err);
+          if (mounted) setChurches([]);
+        });
+    }
     axios
       .get(`${serverurl}/wordofday`)
       .then((res) => {
