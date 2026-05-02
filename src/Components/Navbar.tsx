@@ -1808,7 +1808,7 @@ export const Navbar: React.FC<
               <form css={formStyles} onSubmit={handleSpecialPrayer}>
                 <textarea
                   value={description}
-                  style={{ padding: "12px", borderRadius: "6px" }}
+                  style={{ padding: "12px", borderRadius: "6px", border:"none", boxShadow:"0 0 0 1px #f2f4f7",}}
                   onChange={(e) => setDescription(e.target.value)}
                   maxLength={100}
                   placeholder="say something..."

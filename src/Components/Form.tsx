@@ -1363,9 +1363,8 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                     key={index}
                     css={{
                       padding: "16px",
-                      border: `1px solid ${tokens.border}`,
-                      borderRadius: tokens.radius,
                       backgroundColor: tokens.inputBg,
+                      boxShadow: tokens.shadow,
                     }}
                   >
                     {pageContent === "Church Members" && (
@@ -1373,6 +1372,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
                           {item.name || item.fullname || "N/A"}{" "}
                         </h3>
+                        <hr />
                         <span>
                           <small>
                             {[
@@ -1434,6 +1434,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
                           {item.name || item.sender || "Unknown Sender"}
                         </h3>
+                        <hr />
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
                           <strong>Phone Number:</strong> {item.phone}
                         </p>
@@ -1469,9 +1470,9 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                     {pageContent === "Prayer Requests" && (
                       <div>
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
-                          {item.userid || "Anonymous"}
+                          {item.fullname || "Anonymous"}
                         </h3>
-
+                        <hr />
                         <p css={{ margin: "8px 0", color: tokens.text }}>
                           <strong>Prayer Request:</strong>
                         </p>
@@ -1513,6 +1514,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
                           {item.name || item.churchname || "N/A"}
                         </h3>
+                        <hr />
                         <p css={{ margin: "4px 0", color: tokens.muted }}>
                           <strong>Location:</strong>{" "}
                           {item.location || item.address || "N/A"}
@@ -1568,6 +1570,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                         <h3 css={{ marginBottom: "8px", color: tokens.text }}>
                           {item.title || item.verse || "Daily Word"}
                         </h3>
+                        <hr />
                         <p
                           css={{
                             margin: "8px 0",
