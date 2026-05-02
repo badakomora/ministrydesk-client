@@ -372,6 +372,7 @@ interface LoadingProps {
 
 type Idprops = {
   itemId: number | null;
+  churchId: number | null;
 };
 
 // -------------------- Component --------------------
@@ -386,6 +387,7 @@ export const Navbar: React.FC<
   setLoading,
   loading,
   itemId,
+  churchId,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -747,12 +749,13 @@ export const Navbar: React.FC<
       const response = await axios.post(`${serverurl}/prayerrequest/new`, {
         idnumber: loggedIdNumber,
         description,
-        churchid: loggedChurchId,
+        churchid: churchId,
       });
 
       toast.success(
         response.data.message || "Prayer request sent successfully!",
       );
+      setDescription("");
     } catch (error: any) {
       console.error("Error creating church:", error);
 
@@ -1805,6 +1808,7 @@ export const Navbar: React.FC<
               <form css={formStyles} onSubmit={handleSpecialPrayer}>
                 <textarea
                   value={description}
+                  style={{ padding: "12px", borderRadius: "6px" }}
                   onChange={(e) => setDescription(e.target.value)}
                   maxLength={100}
                   placeholder="say something..."

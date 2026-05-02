@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 function App() {
   const [activeTab, setActiveTab] = useState("Home");
   const [itemId, setItemId] = useState<number | null>(null);
+  const [churchId, setChurchId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pageContent, setPageContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,7 @@ function App() {
         setLoading={setLoading}
         loading={loading}
         itemId={itemId}
+        churchId={churchId}
       />
       {activeTab === "NewsItem" ||
       activeTab === "SermonsItem" ||
@@ -35,6 +37,7 @@ function App() {
           setItemId={setItemId}
           setIsModalOpen={setIsModalOpen}
           setPageContent={setPageContent}
+          setChurchId={setChurchId}
         />
       ) : activeTab === "NewsList" ||
         activeTab === "SermonsList" ||
