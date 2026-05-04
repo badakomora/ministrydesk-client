@@ -163,3 +163,15 @@ export const formatSearchableDate = (dateStr: string) => {
     shortMonth, // nov
   ].join(" ");
 };
+
+
+export const churchCategories = [
+  { id: 1, name: "PAG" },
+  { id: 2, name: "Chapel" },
+  { id: 3, name: "Catholic" },
+  { id: 4, name: "Deliverance" },
+  { id: 5, name: "Presbyterian" },
+  { id: 6, name: "Anglican" },
+  { id: 7, name: "Baptist" },
+  { id: 8, name: "SDA" }
+];

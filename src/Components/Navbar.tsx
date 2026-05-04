@@ -3,7 +3,7 @@ import { css, keyframes } from "@emotion/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getUserRoles, roles, serverurl } from "./Appconfig";
+import { churchCategories, getUserRoles, roles, serverurl } from "./Appconfig";
 
 // -------------------- ROLE HIERARCHY --------------------
 
@@ -766,10 +766,17 @@ export const Navbar: React.FC<
       }
     }
   };
+
   const handleNewChurch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!newChurchName.trim())
       return toast.warning("Please enter a church name.");
+
+    if (!fullname || fullname.trim() === "")
+      return toast.warning(
+        "Please enter your name first then proceed with church registration",
+      );
 
     try {
       const response = await axios.post(`${serverurl}/church/register`, {
@@ -780,14 +787,13 @@ export const Navbar: React.FC<
         phone,
         regionid: selectedRegion,
         email: churchEmail,
-        pastor: fullname,
+        pastor: fullname.trim(),
       });
 
       const registeredChurch = response.data;
 
       toast.success(response.data.message || "Church registered successfully!");
 
-      // Add the church to local state or refetch to ensure it's visible
       if (registeredChurch?.id && registeredChurch?.name) {
         setChurches([
           ...churches,
@@ -795,9 +801,9 @@ export const Navbar: React.FC<
         ]);
         setSelectedChurch(registeredChurch.id);
       } else {
-        // Fallback: refetch all churches to ensure the new one appears
         setRefreshChurches((prev) => prev + 1);
       }
+
       setSearch("");
       setNewChurchName("");
       setIsCreatingChurch(false);
@@ -1366,6 +1372,7 @@ export const Navbar: React.FC<
               boxSizing: "border-box",
               marginBottom: "8px",
             }}
+            required
           />
           {/* Display search results only if search has a value and no church is selected */}
           {search && !selectedChurch && filteredChurches.length > 0 && (
@@ -1808,7 +1815,12 @@ export const Navbar: React.FC<
               <form css={formStyles} onSubmit={handleSpecialPrayer}>
                 <textarea
                   value={description}
-                  style={{ padding: "12px", borderRadius: "6px", border:"none", boxShadow:"0 0 0 1px #f2f4f7",}}
+                  style={{
+                    padding: "12px",
+                    borderRadius: "6px",
+                    border: "none",
+                    boxShadow: "0 0 0 1px #f2f4f7",
+                  }}
                   onChange={(e) => setDescription(e.target.value)}
                   maxLength={100}
                   placeholder="say something..."
@@ -2000,7 +2012,7 @@ export const Navbar: React.FC<
                       }}
                     />
 
-                    <select
+                    {/* <select
                       required
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
@@ -2018,6 +2030,20 @@ export const Navbar: React.FC<
                       <option value="3">Catholic</option>
                       <option value="4">Deliverance</option>
                       <option value="5">Presbyterian</option>
+                    </select> */}
+
+                    <select
+                      required
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                    >
+                      <option value={0}>Select Church Category</option>
+
+                      {churchCategories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
                     </select>
 
                     <input

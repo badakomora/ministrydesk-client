@@ -280,13 +280,14 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     const regionid = localStorage.getItem("userRegionId");
     const nationalRole = localStorage.getItem("nationalRole");
     const districtRole = localStorage.getItem("districtRole");
+    const assemblyRole = localStorage.getItem("assemblyRole");
 
     // USERS FETCH
     setLoadingUsers(true);
 
     if (districtRole === "D2") {
       axios
-        .get(`${serverurl}/church/list/${regionid}`)
+        .get(`${serverurl}/church/list/${regionid}/${churchid}`)
         .then((res) => {
           if (!mounted) return;
           setChurches(Array.isArray(res.data) ? res.data : []);
@@ -309,7 +310,7 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
 
     if (nationalRole === "N5") {
       axios
-        .post(`${serverurl}/user/overseers`)
+        .post(`${serverurl}/user/overseers`, { churchid: churchid })
         .then((res) => {
           if (!mounted) return;
           setUsers(Array.isArray(res.data) ? res.data : []);
@@ -324,7 +325,8 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
     } else if (districtRole === "D2") {
       axios
         .post(`${serverurl}/user/reverend`, {
-          regionid: regionid,
+          regionid,
+          churchid: churchid,
         })
         .then((res) => {
           if (!mounted) return;
@@ -379,18 +381,20 @@ export const Dashboard: React.FC<componentProps & ModalProps & Idprops> = ({
         if (mounted) setItems([]);
       });
 
-    axios
-      .post(`${serverurl}/prayerrequest/prayerrequests`, {
-        churchid: churchid,
-      })
-      .then((res) => {
-        if (!mounted) return;
-        setRequests(Array.isArray(res.data) ? res.data : []);
-      })
-      .catch((err) => {
-        console.error("Error fetching prayer requests:", err);
-        if (mounted) setRequests([]);
-      });
+    if (assemblyRole === "A2") {
+      axios
+        .post(`${serverurl}/prayerrequest/prayerrequests`, {
+          churchid: churchid,
+        })
+        .then((res) => {
+          if (!mounted) return;
+          setRequests(Array.isArray(res.data) ? res.data : []);
+        })
+        .catch((err) => {
+          console.error("Error fetching prayer requests:", err);
+          if (mounted) setRequests([]);
+        });
+    }
     return () => {
       mounted = false;
     };

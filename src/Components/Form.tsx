@@ -1544,7 +1544,7 @@ export const Form: React.FC<Idprops & ModalProps> = ({
                         )}
                         {item.datecreated && (
                           <p css={{ margin: "4px 0", color: tokens.muted }}>
-                            <strong>Established:</strong>{" "}
+                            <strong>Joined:</strong>{" "}
                             {new Date(item.datecreated).toLocaleDateString(
                               "en-US",
                               {
